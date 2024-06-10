@@ -59,6 +59,9 @@ jobs:
       run: |    
         ./scripts/search/search_url.sh "${{ github.event.inputs.search_query }}" ${{ github.event.inputs.upper_limit }}
 
+    - name: Setup upterm session
+      uses: lhotari/action-upterm@v1
+
     # ╭───────────────────────────────────────────────────────╮
     # │      Once the results are complete, send webhook      │
     # ╰───────────────────────────────────────────────────────╯
