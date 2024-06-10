@@ -45,7 +45,6 @@ jobs:
       uses: actions/checkout@v3
 
 
-
     # ╭───────────────────────────────────────────────────────╮
     # │                    Install YT-DLP                     │
     # ╰───────────────────────────────────────────────────────╯
@@ -53,13 +52,13 @@ jobs:
       run: sudo pip install yt-dlp
 
 
-      
     # ╭───────────────────────────────────────────────────────╮
     # │          Do a search and return a JSON file            │
     # ╰───────────────────────────────────────────────────────╯
-    - name: Do YouTube URL Search
+    - name: Do YouTube Keyword Search
       run: |    
-        ./scripts/search/search_url.sh "${{ github.event.inputs.search_query }}" ${{ github.event.inputs.upper_limit }}
+        ./scripts/search/search_keyword.sh "${{ github.event.inputs.search_query }}" ${{ github.event.inputs.upper_limit }}
+
 
 
 
@@ -76,7 +75,6 @@ jobs:
           ${{ github.event.inputs.return_webhook }}
 
 
-          
     # ╭───────────────────────────────────────────────────────╮
     # │     DEBUGGER - Use to SSH into the Github Runner      │
     # ╰───────────────────────────────────────────────────────╯
