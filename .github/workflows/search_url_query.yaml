@@ -27,7 +27,6 @@ on:
           required: true
         return_webhook:
           description: 'Make.com webhook to trigger on finish'
-          required: true
     repository_dispatch:
       types: [youtube_search]
 
@@ -68,6 +67,7 @@ jobs:
     # Use -H "Content-Type: application/json"  for JSON
     # --data-binary is used to stop \n newlines from being added to base64 string.
     - name: Trigger Return Webhook
+      if: ${{ github.event.inputs.return_webhook }}
       run: |
         content=$( cat results.json )
 
