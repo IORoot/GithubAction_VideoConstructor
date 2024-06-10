@@ -113,8 +113,13 @@ jobs:
     - name: rclone copy result back to google drive
       run: | 
           echo "${{ secrets.RCLONE_CONF_B64 }}" | base64 --decode > rclone.conf
+          
           mkdir videos
-          mv *.mp4 videos
+          
+          for file in *.mp4; do
+            mv -- "$file" videos
+          done
+
           rclone copy ./videos/ GDrive:${{ github.event.inputs.gdrive_folder }}/ --config rclone.conf 
 
 

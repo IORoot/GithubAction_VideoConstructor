@@ -22,8 +22,8 @@ on:
         upper_limit:
           description: 'Number of videos to find'     
           required: true
-        search_query:
-          description: 'yt-dlp search'  
+        keyword:
+          description: 'yt-dlp search using keyword'  
           required: true
         return_webhook:
           description: 'Make.com webhook to trigger on finish'
@@ -57,7 +57,7 @@ jobs:
     # ╰───────────────────────────────────────────────────────╯
     - name: Do YouTube Keyword Search
       run: |    
-        ./scripts/search/search_keyword.sh "${{ github.event.inputs.search_query }}" ${{ github.event.inputs.upper_limit }}
+        ./scripts/search/search_keyword.sh "${{ github.event.inputs.keyword }}" ${{ github.event.inputs.upper_limit }}
 
 
 
