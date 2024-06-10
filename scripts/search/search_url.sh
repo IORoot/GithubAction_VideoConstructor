@@ -27,13 +27,15 @@ while IFS= read -r line; do
   VIDEO_ID=$(echo "$line" | jq -r '.id')
   VIDEO_URL="https://www.youtube.com/watch?v=$VIDEO_ID"
 
-  DOWNLOAD_URL=$(yt-dlp -f b --get-url "$VIDEO_URL")
-  
   if [ $FIRST -eq 0 ]; then
     echo ',' >> "$URL_FILE"
   fi
 
-  echo '{"video":"'"$VIDEO_URL"'","download":"'"$DOWNLOAD_URL"'"}' >> "$URL_FILE"
+  # Adds the Download URL if needed.
+  # DOWNLOAD_URL=$(yt-dlp -f b --get-url "$VIDEO_URL")
+  # echo '{"video":"'"$VIDEO_URL"'","download":"'"$DOWNLOAD_URL"'"}' >> "$URL_FILE"
+  
+  echo '{"video":"'"$VIDEO_URL"'"}' >> "$URL_FILE"
   FIRST=0
 done < "$TEMP_FILE"
 

@@ -83,9 +83,10 @@ jobs:
         echo ${{ github.event.inputs.video_array_b64 }} > results.b64
         cat results.b64 | base64 -d > results.json
 
-        cat results.json | jq -c '.results[] | .video' | while read -r video; do
+        cat results.json | jq -r -c '.results[] | .video' | while read -r video; do
 
             video_id=$(echo "$video" | sed 's/^.*=//' | cut -d'&' -f1)
+
             echo "Download snippets for $video_id"
             
             command="./scripts/snippets/yt_snippets.sh --videoid $video_id --count ${{ github.event.inputs.count }} --duration ${{ github.event.inputs.duration }}"
