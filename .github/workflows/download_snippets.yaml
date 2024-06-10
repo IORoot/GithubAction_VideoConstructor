@@ -81,7 +81,7 @@ jobs:
       run: |
 
         echo ${{ github.event.inputs.video_array_b64 }} > results.b64
-        cat results.b64 | base64 -decode > results.json
+        cat results.b64 | base64 -d > results.json
 
         cat results.json | jq -c '.results[] | .video' | while read -r video; do
             echo "Download snippets for $video_id"
