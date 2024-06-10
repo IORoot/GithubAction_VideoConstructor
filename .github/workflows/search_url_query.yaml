@@ -57,9 +57,7 @@ jobs:
     # ╰───────────────────────────────────────────────────────╯
     - name: Do YouTube Search
       run: |    
-        yt-dlp --flat-playlist -O id -I 1:${{ github.event.inputs.upper_limit }} "${{ github.event.inputs.search_query }}"  > results.txt
-        jq -nR --arg url "https://www.youtube.com/watch?v=" '[inputs | {"video": ($url + .)}]' results.txt > results.json
-
+        ./scripts/search/search_url.sh "${{ github.event.inputs.search_query }}" ${{ github.event.inputs.upper_limit }}
 
     # ╭───────────────────────────────────────────────────────╮
     # │      Once the results are complete, send webhook      │
@@ -70,12 +68,7 @@ jobs:
       if: ${{ github.event.inputs.return_webhook }}
       run: |
         content=$( cat results.json )
-
-        echo $content
-
-        curl -X POST \
-          -H "Content-Type: text/plain" \
-          --data-binary "$content" \
+        curl -X POST  -H "Content-Type: text/plain" --data-binary "$content" \
           ${{ github.event.inputs.return_webhook }}
 
 
