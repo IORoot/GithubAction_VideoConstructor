@@ -2,10 +2,6 @@ name: 📲 Upload to YouTube
 
 on:
 
-  push:
-    branches:
-      - master
-
   workflow_dispatch:
 
 env:
