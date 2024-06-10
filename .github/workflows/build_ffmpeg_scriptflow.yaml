@@ -63,15 +63,6 @@ jobs:
             - name: Checkout Repo
               uses: actions/checkout@v3
 
-            
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │        COPY ALL REPO SCRIPTS TO /usr/local/bin        │
-            # ╰───────────────────────────────────────────────────────╯
-            - name: Copy scripts to PATH
-              run: |
-                  sudo cp ./scripts/* /usr/local/bin      
-
 
 
             # ╭───────────────────────────────────────────────────────╮
