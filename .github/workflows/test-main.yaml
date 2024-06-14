@@ -12,8 +12,8 @@ on:
 jobs:
 
     one:
-        uses: ./.github/workflows/test-one.yml
+        uses: ioroot/GithubAction_VideoContructor/.github/workflows/test-one.yml@master
 
     two:
         needs: one
-        uses: ./.github/workflows/test-two.yml
+        uses: ioroot/GithubAction_VideoContructor/.github/workflows/test-two.yml@master
