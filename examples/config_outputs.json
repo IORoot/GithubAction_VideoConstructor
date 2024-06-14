@@ -78,7 +78,8 @@
                 }
             }
         },
-        "timecut": "--viewport=\"1080,1920\" --fps=30 --start=3 --duration=3"
+        "timecut_viewport": "1080,1920",
+        "timecut_settings": "--fps=30 --start=3 --duration=3"
     },
 
 
