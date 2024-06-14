@@ -290,6 +290,43 @@ jobs:
 
 
 
+            # ╭───────────────────────────────────────────────────────╮
+            # │               INSTALL FFMPEG SCRIPTFLOW               │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: Install Scriptflow
+              continue-on-error: true
+              run: |
+                  sudo git clone https://github.com/IORoot/ffmpeg__bash-scripts.git /tmp/scriptflow
+                  sudo mv /tmp/scriptflow/*.sh /usr/local/bin
+                  sudo chmod +x /usr/local/bin/*
+
+
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │  Run /usr/local/bin/scriptflow.sh with the config.json  │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: Run ScriptFlow
+              run: |
+
+                cat config.json | jq -r '.video.config' > ${GITHUB_WORKSPACE}/video_config.json
+
+                mkdir -p ${GITHUB_WORKSPACE}/${UUID}_processed_video
+                export PATH=$PATH:$(pwd)
+                scriptflow.sh --config $(realpath ./video_config.json) -t
+
+                if [ -f output.mp4 ]; then
+                    mv output.mp4 "${GITHUB_WORKSPACE}/${UUID}_processed_video/video.mp4"
+                fi
+
+                if [ -f ff_thumbnail-01.png ]; then
+                    mv ff_thumbnail-01.png "${GITHUB_WORKSPACE}/${UUID}_processed_video/thumbnail.png"
+                fi
+
+                ls -la
+                ls -la ${GITHUB_WORKSPACE}/${UUID}_processed_video
+
+
+                  
             # ╭──────────────────────────────────────────────────────────────────────────╮
             # │                                                                          │░
             # │                                                                          │░
