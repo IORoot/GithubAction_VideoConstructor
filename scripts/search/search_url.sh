@@ -12,7 +12,7 @@ LIMIT="${2:-3}"
 
 # Temporary file to store search results
 TEMP_FILE="raw.json"
-URL_FILE="results.json"
+URL_FILE="videoid_results.json"
 
 # Search YouTube for the QUERY and get the details of the 10 newest results
 yt-dlp --get-id --playlist-end $LIMIT "$QUERY"  > "$TEMP_FILE"

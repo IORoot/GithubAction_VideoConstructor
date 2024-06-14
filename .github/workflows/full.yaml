@@ -36,7 +36,7 @@ jobs:
             # ╭───────────────────────────────────────────────────────╮
             # │             GET CONTENTS OF CURRENT REPO              │
             # ╰───────────────────────────────────────────────────────╯
-            - name: Checkout Repo
+            - name: 🎛️ SETUP - Checkout Repo
               uses: actions/checkout@v3
 
 
@@ -44,7 +44,7 @@ jobs:
             # ╭───────────────────────────────────────────────────────╮
             # │      DECODE THE BASE64 CONFIGS READY TO BE USED       │
             # ╰───────────────────────────────────────────────────────╯
-            - name: Base64 decode Configs
+            - name: 🎛️ SETUP - Base64 decode Configs
               run: |
                 echo "${{ secrets.RCLONE_CONF_B64 }}" | base64 --decode > rclone.conf
                 echo "${{ github.event.inputs.config_b64 }}" | base64 --decode > config.json
@@ -57,7 +57,7 @@ jobs:
             ## If a section of the config is present then the environment
             ## variable is set to TRUE.
             ##
-            - name: JSON to Environment Variables
+            - name: 🎛️ SETUP - JSON to Environment Variables
               run: |
                 echo "WORKFLOW_SEARCH=$(jq -e '.search' config.json > /dev/null && echo TRUE || echo FALSE)" >> $GITHUB_ENV  
                 echo "WORKFLOW_DOWNLOAD=$(jq -e '.download' config.json > /dev/null && echo TRUE || echo FALSE)" >> $GITHUB_ENV  
@@ -71,7 +71,7 @@ jobs:
             # ╭───────────────────────────────────────────────────────╮
             # │             GENERATE A UNIQUE IDENTIFIER              │
             # ╰───────────────────────────────────────────────────────╯
-            - name: Generate UUID
+            - name: 🎛️ SETUP - Generate UUID
               run: |
                   echo "UUID=$(openssl rand -hex 6)" >> $GITHUB_ENV
 
@@ -88,17 +88,20 @@ jobs:
 
 
             # ╭───────────────────────────────────────────────────────╮
-            # │                    Install YT-DLP                     │
+            # │                    INSTALL YT-DLP                     │
             # ╰───────────────────────────────────────────────────────╯
-            - name: Install yt-dlp
+            - name: 🔎 SEARCH - Install yt-dlp
               run: sudo pip install yt-dlp
 
 
 
             # ╭───────────────────────────────────────────────────────╮
-            # │          Do a search and return a JSON file            │
+            # │                     RUN SEARCH                        │
             # ╰───────────────────────────────────────────────────────╯
-            - name: Do YouTube URL Search
+            #
+            # OUTPUTS = videoid_results.json
+            #
+            - name: 🔎 SEARCH - Do YouTube URL Search
               run: |
                 SEARCH_QUERY=$(cat config.json | jq -r '.search.queryUrl')
                 SEARCH_KEYWORD=$(cat config.json | jq -r '.search.keyword')
@@ -111,9 +114,9 @@ jobs:
                 if jq -e '.search.keyword // empty' config.json > /dev/null; then
                     ./scripts/search/search_keyword.sh "${SEARCH_KEYWORD}" ${SEARCH_COUNT}
                 fi
-
-                ls -la
                 
+
+
             # ╭──────────────────────────────────────────────────────────────────────────╮
             # │                                                                          │░
             # │                                                                          │░
@@ -122,6 +125,51 @@ jobs:
             # │                                                                          │░
             # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
+
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                     INSTALL MPV                       │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: 📹 DOWNLOAD - Install mpv
+              run: |
+                sudo apt update
+                sudo apt install mpv
+
+            
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                  RUN THE DOWNLOADER                   │
+            # ╰───────────────────────────────────────────────────────╯
+            ##
+            ## INPUT = videoid_results.json
+            ## OUTPUT = MP4 Video files
+            ##
+            - name: 📹 DOWNLOAD - Run Snippet Downloader
+              continue-on-error: true
+              run: |
+
+                DOWNLOAD_COUNT=$(cat config.json | jq -r '.download.count')
+                DOWNLOAD_DURATION=$(cat config.json | jq -r '.download.duration')
+                DOWNLOAD_TIMESTAMPS=$(cat config.json | jq -r '.download.timestamps')
+
+                cat videoid_results.json | jq -r -c '.results[] | .video' | while read -r video; do
+
+                    video_id=$(echo "$video" | sed 's/^.*=//' | cut -d'&' -f1)
+
+                    echo "Download snippets for $video_id"
+                    
+                    command="./scripts/snippets/yt_snippets.sh --videoid $video_id --count ${DOWNLOAD_COUNT} --duration ${DOWNLOAD_DURATION}"
+
+                    if [ -n "${DOWNLOAD_TIMESTAMPS}" ]; then
+                        command+=" --timestamps ${DOWNLOAD_TIMESTAMPS}"
+                    fi
+                    
+                    eval "$command"
+
+                done
+
+                ls -la
+                    
 
 
             # ╭──────────────────────────────────────────────────────────────────────────╮

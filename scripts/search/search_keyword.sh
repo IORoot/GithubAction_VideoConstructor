@@ -12,7 +12,7 @@ LIMIT="${2:-3}"
 
 # Temporary file to store search results
 TEMP_FILE="raw.json"
-URL_FILE="results.json"
+URL_FILE="videoid_results.json"
 
 # Search YouTube for the keyword and get the details of the 10 newest results
 yt-dlp --flat-playlist -j "ytsearchdate$LIMIT:$KEYWORD" > "$TEMP_FILE"

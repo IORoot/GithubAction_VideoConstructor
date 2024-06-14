@@ -6,7 +6,6 @@
         "count": 3
     },
     "download": {
-        "videos": ["1","2","3"],
         "count": "4",
         "duration": "5",
         "timestamps": "6,7,8"
