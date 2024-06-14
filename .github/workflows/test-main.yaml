@@ -12,8 +12,8 @@ on:
 jobs:
 
     one:
-        uses: IORoot/GithubAction_VideoConstructor/.github/workflows/test-one.yml@master
+        uses: IORoot/GithubAction_VideoConstructor/.github/workflows/test-one.yaml@master
 
     two:
         needs: one
-        uses: IORoot/GithubAction_VideoConstructor/.github/workflows/test-two.yml@master
+        uses: IORoot/GithubAction_VideoConstructor/.github/workflows/test-two.yaml@master
