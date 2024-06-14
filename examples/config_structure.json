@@ -1,30 +1,30 @@
 {
-    "description": "",
+    "description": "description",
     "search": {
-        "queryUrl": "",
-        "keyword": "",
-        "count": ""
+        "queryUrl": "queryUrl",
+        "keyword": "keyword",
+        "count": "count"
     },
     "download": {
-        "videos": [],
-        "count": "",
-        "duration": "",
-        "timestamps": ""
+        "videos": ["1","2","3"],
+        "count": "4",
+        "duration": "5",
+        "timestamps": "6,7,8"
     },
-    "midjourney": {
-        "imagine": ""
+    "image": {
+        "imagine": "imagine"
     },
     "overlay": {
-        "template": "",
-        "inputs": {},
-        "timecut": ""
+        "template": "template",
+        "inputs": { "input1": "input2" },
+        "timecut": "timecut"
     },
     "video": {
-        "config": {}
+        "config": { "config1": "config2" }
     },
     "outputs": {
-        "gDriveFolder": "",
-        "sshServer": "",
-        "sshFolder": ""
+        "gDriveFolder": "gDriveFolder",
+        "sshServer": "sshServer",
+        "sshFolder": "sshFolder"
     }
 }
