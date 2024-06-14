@@ -66,9 +66,9 @@ jobs:
                 echo "WORKFLOW_VIDEO=$(jq -e '.video' config.json > /dev/null && echo TRUE || echo FALSE)" >> $GITHUB_ENV  
                 echo "WORKFLOW_OUTPUTS=$(jq -e '.outputs' config.json > /dev/null && echo TRUE || echo FALSE)" >> $GITHUB_ENV  
                 
-                echo "GDRIVE_FOLDER=$(cat config.json | jq -r '.outputs.gDriveFolder')"" >> $GITHUB_ENV  
-                echo "SSH_SERVER=$(cat config.json | jq -r '.outputs.sshServer')"" >> $GITHUB_ENV  
-                echo "SSH_FOLDER=$(cat config.json | jq -r '.outputs.sshFolder')"" >> $GITHUB_ENV  
+                echo "GDRIVE_FOLDER=$(cat config.json | jq -r '.outputs.gDriveFolder')" >> $GITHUB_ENV  
+                echo "SSH_SERVER=$(cat config.json | jq -r '.outputs.sshServer')" >> $GITHUB_ENV  
+                echo "SSH_FOLDER=$(cat config.json | jq -r '.outputs.sshFolder')" >> $GITHUB_ENV  
 
 
 
