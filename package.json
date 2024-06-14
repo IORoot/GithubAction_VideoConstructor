@@ -1,0 +1,8 @@
+{
+    "name": "Modded Timecut",
+    "version": "1.0.0",
+    "description": "Your package description",
+    "dependencies": {
+        "timecut": "^0.3.3-prerelease"
+    }
+}

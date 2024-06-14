@@ -1,0 +1,19 @@
+name: 🎢 Test Main
+
+on:
+    # Run Via a webhook only
+    workflow_dispatch:
+      inputs:
+        config_b64:
+          description: 'Base64 configuration for Video Constructor'     
+          required: true
+
+
+jobs:
+
+    one:
+        uses: ./.github/workflows/test-one.yml
+
+    two:
+        needs: one
+        uses: ./.github/workflows/test-two.yml

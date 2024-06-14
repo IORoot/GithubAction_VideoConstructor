@@ -1,0 +1,30 @@
+{
+    "description": "",
+    "search": {
+        "queryUrl": "",
+        "keyword": "",
+        "count": ""
+    },
+    "download": {
+        "videos": [],
+        "count": "",
+        "duration": "",
+        "timestamps": ""
+    },
+    "midjourney": {
+        "imagine": ""
+    },
+    "overlay": {
+        "template": "",
+        "inputs": {},
+        "timecut": ""
+    },
+    "video": {
+        "config": {}
+    },
+    "outputs": {
+        "gDriveFolder": "",
+        "sshServer": "",
+        "sshFolder": ""
+    }
+}
