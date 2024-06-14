@@ -56,12 +56,13 @@ jobs:
             # ╰───────────────────────────────────────────────────────╯
             - name: JSON to Environment Variables
               run: |
-                echo "WORKFLOW_SEARCH=$(jq -r '.search // empty' config.json)" >> $GITHUB_ENV
-                echo "WORKFLOW_DOWNLOAD=$(jq -r '.download // empty' config.json)" >> $GITHUB_ENV
-                echo "WORKFLOW_IMAGE=$(jq -r '.image // empty' config.json)" >> $GITHUB_ENV
-                echo "WORKFLOW_OVERLAY=$(jq -r '.overlay // empty' config.json)" >> $GITHUB_ENV
-                echo "WORKFLOW_VIDEO=$(jq -r '.video // empty' config.json)" >> $GITHUB_ENV
-                echo "WORKFLOW_OUTPUTS=$(jq -r '.outputs // empty' config.json)" >> $GITHUB_ENV
+                echo "WORKFLOW_SEARCH=$(jq -e '.search' config.json > /dev/null && echo TRUE || echo FALSE)" >> $GITHUB_ENV  
+                echo "WORKFLOW_DOWNLOAD=$(jq -e '.download' config.json > /dev/null && echo TRUE || echo FALSE)" >> $GITHUB_ENV  
+                echo "WORKFLOW_MIDJOURNEY=$(jq -e '.midjourney' config.json > /dev/null && echo TRUE || echo FALSE)" >> $GITHUB_ENV  
+                echo "WORKFLOW_OVERLAY=$(jq -e '.overlay' config.json > /dev/null && echo TRUE || echo FALSE)" >> $GITHUB_ENV  
+                echo "WORKFLOW_VIDEO=$(jq -e '.video' config.json > /dev/null && echo TRUE || echo FALSE)" >> $GITHUB_ENV  
+                echo "WORKFLOW_OUTPUTS=$(jq -e '.outputs' config.json > /dev/null && echo TRUE || echo FALSE)" >> $GITHUB_ENV  
+
 
 
             # ╭───────────────────────────────────────────────────────╮
@@ -70,7 +71,6 @@ jobs:
             - name: Generate UUID
               run: |
                   echo "UUID=$(openssl rand -hex 6)" >> $GITHUB_ENV
-
 
 
 
@@ -84,6 +84,7 @@ jobs:
                 echo "WORKFLOW_VIDEO=${{ env.WORKFLOW_VIDEO }}"
                 echo "WORKFLOW_OUTPUTS=${{ env.WORKFLOW_OUTPUTS }}"
                 echo "UUID=${{ env.UUID }}"
+
 
 
 
