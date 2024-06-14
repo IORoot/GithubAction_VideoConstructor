@@ -65,6 +65,10 @@ jobs:
                 echo "WORKFLOW_OVERLAY=$(jq -e '.overlay' config.json > /dev/null && echo TRUE || echo FALSE)" >> $GITHUB_ENV  
                 echo "WORKFLOW_VIDEO=$(jq -e '.video' config.json > /dev/null && echo TRUE || echo FALSE)" >> $GITHUB_ENV  
                 echo "WORKFLOW_OUTPUTS=$(jq -e '.outputs' config.json > /dev/null && echo TRUE || echo FALSE)" >> $GITHUB_ENV  
+                
+                echo "GDRIVE_FOLDER=$(cat config.json | jq -r '.outputs.gDriveFolder')"" >> $GITHUB_ENV  
+                echo "SSH_SERVER=$(cat config.json | jq -r '.outputs.sshServer')"" >> $GITHUB_ENV  
+                echo "SSH_FOLDER=$(cat config.json | jq -r '.outputs.sshFolder')"" >> $GITHUB_ENV  
 
 
 
@@ -311,21 +315,10 @@ jobs:
 
                 cat config.json | jq -r '.video.config' > ${GITHUB_WORKSPACE}/video_config.json
 
-                mkdir -p ${GITHUB_WORKSPACE}/${UUID}_processed_video
                 export PATH=$PATH:$(pwd)
                 scriptflow.sh --config $(realpath ./video_config.json) -t
 
-                if [ -f output.mp4 ]; then
-                    mv output.mp4 "${GITHUB_WORKSPACE}/${UUID}_processed_video/video.mp4"
-                fi
-
-                if [ -f ff_thumbnail-01.png ]; then
-                    mv ff_thumbnail-01.png "${GITHUB_WORKSPACE}/${UUID}_processed_video/thumbnail.png"
-                fi
-
                 ls -la
-                ls -la ${GITHUB_WORKSPACE}/${UUID}_processed_video
-
 
                   
             # ╭──────────────────────────────────────────────────────────────────────────╮
@@ -335,6 +328,19 @@ jobs:
             # │                                                                          │░
             # │                                                                          │░
             # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+
+
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                 COPY TO GOOGLE DRIVE                  │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: rclone copy result back to google drive
+              uses: wei/rclone@v1
+              env:
+                  RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
+              with:
+                  args: copy ./output.mp4 GDrive:${GDRIVE_FOLDER}/${UUID}/
 
 
             
