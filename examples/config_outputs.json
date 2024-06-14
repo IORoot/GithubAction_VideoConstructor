@@ -111,6 +111,15 @@
                 "output": "output.mp4"
             }
         }        
+    },
+
+
+
+
+    "outputs": {
+        "gDriveFolder": "VideoConstructor",
+        "sshServer": "media.londonparkour.com",
+        "sshFolder": "sshFolder"
     }
     
 }
