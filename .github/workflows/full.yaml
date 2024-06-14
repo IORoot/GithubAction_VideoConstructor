@@ -111,6 +111,8 @@ jobs:
                 if jq -e '.search.keyword // empty' config.json > /dev/null; then
                     ./scripts/search/search_keyword.sh "${SEARCH_KEYWORD}" ${SEARCH_COUNT}
                 fi
+
+                ls -la
                 
             # ╭──────────────────────────────────────────────────────────────────────────╮
             # │                                                                          │░
