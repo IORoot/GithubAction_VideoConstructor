@@ -100,9 +100,9 @@ jobs:
             # ╰───────────────────────────────────────────────────────╯
             - name: Do YouTube URL Search
               run: |
-                SEARCH_QUERY=$(cat config.json | | jq -r '.search.queryUrl')
-                SEARCH_KEYWORD=$(cat config.json | | jq -r '.search.keyword')
-                SEARCH_COUNT=$(cat config.json | | jq -r '.search.count')
+                SEARCH_QUERY=$(cat config.json | jq -r '.search.queryUrl')
+                SEARCH_KEYWORD=$(cat config.json | jq -r '.search.keyword')
+                SEARCH_COUNT=$(cat config.json | jq -r '.search.count')
 
                 if jq -e '.search.queryUrl // empty' config.json > /dev/null; then
                     ./scripts/search/search_url.sh "${SEARCH_QUERY}" ${SEARCH_COUNT}
