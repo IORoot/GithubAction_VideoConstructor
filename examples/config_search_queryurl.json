@@ -1,0 +1,7 @@
+{
+    "description": "description",
+    "search": {
+        "queryUrl": "https://www.youtube.com/results?search_query=ai",
+        "count": 5
+    }
+}

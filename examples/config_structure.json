@@ -3,7 +3,7 @@
     "search": {
         "queryUrl": "queryUrl",
         "keyword": "keyword",
-        "count": "count"
+        "count": 3
     },
     "download": {
         "videos": ["1","2","3"],
