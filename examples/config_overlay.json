@@ -1,0 +1,73 @@
+{
+    "description": "description",
+    "search": {
+        "queryUrl": "queryUrl",
+        "keyword": "keyword",
+        "count": 3
+    },
+    "download": {
+        "count": "4",
+        "duration": "5",
+        "timestamps": "6,7,8"
+    },
+    "overlay": {
+        "template": "001-bounce",
+        "inputs": {
+            "letter1":{
+                "innerText": "HELLO",
+                "style": {
+                    "color": "rgb(92,201,187)",
+                    "font-size": "40px"
+                }
+            },
+            "letter2": {
+                "innerText": "THIS",
+                "style": {
+                    "color": "rgb(34,74,0)",
+                    "font-size": "40px"
+                }
+            },
+            "letter3": {
+                "innerText": "IS",
+                "style": {
+                    "color": "rgb(128,0,0)",
+                    "font-size": "40px"
+                }
+            },
+            "letter4": {
+                "innerText": "A",
+                "style": {
+                    "color": "rgb(32,23,90)",
+                    "font-size": "40px"
+                }
+            },
+            "letter5": {
+                "innerText": "TEST",
+                "style": {
+                    "color": "rgb(12,189,18)",
+                    "font-size": "40px"
+                }
+            },
+            "letter6": {
+                "innerText": "TEMPLATE",
+                "style": {
+                    "color": "rgb(12,189,18)",
+                    "font-size": "40px"
+                }
+            },
+            "underline": {
+                "style": {
+                    "background": "rgb(12,189,18)"
+                }
+            },
+            "replacetext02": {
+                "innerText": "YAY!",
+                "style": {
+                    "color": "rgb(128,0,0)",
+                    "font-size": "100px"
+                }
+            }
+        },
+        "timecut": ""
+    }
+}
