@@ -271,7 +271,8 @@ jobs:
             - name: 🎨 OVERLAY - Capture Video
               continue-on-error: true
               run: |
-                OVERLAY_TIMECUT=$(cat config.json | jq -r '.overlay.timecut')
+                OVERLAY_TIMECUT=$(cat config.json | jq -r '.overlay.timecut' | sed 's/\\"/"/g')
+                echo ${OVERLAY_TIMECUT}
                 node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" ${OVERLAY_TIMECUT} --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
                 mkdir overlay
                 mv overlay_video.mov ./overlay
