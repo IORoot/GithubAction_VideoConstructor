@@ -20,13 +20,79 @@ on:
 
 
 jobs:
+
+    # ╭──────────────────────────────────────────────────────────────────────────╮
+    # │   This is all one job. The reason is because moving large video files    │░
+    # │       across jobs using artifacts takes time and space. Therefore        │░
+    # │        keeping the whole process on a single job increases speed.        │░
+    # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+    video_constructor:
+        runs-on: ubuntu-latest
+        continue-on-error: true
+        steps:
+
+
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │             GET CONTENTS OF CURRENT REPO              │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: Checkout Repo
+              uses: actions/checkout@v3
+
+
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │      DECODE THE BASE64 CONFIGS READY TO BE USED       │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: Base64 decode Configs
+              run: |
+                echo "${{ secrets.RCLONE_CONF_B64 }}" | base64 --decode > rclone.conf
+                echo "${{ github.event.inputs.config_b64 }}" | base64 --decode > config.json
+
+
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │             JSON TO ENVIRONMENT VARIABLES             │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: JSON to Environment Variables
+              run: |
+                echo "WORKFLOW_SEARCH=$(jq -r '.search // empty' config.json)" >> $GITHUB_ENV
+                echo "WORKFLOW_DOWNLOAD=$(jq -r '.download // empty' config.json)" >> $GITHUB_ENV
+                echo "WORKFLOW_IMAGE=$(jq -r '.image // empty' config.json)" >> $GITHUB_ENV
+                echo "WORKFLOW_OVERLAY=$(jq -r '.overlay // empty' config.json)" >> $GITHUB_ENV
+                echo "WORKFLOW_VIDEO=$(jq -r '.video // empty' config.json)" >> $GITHUB_ENV
+                echo "WORKFLOW_OUTPUTS=$(jq -r '.outputs // empty' config.json)" >> $GITHUB_ENV
+
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │             GENERATE A UNIQUE IDENTIFIER              │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: Generate UUID
+              run: |
+                  echo "UUID=$(openssl rand -hex 6)" >> $GITHUB_ENV
+
+
+
+
+
+            - name: Display environment variables
+              run: |
+                echo "WORKFLOW_SEARCH=${{ env.WORKFLOW_SEARCH }}"
+                echo "WORKFLOW_DOWNLOAD=${{ env.WORKFLOW_DOWNLOAD }}"
+                echo "WORKFLOW_IMAGE=${{ env.WORKFLOW_IMAGE }}"
+                echo "WORKFLOW_OVERLAY=${{ env.WORKFLOW_OVERLAY }}"
+                echo "WORKFLOW_VIDEO=${{ env.WORKFLOW_VIDEO }}"
+                echo "WORKFLOW_OUTPUTS=${{ env.WORKFLOW_OUTPUTS }}"
+                echo "UUID=${{ env.UUID }}"
+
+
+
+
     # ╭──────────────────────────────────────────────────────────────────────────╮
     # │                                                                          │░
     # │  This performs a youtube search to return video ids ready for download   │░
     # │                                                                          │░
     # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-    search:
-        uses: ./.github/workflows/full-search.yml
 
 
 
@@ -35,8 +101,7 @@ jobs:
     # │          Using Video IDs, this will download snippets of videos          │░
     # │                                                                          │░
     # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-    download:
-        uses: ./.github/workflows/full-download.yml
+
 
 
 
@@ -46,7 +111,7 @@ jobs:
     # │                                                                          │░
     # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
     # overlay:
-    #     uses: ./.github/workflows/full-overlay.yml
+    #     uses: IORoot/GithubAction_VideoConstructor/.github/workflows/full-overlay.yaml
 
 
 
@@ -56,7 +121,7 @@ jobs:
     # │                                                                          │░
     # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
     # scriptflow:
-    #     uses: ./.github/workflows/full-scriptflow.yml
+    #     uses: IORoot/GithubAction_VideoConstructor/.github/workflows/full-scriptflow.yaml
 
 
 
@@ -66,4 +131,4 @@ jobs:
     # │                                                                          │░
     # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
     # output:
-    #     uses: ./.github/workflows/outputs.yml
+    #     uses: IORoot/GithubAction_VideoConstructor/.github/workflows/outputs.yaml
