@@ -54,6 +54,9 @@ jobs:
             # ╭───────────────────────────────────────────────────────╮
             # │             JSON TO ENVIRONMENT VARIABLES             │
             # ╰───────────────────────────────────────────────────────╯
+            ## If a section of the config is present then the environment
+            ## variable is set to TRUE.
+            ##
             - name: JSON to Environment Variables
               run: |
                 echo "WORKFLOW_SEARCH=$(jq -e '.search' config.json > /dev/null && echo TRUE || echo FALSE)" >> $GITHUB_ENV  
@@ -74,62 +77,102 @@ jobs:
 
 
 
+            # ╭──────────────────────────────────────────────────────────────────────────╮
+            # │                                                                          │░
+            # │                                                                          │░
+            # │                              YOUTUBE SEARCH                              │░
+            # │                                                                          │░
+            # │                                                                          │░
+            # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-            - name: Display environment variables
+
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                    Install YT-DLP                     │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: Install yt-dlp
+              run: sudo pip install yt-dlp
+
+
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │          Do a search and return a JSON file            │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: Do YouTube URL Search
               run: |
-                echo "WORKFLOW_SEARCH=${{ env.WORKFLOW_SEARCH }}"
-                echo "WORKFLOW_DOWNLOAD=${{ env.WORKFLOW_DOWNLOAD }}"
-                echo "WORKFLOW_IMAGE=${{ env.WORKFLOW_IMAGE }}"
-                echo "WORKFLOW_OVERLAY=${{ env.WORKFLOW_OVERLAY }}"
-                echo "WORKFLOW_VIDEO=${{ env.WORKFLOW_VIDEO }}"
-                echo "WORKFLOW_OUTPUTS=${{ env.WORKFLOW_OUTPUTS }}"
-                echo "UUID=${{ env.UUID }}"
+                SEARCH_QUERY=$(cat config.json | | jq -r '.search.queryUrl')
+                SEARCH_KEYWORD=$(cat config.json | | jq -r '.search.keyword')
+                SEARCH_COUNT=$(cat config.json | | jq -r '.search.count')
+
+                if jq -e '.search.queryUrl // empty' config.json > /dev/null; then
+                    ./scripts/search/search_url.sh "${SEARCH_QUERY}" ${SEARCH_COUNT}
+                fi
+
+                if jq -e '.search.keyword // empty' config.json > /dev/null; then
+                    ./scripts/search/search_keyword.sh "${SEARCH_KEYWORD}" ${SEARCH_COUNT}
+                fi
+                
+            # ╭──────────────────────────────────────────────────────────────────────────╮
+            # │                                                                          │░
+            # │                                                                          │░
+            # │                                 SNIPPETS                                 │░
+            # │                                                                          │░
+            # │                                                                          │░
+            # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 
 
-
-
-    # ╭──────────────────────────────────────────────────────────────────────────╮
-    # │                                                                          │░
-    # │  This performs a youtube search to return video ids ready for download   │░
-    # │                                                                          │░
-    # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-
-
-
-    # ╭──────────────────────────────────────────────────────────────────────────╮
-    # │                                                                          │░
-    # │          Using Video IDs, this will download snippets of videos          │░
-    # │                                                                          │░
-    # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+            # ╭──────────────────────────────────────────────────────────────────────────╮
+            # │                                                                          │░
+            # │                                                                          │░
+            # │                                 OVERLAY                                  │░
+            # │                                                                          │░
+            # │                                                                          │░
+            # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 
 
-
-    # ╭──────────────────────────────────────────────────────────────────────────╮
-    # │                                                                          │░
-    # │               This will create an Overlay Video if needed                │░
-    # │                                                                          │░
-    # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-    # overlay:
-    #     uses: IORoot/GithubAction_VideoConstructor/.github/workflows/full-overlay.yaml
-
-
-
-    # ╭──────────────────────────────────────────────────────────────────────────╮
-    # │                                                                          │░
-    # │              This will put everything together as one video              │░
-    # │                                                                          │░
-    # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-    # scriptflow:
-    #     uses: IORoot/GithubAction_VideoConstructor/.github/workflows/full-scriptflow.yaml
+            # ╭──────────────────────────────────────────────────────────────────────────╮
+            # │                                                                          │░
+            # │                                                                          │░
+            # │                                SCRIPTFLOW                                │░
+            # │                                                                          │░
+            # │                                                                          │░
+            # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 
 
-    # ╭──────────────────────────────────────────────────────────────────────────╮
-    # │                                                                          │░
-    # │           This outputs to GDrive / Server / Wordpress Release            │░
-    # │                                                                          │░
-    # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-    # output:
-    #     uses: IORoot/GithubAction_VideoConstructor/.github/workflows/outputs.yaml
+            # ╭──────────────────────────────────────────────────────────────────────────╮
+            # │                                                                          │░
+            # │                                                                          │░
+            # │                                 OUTPUTS                                  │░
+            # │                                                                          │░
+            # │                                                                          │░
+            # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+
+            
+            # ╭──────────────────────────────────────────────────────────────────────────╮
+            # │                                                                          │░
+            # │                                                                          │░
+            # │                                DEBUGGERS                                 │░
+            # │                                                                          │░
+            # │                                                                          │░
+            # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                          SSH                          │
+            # ╰───────────────────────────────────────────────────────╯
+            # - name: Setup upterm session
+            #   uses: lhotari/action-upterm@v1
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                         HTTP                          │
+            # ╰───────────────────────────────────────────────────────╯
+            # - uses: dsmirc/ngrok-tunnel-action@cd
+            # with:
+            #   timeout: 1h
+            #   port: 8080
+            #   ngrok_authtoken: ${{ secrets.NGROK_AUTHTOKEN }}
+            #   tunnel_type: http
+            #   save_url_to_filename: tunnelURL.md
