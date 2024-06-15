@@ -132,7 +132,7 @@
         },
         "webhook": {
             "run": false,
-            "url": "123"
+            "url": "TRUE"
         },
         "release": {
             "run": false,
