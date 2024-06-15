@@ -18,5 +18,5 @@ def recurse_to_env($prefix; $obj):
 recurse_to_env("VC"; .)
 ' config.json | while IFS= read -r line; do
   echo "$line"
-  # echo "$line" >> $GITHUB_ENV
+  echo "$line" >> $GITHUB_ENV
 done
