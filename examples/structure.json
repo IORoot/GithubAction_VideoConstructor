@@ -1,29 +1,65 @@
 {
-    "description": "description",
+    "description": "",
+
+
+
     "search": {
-        "queryUrl": "queryUrl",
-        "keyword": "keyword",
-        "count": 3
+        "run": true,
+        "queryUrl": "",
+        "count": 1
     },
+
+
+
     "download": {
-        "count": "4",
-        "duration": "5",
-        "timestamps": "6,7,8"
+        "run": true,
+        "count": "",
+        "duration": ""
     },
-    "image": {
-        "imagine": "imagine"
-    },
+
+
+
     "overlay": {
-        "template": "template",
-        "inputs": { "input1": "input2" },
-        "timecut": "timecut"
+        "run": true,
+        "template": "",
+        "inputs": {},
+        "timecut_viewport": "",
+        "timecut_settings": ""
     },
+
+
+
     "video": {
-        "config": { "config1": "config2" }
+        "run": true,
+        "config": {}        
     },
+
+
+
     "outputs": {
-        "gDriveFolder": "gDriveFolder",
-        "sshServer": "sshServer",
-        "sshFolder": "sshFolder"
+        "gdrive": {
+            "run": true,
+            "folder": ""
+        },
+        "ssh": {
+            "run": false,
+            "Server": "",
+            "Folder": ""
+        },
+        "webhook": {
+            "run": false,
+            "url": ""
+        },
+        "release": {
+            "run": false,
+            "api_url": "",
+            "api_token": "",
+            "schedule": "",
+            "action": "",
+            "gdrive": "",
+            "video": "",
+            "thumbnail": ""
+        }
     }
+    
 }
