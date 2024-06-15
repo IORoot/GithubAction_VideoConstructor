@@ -253,6 +253,7 @@ jobs:
                 sed -i 's/"puppeteer": "\^2.1.1"/"puppeteer": "\^22.10.0"/' package.json
                 npm install
                 cd ${GITHUB_WORKSPACE}
+                cat ${GITHUB_WORKSPACE}/node_modules/puppeteer/package.json
 
 
 
