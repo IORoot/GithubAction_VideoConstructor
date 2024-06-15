@@ -158,6 +158,8 @@ jobs:
                 done
                 mkdir videos
                 mv *.mp4 ./videos
+                ls -la
+                ls -la ./videos 
                     
 
 
@@ -233,7 +235,7 @@ jobs:
             # ╭───────────────────────────────────────────────────────╮
             # │                   Start PHP Server                    │
             # ╰───────────────────────────────────────────────────────╯
-            - name: 🎨 OVERLAY - Start PHP server
+            - name: 🎨 OVERLAY - Start PHP server in background
               if: ${{ env.VC_OVERLAY_RUN }}
               run: |
                 php -S 0.0.0.0:8080 -t ./overlays/${{ env.VC_OVERLAY_TEMPLATE }}/ &
@@ -260,16 +262,7 @@ jobs:
             - name: 🎨 OVERLAY - Capture Video
               if: ${{ env.VC_OVERLAY_RUN }}
               run: |
-                node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js            \
-                    "http://localhost:8080"                                     \
-                    --selector="sr7-module"                                     \
-                    --viewport="${{ env.VC_OVERLAY_TIMECUT_VIEWPORT }}"         \
-                    ${{ env.VC_OVERLAY_TIMECUT_SETTINGS }}                      \
-                    --transparent-background                                    \
-                    --output-options="-c:v png"                                 \
-                    --pix-fmt=rgba                                              \
-                    --output=overlay_video.mov                                  \
-                    --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
+                node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="sr7-module" --viewport="${{ env.VC_OVERLAY_TIMECUT_VIEWPORT }}" ${{ env.VC_OVERLAY_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
                 mkdir overlay
                 mv overlay_video.mov ./overlay
                 ls -la
