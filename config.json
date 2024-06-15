@@ -5,6 +5,7 @@
 
 
     "search": {
+        "run": "TRUE",
         "queryUrl": "https://www.youtube.com/results?search_query=ai",
         "count": 3
     },
@@ -13,6 +14,7 @@
 
 
     "download": {
+        "run": "TRUE",
         "count": "2",
         "duration": "5"
     },
@@ -21,6 +23,7 @@
 
 
     "overlay": {
+        "run": "TRUE",
         "template": "001-bounce",
         "inputs": {
             "letter1":{
@@ -87,8 +90,8 @@
 
 
     "video": {
+        "run": "TRUE",
         "config": {
-            
             "ff_transcode": {
                 "input": "./videos",
                 "width": "1080",
@@ -118,13 +121,21 @@
 
 
     "outputs": {
-        "gdrive": "VideoConstructor",
+        "gdrive": {
+            "run": "TRUE",
+            "folder": "VideoConstructor"
+        },
         "ssh": {
+            "run": "TRUE",
             "Server": "media.londonparkour.com",
             "Folder": "sshFolder"
         },
-        "webhook": "",
+        "webhook": {
+            "run": "TRUE",
+            "url": "TRUE"
+        },
         "release": {
+            "run": "TRUE",
             "api_url": "",
             "api_token": "",
             "schedule": "",
