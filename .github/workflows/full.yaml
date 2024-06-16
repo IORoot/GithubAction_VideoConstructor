@@ -57,11 +57,6 @@ jobs:
             - name: 🎛️ SETUP - JSON to Environment Variables
               run: |
                 ./scripts/env/json_to_env.sh 
-
-            - name: 🎛️ SETUP - Environment Variables Remove Quotes
-              run: |
-                VC_OVERLAY_TEMPLATE=${{ env.VC_OVERLAY_TEMPLATE }}
-                echo "VC_OVERLAY_TEMPLATE=${VC_OVERLAY_TEMPLATE//\"/}" >> $GITHUB_ENV
                 env
 
 
@@ -281,14 +276,14 @@ jobs:
               continue-on-error: true
               if: ${{ env.VC_OVERLAY_RUN }}
               run: |
-                node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector=${{ env.VC_OVERLAY_TIMECUT_TARGET }} --viewport=${{ env.VC_OVERLAY_TIMECUT_VIEWPORT }} ${{ env.VC_OVERLAY_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
+                node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ env.VC_OVERLAY_TIMECUT_TARGET }}" --viewport="${{ env.VC_OVERLAY_TIMECUT_VIEWPORT }}" ${{ env.VC_OVERLAY_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
                 mkdir overlay
                 mv overlay_video.mov ./overlay
                 ls -la
                 ls -la ./overlay
                 
 
-                
+
 
             # ╭───────────────────────────────────────────────────────╮
             # │                          SSH                          │

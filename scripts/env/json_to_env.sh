@@ -10,7 +10,7 @@ def recurse_to_env($prefix; $obj):
     if (.value | type) == "object" then
       recurse_to_env("\($prefix)_\(.key | to_env)"; .value)
     else
-      "\($prefix)_\(.key | to_env)=\"\(.value|tostring)\""
+      "\($prefix)_\(.key | to_env)=\(.value|tostring)"
     end
   );
 
