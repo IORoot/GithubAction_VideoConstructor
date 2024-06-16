@@ -58,7 +58,11 @@ jobs:
               run: |
                 ./scripts/env/json_to_env.sh 
 
-                
+            - name: 🎛️ SETUP - Environment Variables Remove Quotes
+              run: |
+                VC_OVERLAY_TEMPLATE=${{ env.VC_OVERLAY_TEMPLATE }}
+                echo "VC_OVERLAY_TEMPLATE=${VC_OVERLAY_TEMPLATE//\"/}" >> $GITHUB_ENV
+                env
 
 
             # ╭───────────────────────────────────────────────────────╮
@@ -216,9 +220,7 @@ jobs:
             - name: 🎨 OVERLAY - Setup Overlay
               if: ${{ env.VC_OVERLAY_RUN }}
               run: | 
-                TEMPLATE=${{ env.VC_OVERLAY_TEMPLATE//\"/ }}
-                TEMPLATE=${TEMPLATE//\"/}
-                unzip ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE//\"/ }}/template.zip -d ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE//\"/ }}/
+                unzip ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/template.zip -d ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/
 
 
 
@@ -228,7 +230,7 @@ jobs:
             - name: 🎨 OVERLAY - Setup Inputs.json
               if: ${{ env.VC_OVERLAY_RUN }}
               run: |   
-                cat config.json | jq -r '.overlay.inputs' > ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE//\"/ }}/inputs.json
+                cat config.json | jq -r '.overlay.inputs' > ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/inputs.json
                 
                 
             
@@ -238,7 +240,7 @@ jobs:
             - name: 🎨 OVERLAY - Start PHP server in background
               if: ${{ env.VC_OVERLAY_RUN }}
               run: |
-                php -S 0.0.0.0:8080 -t ./overlays/${{ env.VC_OVERLAY_TEMPLATE//\"/ }}/ &
+                php -S 0.0.0.0:8080 -t ./overlays/${{ env.VC_OVERLAY_TEMPLATE }}/ &
         
 
 
@@ -258,7 +260,7 @@ jobs:
                 cat ${GITHUB_WORKSPACE}/node_modules/puppeteer/package.json
 
 
-
+                
             # ╭───────────────────────────────────────────────────────╮
             # │               Ensure website is running               │
             # ╰───────────────────────────────────────────────────────╯
@@ -267,7 +269,7 @@ jobs:
               run: |
                 curl "http://localhost:8080"
 
-                
+
 
             # ╭───────────────────────────────────────────────────────╮
             # │             Use Timecut to capture Video              │
@@ -337,7 +339,7 @@ jobs:
             - name: 📬 OUTPUTS - rClone copy
               if: ${{ env.VC_OUTPUTS_GDRIVE_RUN }}
               run: |
-                  rclone copy ./output.mp4 GDrive:${{ env.VC_OUTPUTS_GDRIVE_FOLDER//\"/ }}/${UUID}/ --config rclone.conf 
+                  rclone copy ./output.mp4 GDrive:${{ env.VC_OUTPUTS_GDRIVE_FOLDER }}/${UUID}/ --config rclone.conf 
     
             
 
@@ -351,7 +353,7 @@ jobs:
                 curl -X POST \
                   -H "Content-Type: text/plain" \
                   -d "" \
-                  ${{ env.VC_OUTPUTS_WEBHOOK_URL//\"/ }}
+                  ${{ env.VC_OUTPUTS_WEBHOOK_URL }}
 
 
 
@@ -367,11 +369,11 @@ jobs:
               if: ${{ env.VC_OUTPUTS_SSH_RUN }}
               run: |
                   mkdir ~/.ssh
-                  ssh-keyscan -H ${{ env.VC_OUTPUTS_SSH_SERVER//\"/ }} >> ~/.ssh/known_hosts
-                  TARGET_DIR="${{ env.VC_OUTPUTS_SSH_FOLDER//\"/ }}/${UUID}/"
-                  sshpass -p '${{ secrets.SSH_PASS }}' ssh -v -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.SSH_USER }}@${{ env.VC_OUTPUTS_SSH_SERVER//\"/ }} "mkdir -p ${TARGET_DIR}"
+                  ssh-keyscan -H ${{ env.VC_OUTPUTS_SSH_SERVER }} >> ~/.ssh/known_hosts
+                  TARGET_DIR="${{ env.VC_OUTPUTS_SSH_FOLDER }}/${UUID}/"
+                  sshpass -p '${{ secrets.SSH_PASS }}' ssh -v -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.SSH_USER }}@${{ env.VC_OUTPUTS_SSH_SERVER }} "mkdir -p ${TARGET_DIR}"
                   cd ./${UUID}_processed_video
-                  sshpass -p '${{ secrets.SSH_PASS }}' scp -v -p -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null * ${{ secrets.SSH_USER }}@${{ env.VC_OUTPUTS_SSH_SERVER//\"/ }}:${TARGET_DIR}
+                  sshpass -p '${{ secrets.SSH_PASS }}' scp -v -p -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null * ${{ secrets.SSH_USER }}@${{ env.VC_OUTPUTS_SSH_SERVER }}:${TARGET_DIR}
       
 
 
@@ -388,8 +390,8 @@ jobs:
                   --title "${{ env.VC_OUTPUTS_RELEASE_ACTION }} - ${UUID}" \
                   --content "" \
                   --gdrive ${GDRIVE_FILE_ID} \
-                  --video ${{ env.VC_OUTPUTS_SSH_SERVER//\"/ }}/${{ env.VC_OUTPUTS_SSH_FOLDER//\"/ }}/${UUID}/video.mp4 \
-                  --thumbnail ${{ env.VC_OUTPUTS_SSH_SERVER//\"/ }}/${{ env.VC_OUTPUTS_SSH_FOLDER//\"/ }}/${UUID}/thumbnail.png
+                  --video ${{ env.VC_OUTPUTS_SSH_SERVER }}/${{ env.VC_OUTPUTS_SSH_FOLDER }}/${UUID}/video.mp4 \
+                  --thumbnail ${{ env.VC_OUTPUTS_SSH_SERVER }}/${{ env.VC_OUTPUTS_SSH_FOLDER }}/${UUID}/thumbnail.png
 
 
             # ╭──────────────────────────────────────────────────────────────────────────╮
