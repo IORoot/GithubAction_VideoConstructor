@@ -260,7 +260,7 @@ jobs:
                 cat ${GITHUB_WORKSPACE}/node_modules/puppeteer/package.json
 
 
-                
+
             # ╭───────────────────────────────────────────────────────╮
             # │               Ensure website is running               │
             # ╰───────────────────────────────────────────────────────╯
@@ -277,7 +277,7 @@ jobs:
             - name: 🎨 OVERLAY - Capture Video
               if: ${{ env.VC_OVERLAY_RUN }}
               run: |
-                node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="sr7-module" --viewport="${{ env.VC_OVERLAY_TIMECUT_VIEWPORT }}" ${{ env.VC_OVERLAY_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
+                node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ env.VC_OVERLAY_TIMECUT_TARGET }}" --viewport="${{ env.VC_OVERLAY_TIMECUT_VIEWPORT }}" ${{ env.VC_OVERLAY_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
                 mkdir overlay
                 mv overlay_video.mov ./overlay
                 ls -la

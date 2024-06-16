@@ -81,6 +81,7 @@
                 }
             }
         },
+        "timecut_target":   "#SR7_2_1",
         "timecut_viewport": "1080,1920",
         "timecut_settings": "--fps=30 --start=3 --duration=3"
     },
