@@ -96,7 +96,7 @@ jobs:
             - name: 🔎 SEARCH - Do YouTube URL Search
               if: ${{ env.VC_SEARCH_RUN && env.VC_SEARCH_QUERYURL }}
               run: |
-                  ./scripts/search/search_url.sh "${{ env.VC_SEARCH_QUERYURL }}" ${{ env.VC_SEARCH_COUNT }}
+                  ./scripts/search/search_url.sh "${{ env.VC_SEARCH_QUERYURL }}" ${{ env.VC_SEARCH_COUNT }} 
 
 
                   
@@ -283,7 +283,7 @@ jobs:
                 ls -la ./overlay
 
 
-                
+
             # ╭──────────────────────────────────────────────────────────────────────────╮
             # │                                                                          │░
             # │                                                                          │░

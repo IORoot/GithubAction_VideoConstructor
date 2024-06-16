@@ -8,7 +8,7 @@
         "run": true,
         "queryUrl": "https://www.youtube.com/results?search_query=FISH+4k+%23shorts",
         "filter": "duration <= 60",
-        "count": 3
+        "count": 20
     },
 
 
