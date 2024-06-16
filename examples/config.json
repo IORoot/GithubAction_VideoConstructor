@@ -101,15 +101,14 @@
                 "output": "ff_transcode.mp4"
             },
 
-            "ff_transition": {
+            "ff_concat": {
                 "input": "./",
                 "grep": "ff_transcode",
-                "effects": "wipeleft,circlecrop",
-                "output": "ff_transition.mp4"
+                "output": "ff_concat.mp4"
             },
-        
+            
             "ff_overlay": {
-                "input": "ff_transition.mp4",
+                "input": "ff_concat.mp4",
                 "overlay": "./overlay/overlay_video.mov",
                 "start": "3",
                 "end": "6",
