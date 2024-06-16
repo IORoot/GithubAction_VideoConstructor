@@ -154,7 +154,7 @@ jobs:
                     eval "$command"
                 done
                 mkdir videos
-                mv *.mp4 ./videos
+                mv -- *.mp4 ./videos
                 ls -la
                 ls -la ./videos 
                     
