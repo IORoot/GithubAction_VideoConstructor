@@ -249,15 +249,14 @@ jobs:
               if: ${{ env.VC_OVERLAY_RUN }}
               run: |
                 npm install
+                rm -Rf ${GITHUB_WORKSPACE}/node_modules/puppeteer
                 cd ${GITHUB_WORKSPACE}/node_modules/timesnap/
                 sed -i 's/"puppeteer": "\^2.1.1"/"puppeteer": "\^22.10.0"/' package.json
-                npm install
                 cd ${GITHUB_WORKSPACE}
+                rm package-lock.json
+                npm install
                 cat ${GITHUB_WORKSPACE}/node_modules/puppeteer/package.json
 
-                
-            - name: Setup upterm session
-              uses: lhotari/action-upterm@v1
 
             # ╭───────────────────────────────────────────────────────╮
             # │             Use Timecut to capture Video              │
