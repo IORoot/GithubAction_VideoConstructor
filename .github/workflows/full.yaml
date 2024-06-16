@@ -357,51 +357,51 @@ jobs:
             # ╭───────────────────────────────────────────────────────╮
             # │                        WEBHOOK                        │
             # ╰───────────────────────────────────────────────────────╯
-            - name: Trigger Return Webhook
-              if: ${{ env.VC_OUTPUTS_WEBHOOK_RUN }}
-              run: |
-                curl -X POST \
-                  -H "Content-Type: text/plain" \
-                  -d "" \
-                  ${{ env.VC_OUTPUTS_WEBHOOK_URL }}
+            # - name: Trigger Return Webhook
+            #   if: ${{ env.VC_OUTPUTS_WEBHOOK_RUN }}
+            #   run: |
+            #     curl -X POST \
+            #       -H "Content-Type: text/plain" \
+            #       -d "" \
+            #       ${{ env.VC_OUTPUTS_WEBHOOK_URL }}
 
 
 
             # ╭───────────────────────────────────────────────────────╮
             # │                        SERVER                         │
             # ╰───────────────────────────────────────────────────────╯
-            - name: install dependencies
-              if: ${{ env.VC_OUTPUTS_SSH_RUN }}
-              run: |
-                sudo apt-get install --no-install-recommends ssh sshpass
+            # - name: install dependencies
+            #   if: ${{ env.VC_OUTPUTS_SSH_RUN }}
+            #   run: |
+            #     sudo apt-get install --no-install-recommends ssh sshpass
 
-            - name: Copy Video to Server
-              if: ${{ env.VC_OUTPUTS_SSH_RUN }}
-              run: |
-                  mkdir ~/.ssh
-                  ssh-keyscan -H ${{ env.VC_OUTPUTS_SSH_SERVER }} >> ~/.ssh/known_hosts
-                  TARGET_DIR="${{ env.VC_OUTPUTS_SSH_FOLDER }}/${UUID}/"
-                  sshpass -p '${{ secrets.SSH_PASS }}' ssh -v -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.SSH_USER }}@${{ env.VC_OUTPUTS_SSH_SERVER }} "mkdir -p ${TARGET_DIR}"
-                  cd ./${UUID}_processed_video
-                  sshpass -p '${{ secrets.SSH_PASS }}' scp -v -p -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null * ${{ secrets.SSH_USER }}@${{ env.VC_OUTPUTS_SSH_SERVER }}:${TARGET_DIR}
+            # - name: Copy Video to Server
+            #   if: ${{ env.VC_OUTPUTS_SSH_RUN }}
+            #   run: |
+            #       mkdir ~/.ssh
+            #       ssh-keyscan -H ${{ env.VC_OUTPUTS_SSH_SERVER }} >> ~/.ssh/known_hosts
+            #       TARGET_DIR="${{ env.VC_OUTPUTS_SSH_FOLDER }}/${UUID}/"
+            #       sshpass -p '${{ secrets.SSH_PASS }}' ssh -v -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.SSH_USER }}@${{ env.VC_OUTPUTS_SSH_SERVER }} "mkdir -p ${TARGET_DIR}"
+            #       cd ./${UUID}_processed_video
+            #       sshpass -p '${{ secrets.SSH_PASS }}' scp -v -p -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null * ${{ secrets.SSH_USER }}@${{ env.VC_OUTPUTS_SSH_SERVER }}:${TARGET_DIR}
       
 
 
             # ╭───────────────────────────────────────────────────────╮
             # │                   CREATE A RELEASE                    │
             # ╰───────────────────────────────────────────────────────╯
-            - name: Create a Release
-              if: ${{ env.VC_OUTPUTS_RELEASE_RUN }}
-              run: |
-                  create_release.sh \
-                  --target ${{ env.VC_OUTPUTS_RELEASE_API_URL }} \
-                  --token ${{ env.VC_OUTPUTS_RELEASE_API_TOKEN }} \
-                  --schedule "${{ env.VC_OUTPUTS_RELEASE_SCHEDULE  }}" \
-                  --title "${{ env.VC_OUTPUTS_RELEASE_ACTION }} - ${UUID}" \
-                  --content "" \
-                  --gdrive ${GDRIVE_FILE_ID} \
-                  --video ${{ env.VC_OUTPUTS_SSH_SERVER }}/${{ env.VC_OUTPUTS_SSH_FOLDER }}/${UUID}/video.mp4 \
-                  --thumbnail ${{ env.VC_OUTPUTS_SSH_SERVER }}/${{ env.VC_OUTPUTS_SSH_FOLDER }}/${UUID}/thumbnail.png
+            # - name: Create a Release
+            #   if: ${{ env.VC_OUTPUTS_RELEASE_RUN }}
+            #   run: |
+            #       create_release.sh \
+            #       --target ${{ env.VC_OUTPUTS_RELEASE_API_URL }} \
+            #       --token ${{ env.VC_OUTPUTS_RELEASE_API_TOKEN }} \
+            #       --schedule "${{ env.VC_OUTPUTS_RELEASE_SCHEDULE  }}" \
+            #       --title "${{ env.VC_OUTPUTS_RELEASE_ACTION }} - ${UUID}" \
+            #       --content "" \
+            #       --gdrive ${GDRIVE_FILE_ID} \
+            #       --video ${{ env.VC_OUTPUTS_SSH_SERVER }}/${{ env.VC_OUTPUTS_SSH_FOLDER }}/${UUID}/video.mp4 \
+            #       --thumbnail ${{ env.VC_OUTPUTS_SSH_SERVER }}/${{ env.VC_OUTPUTS_SSH_FOLDER }}/${UUID}/thumbnail.png
 
 
             # ╭──────────────────────────────────────────────────────────────────────────╮
