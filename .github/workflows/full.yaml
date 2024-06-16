@@ -249,6 +249,7 @@ jobs:
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Setup Timecut
               if: ${{ env.VC_OVERLAY_RUN }}
+              continue-on-error: true
               run: |
                 npm install
                 rm -Rf ${GITHUB_WORKSPACE}/node_modules/puppeteer
@@ -258,7 +259,6 @@ jobs:
                 cd ${GITHUB_WORKSPACE}
                 rm package-lock.json
                 npm install
-                cat ${GITHUB_WORKSPACE}/node_modules/puppeteer/package.json
 
 
 
