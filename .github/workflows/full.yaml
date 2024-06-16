@@ -255,7 +255,9 @@ jobs:
                 cd ${GITHUB_WORKSPACE}
                 cat ${GITHUB_WORKSPACE}/node_modules/puppeteer/package.json
 
-
+                
+            - name: Setup upterm session
+              uses: lhotari/action-upterm@v1
 
             # ╭───────────────────────────────────────────────────────╮
             # │             Use Timecut to capture Video              │
