@@ -2,23 +2,26 @@
 
 # Check if a keyword is provided
 if [ -z "$1" ]; then
-  echo "Usage: $0 <keyword>"
+  echo "Usage: $0 <KEYWORD> <LIMIT> <FILTER>"
   exit 1
 fi
 
 # Store the keyword
 KEYWORD="$1"
 LIMIT="${2:-3}"
-if [ -n "$3" ]; then
-    FILTER=--match-filter "$3"
-fi
 
 # Temporary file to store search results
 TEMP_FILE="raw.json"
 URL_FILE="videoid_results.json"
 
 # Search YouTube for the keyword
-yt-dlp --flat-playlist -j "ytsearchdate$LIMIT:$KEYWORD" $FILTER > "$TEMP_FILE"
+
+
+if [ -n "$3" ]; then
+  yt-dlp --flat-playlist -j "ytsearchdate$LIMIT:$KEYWORD" --match-filter "$3"  > "$TEMP_FILE"
+else
+  yt-dlp --flat-playlist -j "ytsearchdate$LIMIT:$KEYWORD" > "$TEMP_FILE"
+fi
 
 # Prepare the JSON structure
 echo '{"results":[' > "$URL_FILE"
@@ -34,10 +37,6 @@ while IFS= read -r line; do
     echo ',' >> "$URL_FILE"
   fi
 
-  # Adds the Download URL if needed.
-  # DOWNLOAD_URL=$(yt-dlp -f b --get-url "$VIDEO_URL")
-  # echo '{"video":"'"$VIDEO_URL"'","download":"'"$DOWNLOAD_URL"'"}' >> "$URL_FILE"
-  
   echo '{"video":"'"$VIDEO_URL"'"}' >> "$URL_FILE"
   FIRST=0
 done < "$TEMP_FILE"

@@ -2,23 +2,24 @@
 
 # Check if a QUERY is provided
 if [ -z "$1" ]; then
-  echo "Usage: $0 <QUERY>"
+  echo "Usage: $0 <QUERY> <LIMIT> <FILTER>"
   exit 1
 fi
 
 # Store the QUERY
 QUERY="$1"
 LIMIT="${2:-3}"
-if [ -n "$3" ]; then
-    FILTER=--match-filter "$3"
-fi
 
 # Temporary file to store search results
 TEMP_FILE="raw.json"
 URL_FILE="videoid_results.json"
 
-# Search YouTube for the QUERY 
-yt-dlp --get-id --playlist-end $LIMIT "$QUERY" $FILTER > "$TEMP_FILE"
+# Search YouTube for the QUERY
+if [ -n "$3" ]; then
+  yt-dlp --get-id --playlist-end $LIMIT $QUERY --match-filter "$3"  > "$TEMP_FILE"
+else
+  yt-dlp --get-id --playlist-end $LIMIT $QUERY > "$TEMP_FILE"
+fi
 
 # Prepare the JSON structure
 echo '{"results":[' > "$URL_FILE"
