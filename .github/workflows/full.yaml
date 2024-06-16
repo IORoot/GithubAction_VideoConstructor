@@ -275,6 +275,7 @@ jobs:
             # │             Use Timecut to capture Video              │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Capture Video
+              continue-on-error: true
               if: ${{ env.VC_OVERLAY_RUN }}
               run: |
                 node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ env.VC_OVERLAY_TIMECUT_TARGET }}" --viewport="${{ env.VC_OVERLAY_TIMECUT_VIEWPORT }}" ${{ env.VC_OVERLAY_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
@@ -283,6 +284,12 @@ jobs:
                 ls -la
                 ls -la ./overlay
                 
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                          SSH                          │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: Setup upterm session
+              uses: lhotari/action-upterm@v1
 
 
             # ╭──────────────────────────────────────────────────────────────────────────╮
