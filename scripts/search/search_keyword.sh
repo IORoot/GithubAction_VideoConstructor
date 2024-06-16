@@ -9,13 +9,16 @@ fi
 # Store the keyword
 KEYWORD="$1"
 LIMIT="${2:-3}"
+if [ -n "$3" ]; then
+    FILTER=--match-filter "$3"
+fi
 
 # Temporary file to store search results
 TEMP_FILE="raw.json"
 URL_FILE="videoid_results.json"
 
-# Search YouTube for the keyword and get the details of the 10 newest results
-yt-dlp --flat-playlist -j "ytsearchdate$LIMIT:$KEYWORD" > "$TEMP_FILE"
+# Search YouTube for the keyword
+yt-dlp --flat-playlist -j "ytsearchdate$LIMIT:$KEYWORD" $FILTER > "$TEMP_FILE"
 
 # Prepare the JSON structure
 echo '{"results":[' > "$URL_FILE"

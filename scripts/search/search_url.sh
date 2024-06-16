@@ -9,13 +9,16 @@ fi
 # Store the QUERY
 QUERY="$1"
 LIMIT="${2:-3}"
+if [ -n "$3" ]; then
+    FILTER=--match-filter "$3"
+fi
 
 # Temporary file to store search results
 TEMP_FILE="raw.json"
 URL_FILE="videoid_results.json"
 
-# Search YouTube for the QUERY and get the details of the 10 newest results
-yt-dlp --get-id --playlist-end $LIMIT "$QUERY"  > "$TEMP_FILE"
+# Search YouTube for the QUERY 
+yt-dlp --get-id --playlist-end $LIMIT "$QUERY" $FILTER > "$TEMP_FILE"
 
 # Prepare the JSON structure
 echo '{"results":[' > "$URL_FILE"

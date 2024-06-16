@@ -6,7 +6,8 @@
 
     "search": {
         "run": true,
-        "queryUrl": "https://www.youtube.com/results?search_query=fish+4k",
+        "queryUrl": "https://www.youtube.com/results?search_query=FISH+4k+%23shorts",
+        "filter": "duration <= 60",
         "count": 3
     },
 
@@ -101,14 +102,15 @@
                 "output": "ff_transcode.mp4"
             },
 
-            "ff_concat": {
+            "ff_transition": {
                 "input": "./",
                 "grep": "ff_transcode",
-                "output": "ff_concat.mp4"
+                "effects": "wipeleft,circlecrop",
+                "output": "ff_transition.mp4"
             },
-            
+        
             "ff_overlay": {
-                "input": "ff_concat.mp4",
+                "input": "ff_transition.mp4",
                 "overlay": "./overlay/overlay_video.mov",
                 "start": "3",
                 "end": "6",
