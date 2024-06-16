@@ -254,6 +254,7 @@ jobs:
                 rm -Rf ${GITHUB_WORKSPACE}/node_modules/puppeteer
                 cd ${GITHUB_WORKSPACE}/node_modules/timesnap/
                 sed -i 's/"puppeteer": "\^2.1.1"/"puppeteer": "\^22.10.0"/' package.json
+                npm install
                 cd ${GITHUB_WORKSPACE}
                 rm package-lock.json
                 npm install
@@ -278,18 +279,36 @@ jobs:
               continue-on-error: true
               if: ${{ env.VC_OVERLAY_RUN }}
               run: |
-                node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ env.VC_OVERLAY_TIMECUT_TARGET }}" --viewport="${{ env.VC_OVERLAY_TIMECUT_VIEWPORT }}" ${{ env.VC_OVERLAY_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
+                node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector=${{ env.VC_OVERLAY_TIMECUT_TARGET }} --viewport=${{ env.VC_OVERLAY_TIMECUT_VIEWPORT }} ${{ env.VC_OVERLAY_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
                 mkdir overlay
                 mv overlay_video.mov ./overlay
                 ls -la
                 ls -la ./overlay
                 
 
+
+
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                         HTTP                          │
+            # ╰───────────────────────────────────────────────────────╯
+            - uses: dsmirc/ngrok-tunnel-action@cd
+            with:
+              timeout: 1h
+              port: 8080
+              ngrok_authtoken: ${{ secrets.NGROK_AUTHTOKEN }}
+              tunnel_type: http
+              save_url_to_filename: tunnelURL.md
+
             # ╭───────────────────────────────────────────────────────╮
             # │                          SSH                          │
             # ╰───────────────────────────────────────────────────────╯
             - name: Setup upterm session
               uses: lhotari/action-upterm@v1
+
+
+
+
 
 
             # ╭──────────────────────────────────────────────────────────────────────────╮
