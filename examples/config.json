@@ -94,24 +94,27 @@
     "video": {
         "run": true,
         "config": {
+            "ff_sh_runner1": {
+                "script": "mkdir",
+                "parameters": "-p ff_transcoded",
+                "output": ""
+            },
+
             "ff_transcode": {
                 "input": "./videos",
                 "width": "1080",
                 "height": "1920",
                 "fps": "30",
-                "output": "ff_transcode.mp4"
+                "output": "./ff_transcoded/ff_transcode.mp4"
             },
 
-            "ff_transition": {
-                "input": "./",
-                "grep": "ff_transcode",
-                "effects": "wipeleft,circlecrop",
-                "duration": "1",
-                "output": "ff_transition.mp4"
+            "ff_concat": {
+                "input1": "./ff_transcoded",
+                "output": "ff_concat.mp4"
             },
         
             "ff_overlay": {
-                "input": "ff_transition.mp4",
+                "input": "./ff_concat.mp4",
                 "overlay": "./overlay/overlay_video.mov",
                 "start": "3",
                 "end": "6",
