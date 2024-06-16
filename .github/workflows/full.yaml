@@ -251,14 +251,16 @@ jobs:
               if: ${{ env.VC_OVERLAY_RUN }}
               continue-on-error: true
               run: |
-                npm install
-                rm -Rf ${GITHUB_WORKSPACE}/node_modules/puppeteer
+                npm install puppeteer@22.10.0
+
                 cd ${GITHUB_WORKSPACE}/node_modules/timesnap/
+                rm -Rf node_modules
+
                 sed -i 's/"puppeteer": "\^2.1.1"/"puppeteer": "\^22.10.0"/' package.json
-                npm install
+                npm install puppeteer@22.10.0
+
                 cd ${GITHUB_WORKSPACE}
-                rm package-lock.json
-                npm install
+
 
 
 
@@ -292,20 +294,20 @@ jobs:
             # ╭───────────────────────────────────────────────────────╮
             # │                         HTTP                          │
             # ╰───────────────────────────────────────────────────────╯
-            - uses: dsmirc/ngrok-tunnel-action@cd
-              name: 🪲 DEBUG - Setup NGROK Tunnel
-              with:
-                timeout: 1h
-                port: 8080
-                ngrok_authtoken: ${{ secrets.NGROK_AUTH_TOKEN }}
-                tunnel_type: http
-                save_url_to_filename: tunnelURL.md
+            # - uses: dsmirc/ngrok-tunnel-action@cd
+            #   name: 🪲 DEBUG - Setup NGROK Tunnel
+            #   with:
+            #     timeout: 1h
+            #     port: 8080
+            #     ngrok_authtoken: ${{ secrets.NGROK_AUTH_TOKEN }}
+            #     tunnel_type: http
+            #     save_url_to_filename: tunnelURL.md
 
             # ╭───────────────────────────────────────────────────────╮
             # │                          SSH                          │
             # ╰───────────────────────────────────────────────────────╯
-            - name: 🪲 DEBUG - Setup upterm session
-              uses: lhotari/action-upterm@v1
+            # - name: 🪲 DEBUG - Setup upterm session
+            #   uses: lhotari/action-upterm@v1
 
 
 
