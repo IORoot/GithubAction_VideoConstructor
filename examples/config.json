@@ -6,7 +6,7 @@
 
     "search": {
         "run": true,
-        "queryUrl": "https://www.youtube.com/results?search_query=FISH+4k+%23shorts",
+        "queryUrl": "https://www.youtube.com/results?search_query=parkour",
         "filter": "duration <= 60",
         "count": 10
     },

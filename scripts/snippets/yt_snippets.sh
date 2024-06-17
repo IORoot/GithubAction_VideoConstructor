@@ -30,24 +30,24 @@ DURATION_MILLISECONDS=5000
 usage()
 {
     if [ "$#" -lt 2 ]; then
-        printf "ℹ️ Usage:\n $0 -v <YOUTUBE_VIDEO_ID> -n <NUMBER>\n\n" >&2 
+        printf " ℹ️ Usage:\n $0 -v <YOUTUBE_VIDEO_ID> -n <NUMBER>\n\n" >&2 
 
-        printf "Summary:\n"
-        printf "Downloads the snippets of videos.\n\n"
+        printf " Summary:\n"
+        printf " Downloads the snippets of videos.\n\n"
 
-        printf "Flags:\n"
+        printf " Flags:\n"
 
-        printf " -v | --videoid <YOUTUBE_VIDEO_ID>\n"
-        printf "\tSupply the youtube video ID to scan.\n\n"
+        printf "  -v | --videoid <YOUTUBE_VIDEO_ID>\n"
+        printf " \tSupply the youtube video ID to scan.\n\n"
 
-        printf " -c | --count <NUMBER>\n"
-        printf "\tNumber of timestamps to return (most watched first).\n\n"
+        printf "  -c | --count <NUMBER>\n"
+        printf " \tNumber of timestamps to return (most watched first).\n\n"
 
-        printf " -d | --duration <NUMBER>\n"
-        printf "\tNumber of timestamps to return (most watched first).\n\n"
+        printf "  -d | --duration <NUMBER>\n"
+        printf " \tNumber of timestamps to return (most watched first).\n\n"
 
-        printf " -t | --timestamps <CSV_TIMESTAMPS>\n"
-        printf "\tComma separated list of timestamps in seconds. no spaces.\n\n"
+        printf "  -t | --timestamps <CSV_TIMESTAMPS>\n"
+        printf " \tComma separated list of timestamps in seconds. no spaces.\n\n"
 
         exit 1
     fi
@@ -153,32 +153,100 @@ function get_most_played()
     MOST_REPLAYED=$(echo "$JSON_RESPONSE" | jq -r '.items[0].mostReplayed')
 
 
-    # OVERRIDE with the custom set timestamps.
+    # ╭───────────────────────────────────────────────────────╮
+    # │       OVERRIDE with the custom set timestamps.        │
+    # ╰───────────────────────────────────────────────────────╯
     if [ -n "$TIMESTAMPS" ]; then
         IFS=',' read -ra SECONDS_ARRAY <<< "$TIMESTAMPS"
         MOST_PLAYED_PARTS=""
         for seconds in "${SECONDS_ARRAY[@]}"; do
             milliseconds=$((seconds * 1000))
-            MOST_PLAYED_PARTS+="$milliseconds"$'\n'
+            MOST_PLAYED_PARTS+=("$milliseconds")
         done
+
+        # echo ${MOST_PLAYED_PARTS[@]}
         return
     fi
 
-    # If null, separate by 30 seconds.
+    # ╭───────────────────────────────────────────────────────╮
+    # │           If null, separate by 30 seconds.            │
+    # ╰───────────────────────────────────────────────────────╯
     if [ "$MOST_REPLAYED" == "null" ]; then
         echo "--- No MOST_REPLAYED found - defaulting to 30sec increments from 0."
         MOST_PLAYED_PARTS=""
         for ((i = 0; i < COUNT; i++)); do
             value=$((i * 30000))
-            MOST_PLAYED_PARTS+="$value"$'\n'
+            MOST_PLAYED_PARTS+=("$value")
         done
         return
     fi
 
 
-    # Read the JSON file and parse the top N highest intensity scores with their startMillis values
+    # ╭───────────────────────────────────────────────────────╮
+    # │    Read the JSON file and parse the top N highest      │
+    # │    intensity scores with their startMillis values     │
+    # ╰───────────────────────────────────────────────────────╯
     if [ "$MOST_REPLAYED" != "null" ]; then
-        MOST_PLAYED_PARTS=$(echo "$MOST_REPLAYED" | jq -r --argjson num "$COUNT" '.markers | sort_by(-.intensityScoreNormalized) | .[:$num] | map({startMillis}) | .[] | "\(.startMillis)"')
+
+        # We don't want to go over the end of the duration, so remove
+        # any entries at the end that are within the duration period
+        # 10secs = remove any of the entries that at 10secs from end
+        REMOVED_END=$(echo "$MOST_REPLAYED" | jq -r --argjson DURATION_MILLISECONDS "$DURATION_MILLISECONDS" '.markers as $markers |  ($markers | map(.startMillis) | max) as $maxStartMillis | $markers | map(select(.startMillis < ($maxStartMillis - $DURATION_MILLISECONDS)))')
+
+        # Sort by intensityScoreNormalized
+        ALL_PLAYED_PARTS=$(echo "$REMOVED_END" | jq -r '. | sort_by(-.intensityScoreNormalized) | map(.startMillis | tostring) | .[]')
+
+        # initialise arrays
+        FILTERED_VALUES=()
+        MOST_PLAYED_PARTS=()
+        
+        # convert ALL_PLAYED_PARTS to array 
+        while IFS= read -r line; do
+            FILTERED_VALUES+=("$line")
+        done <<< "$ALL_PLAYED_PARTS"
+
+
+        
+
+
+        # Iterate through the values
+        for ((i=0; i<${#FILTERED_VALUES[@]}; i++)); do
+            # If it's the first value or the current value is >= DURATION away from the last added value
+            CURRENT_VALUE=${FILTERED_VALUES[i]}
+
+            # Add the first entry
+            if [ $i -eq 0 ]; then
+                MOST_PLAYED_PARTS+=("$CURRENT_VALUE")
+            fi
+            
+            LESS_THAN_DURATION=false
+
+            # is CURRENT_VALUE a minimum of 1000 (DURATION_MILLSECONDS) from
+            # any entry in MOST_PLAYED_PARTS
+            for element in "${MOST_PLAYED_PARTS[@]}"; do
+                
+                # Calculate the absolute difference between CURRENT_VALUE and 
+                # each element in MOST_PLAYED_PARTS
+                DIFFERENCE=$(( CURRENT_VALUE - element ))
+                
+                # If we find ANY matches, then skip it.
+                if [ "$DIFFERENCE" -le "$DURATION_MILLISECONDS" ]; then
+                    LESS_THAN_DURATION=true
+                    break  # No need to check further if we find a match
+                fi
+
+            done
+
+            # Current entry is not within DURATION of any other value.
+            if ! $LESS_THAN_DURATION; then
+                MOST_PLAYED_PARTS+=("$CURRENT_VALUE")
+            fi
+            
+        done
+
+        # Trim to $COUNT entries
+        MOST_PLAYED_PARTS=("${MOST_PLAYED_PARTS[@]:0:$COUNT}")
+
         return
     fi
 
@@ -194,14 +262,8 @@ function get_most_played()
 function get_all_snippets()
 {
 
-    # Create a bash array from the output of jq
-    declare -a MILLISECOND_ARRAY
-    while read -r startMillis intensityScoreNormalized; do
-        MILLISECOND_ARRAY+=("$startMillis")
-    done <<< "$MOST_PLAYED_PARTS"
-
     # LOOP through each entry
-    for MILLISECONDS in "${MILLISECOND_ARRAY[@]}"; do
+    for MILLISECONDS in "${MOST_PLAYED_PARTS[@]}"; do
 
         if [ "$MILLISECONDS" == "" ]; then continue; fi
 
@@ -211,6 +273,9 @@ function get_all_snippets()
 
         # Calculate end timestamp
         END_MILLISECONDS=$(($MILLISECONDS + $DURATION_MILLISECONDS))
+
+        echo $END_MILLISECONDS
+
         milliseconds_to_timestamp $END_MILLISECONDS
         END_TIMESTAMP=$RETURN_TIMESTAMP
 
