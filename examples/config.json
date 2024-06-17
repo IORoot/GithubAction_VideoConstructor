@@ -109,7 +109,7 @@
             },
 
             "ff_concat": {
-                "input1": "./ff_transcoded",
+                "input": "./ff_transcoded",
                 "output": "ff_concat.mp4"
             },
         
