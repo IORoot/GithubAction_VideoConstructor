@@ -6,9 +6,10 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 # │                        VARIABLES                         │
 # ╰──────────────────────────────────────────────────────────╯
 TEMP_FILE="raw.json"
-URL_FILE="search_results_keyword.json"; i=1; while [ -e "$URL_FILE" ]; do URL_FILE="search_results_keyword${i}.json"; ((i++)); done
+URL_FILE="search_results_keyword_in_channels.json"; i=1; while [ -e "$URL_FILE" ]; do URL_FILE="search_results_keyword_in_channels${i}.json"; ((i++)); done
 RESULTS_FILE="search_results.json"
 COUNT="3"
+CHANNELSFILE="channels.txt"
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -32,6 +33,9 @@ usage()
 
         printf " --count <Count>\n"
         printf "\tNumber of results to return.\n\n"
+
+        printf " --channelsfile <File>\n"
+        printf "\tName of file with list of channels to search.\n\n"
 
         exit 1
     fi
@@ -71,6 +75,13 @@ function arguments()
             ;;
 
 
+        --channelsfile)
+            CHANNELSFILE="$2"
+            shift
+            shift
+            ;;
+
+
         -*|--*)
             echo "Unknown option $1"
             exit 1
@@ -95,8 +106,29 @@ function do_search()
     FILTER_PARAM="--match-filter ${FILTER}"
   fi
 
-  echo yt-dlp --flat-playlist -j "ytsearchdate$COUNT:$KEYWORD" $FILTER_PARAM
-  yt-dlp --flat-playlist -j "ytsearchdate$COUNT:$KEYWORD" $FILTER_PARAM > "$TEMP_FILE"
+  total_channels=$(wc -l < channels.txt)
+  current_channel=0
+
+  while IFS= read -r channel; do
+      current_channel=$((current_channel + 1))
+      echo "Processing channel $current_channel of $total_channels: $channel"
+
+      # Construct the search URL for the channel
+      search_url="${channel}/search?query=${KEYWORD}"
+
+      # Use yt-dlp to list videos matching the keyword in the channel
+      yt-dlp -J "$search_url" | jq -r \
+      --arg keyword "$KEYWORD" \
+      '[
+          .entries[] |
+          select(
+              (.title | ascii_downcase | contains($keyword | ascii_downcase)) or
+              (.description | ascii_downcase | contains($keyword | ascii_downcase))
+          ) |
+          {title: .title, id: .id, channel: .uploader}
+      ]' > "$TEMP_FILE"
+
+  done < "$CHANNELSFILE"
 
 }
 
@@ -104,28 +136,10 @@ function do_search()
 
 function output_results()
 {
-
-  # Prepare the JSON structure
-  echo '{"results":[' > "$URL_FILE"
-
-  # Process each video ID to get the best-quality download URL
-  FIRST=1
-  while IFS= read -r line; do
-
-    VIDEO_ID=$(echo "$line" | jq -r '.id')
-    VIDEO_URL="https://www.youtube.com/watch?v=$VIDEO_ID"
-
-    if [ $FIRST -eq 0 ]; then
-      echo ',' >> "$URL_FILE"
-    fi
-
-    echo '{"video":"'"$VIDEO_URL"'"}' >> "$URL_FILE"
-    FIRST=0
-  done < "$TEMP_FILE"
-
-  # Close the JSON structure
-  echo ']}' >> "$URL_FILE"
+  jq -r '[.[] | {video: ("https://www.youtube.com/watch?v=" + .id)}] | {results: .}' $TEMP_FILE > $URL_FILE
 }
+
+
 
 function append_to_results_file()
 {
@@ -151,6 +165,7 @@ function cleanup()
 {
   # Remove the temporary files
   rm "$TEMP_FILE"
+  rm "$CHANNELSFILE"
 }
 
 
@@ -166,7 +181,7 @@ function main()
   do_search
   output_results
   append_to_results_file
-  cleanup
+  # cleanup
   
   
   # Output the final JSON

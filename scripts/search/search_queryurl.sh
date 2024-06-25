@@ -6,7 +6,7 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 # │                        VARIABLES                         │
 # ╰──────────────────────────────────────────────────────────╯
 TEMP_FILE="raw.json"
-URL_FILE="search_results_keyword.json"; i=1; while [ -e "$URL_FILE" ]; do URL_FILE="search_results_keyword${i}.json"; ((i++)); done
+URL_FILE="search_results_queryurl.json"; i=1; while [ -e "$URL_FILE" ]; do URL_FILE="search_results_queryurl${i}.json"; ((i++)); done
 RESULTS_FILE="search_results.json"
 COUNT="3"
 
@@ -17,15 +17,15 @@ COUNT="3"
 usage()
 {
     if [ "$#" -lt 1 ]; then
-        printf "ℹ️ Usage:\n $0 <KEYWORDS> <LIMIT> <FILTER> \n\n" >&2 
+        printf "ℹ️ Usage:\n $0 <QUERY> <LIMIT> <FILTER> \n\n" >&2 
 
         printf "Summary:\n"
-        printf "This will search youtube using a keyword.\n\n"
+        printf "This will search youtube using a queryurl.\n\n"
 
         printf "Flags:\n"
 
-        printf " --keyword <KEYWORDS>\n"
-        printf "\tTarget YouTube KEYWORDS.\n\n"
+        printf " --queryurl <Query URL>\n"
+        printf "\tTarget YouTube URL.\n\n"
 
         printf " --filter <YT-DLP FILTER>\n"
         printf "\tUse a YT-DLP Filter on results.\n\n"
@@ -50,8 +50,8 @@ function arguments()
     while [[ $# -gt 0 ]]; do
     case $1 in
 
-        --keyword)
-            KEYWORD="$2"
+        --queryurl)
+            QUERY="$2"
             shift
             shift
             ;;
@@ -91,15 +91,14 @@ function arguments()
 function do_search()
 {
 
+  # Search YouTube for the QUERY
   if [ -n "$FILTER" ]; then
     FILTER_PARAM="--match-filter ${FILTER}"
   fi
 
-  echo yt-dlp --flat-playlist -j "ytsearchdate$COUNT:$KEYWORD" $FILTER_PARAM
-  yt-dlp --flat-playlist -j "ytsearchdate$COUNT:$KEYWORD" $FILTER_PARAM > "$TEMP_FILE"
-
+  echo yt-dlp --get-id --playlist-end $COUNT "$QUERY" $FILTER_PARAM
+  yt-dlp --get-id --playlist-end $COUNT "$QUERY" $FILTER_PARAM > "$TEMP_FILE"
 }
-
 
 
 function output_results()
@@ -112,8 +111,7 @@ function output_results()
   FIRST=1
   while IFS= read -r line; do
 
-    VIDEO_ID=$(echo "$line" | jq -r '.id')
-    VIDEO_URL="https://www.youtube.com/watch?v=$VIDEO_ID"
+    VIDEO_URL="https://www.youtube.com/watch?v=$line"
 
     if [ $FIRST -eq 0 ]; then
       echo ',' >> "$URL_FILE"
@@ -126,6 +124,8 @@ function output_results()
   # Close the JSON structure
   echo ']}' >> "$URL_FILE"
 }
+
+
 
 function append_to_results_file()
 {
@@ -167,7 +167,6 @@ function main()
   output_results
   append_to_results_file
   cleanup
-  
   
   # Output the final JSON
   cat "$URL_FILE"
