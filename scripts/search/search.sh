@@ -116,6 +116,9 @@ run_script() {
             # get value
             value=$(echo "$section_content" | jq -r --arg key "$key" ".$key")
 
+            # remove spaces
+            value=${value// /}
+
             # Don't apply any flags with no value.
             if [ ! -z "$value" ]; then
                 args+=("--$key" "$value")
