@@ -48,6 +48,7 @@ jobs:
               run: |
                 echo "${{ secrets.RCLONE_CONF_B64 }}" | base64 --decode > rclone.conf
                 echo "${{ github.event.inputs.config_b64 }}" | base64 --decode > config.json
+                cat config.json
 
 
 
