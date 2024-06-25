@@ -131,7 +131,7 @@ jobs:
             - name: 📹 DOWNLOAD - Run Snippet Downloader
               if: ${{ env.VC_DOWNLOAD_RUN }}
               run: |
-                cat videoid_results.json | jq -r -c '.results[] | .video' | while read -r video; do
+                cat search_results.json | jq -r -c '.results[] | .video' | while read -r video; do
                     video_id=$(echo "$video" | sed 's/^.*=//' | cut -d'&' -f1)
                     echo "Download snippets for $video_id"
                     command="./scripts/snippets/yt_snippets.sh --videoid $video_id --count ${{ env.VC_DOWNLOAD_COUNT }} --duration ${{ env.VC_DOWNLOAD_DURATION }}"
