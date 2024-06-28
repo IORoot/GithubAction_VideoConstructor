@@ -152,7 +152,7 @@ function download_files_with_strategy()
         DIRPATH="${SOURCEURL%/*}"
 
         # print to screen
-        printf "📥 %-10s : %s\n" "Random" "$DIRPATH/$FILE"
+        printf "📥 %-10s : %s\n" "$STRATEGY" "$DIRPATH/$FILE"
 
         # download
         curl --insecure --silent --show-error --url "$DIRPATH/$FILE" --output ${OUTPUT_FILE} 2>/dev/null
