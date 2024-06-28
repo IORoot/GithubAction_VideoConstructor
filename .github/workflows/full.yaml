@@ -137,10 +137,16 @@ jobs:
                     --searchresults ${GITHUB_WORKSPACE}/search_results.json \
                     --rclone ./rclone.conf
               
-              # mkdir videos
-              # mv -- *.mp4 ./videos
-              # ls -la
-              # ls -la ./videos 
+                mkdir -p videos
+                
+                mv -- *.mp4 videos/ || true
+                mv -- *.avi videos/ || true
+                mv -- *.mkv videos/ || true
+                mv -- *.mov videos/ || true
+                mv -- *.flv videos/ || true
+
+                ls -la
+                ls -la videos 
                     
 
 
