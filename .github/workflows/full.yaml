@@ -139,11 +139,11 @@ jobs:
               
                 mkdir -p videos
                 
-                mv -- *.mp4 videos/ || true
-                mv -- *.avi videos/ || true
-                mv -- *.mkv videos/ || true
-                mv -- *.mov videos/ || true
-                mv -- *.flv videos/ || true
+                find . -maxdepth 1 -iname "*.mp4" -exec mv {} videos/ \; || true
+                find . -maxdepth 1 -iname "*.avi" -exec mv {} videos/ \; || true
+                find . -maxdepth 1 -iname "*.mkv" -exec mv {} videos/ \; || true
+                find . -maxdepth 1 -iname "*.mov" -exec mv {} videos/ \; || true
+                find . -maxdepth 1 -iname "*.flv" -exec mv {} videos/ \; || true
 
                 ls -la
                 ls -la videos 
