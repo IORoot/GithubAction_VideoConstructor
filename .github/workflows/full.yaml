@@ -128,15 +128,13 @@ jobs:
             ## INPUT = videoid_results.json
             ## OUTPUT = MP4 Video files
             ##
-            - name: 📹 DOWNLOAD - Run Snippet Downloader
+            - name: 📹 DOWNLOAD - Run Downloader
               if: ${{ env.VC_DOWNLOAD_RUN }}
               run: |
                 cat config.json | jq -r '.download.downloads' > ./config_download.json
                 ./scripts/download/download.sh \
                     --json ${GITHUB_WORKSPACE}/config_download.json \
                     --searchresults ${GITHUB_WORKSPACE}/search_results.json \
-                    --sshuser ${{ secrets.SSH_USER }} \
-                    --sshpass ${{ secrets.SSH_PASS }} \
                     --rclone ./rclone.conf
               
               # mkdir videos
