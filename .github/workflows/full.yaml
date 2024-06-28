@@ -96,15 +96,15 @@ jobs:
             - name: 🔎 SEARCH - Do a Search
               if: ${{ env.VC_SEARCH_RUN }}
               run: |
-                  cat config.json | jq -r '.search.searches' > ./search_configs.json
-                  ./scripts/search/search.sh --json ${GITHUB_WORKSPACE}/search_configs.json
+                  cat config.json | jq -r '.search.searches' > ./config_search.json
+                  ./scripts/search/search.sh --json ${GITHUB_WORKSPACE}/config_search.json
                 
 
 
             # ╭──────────────────────────────────────────────────────────────────────────╮
             # │                                                                          │░
             # │                                                                          │░
-            # │                                 SNIPPETS                                 │░
+            # │                                DOWNLOADS                                 │░
             # │                                                                          │░
             # │                                                                          │░
             # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -131,19 +131,18 @@ jobs:
             - name: 📹 DOWNLOAD - Run Snippet Downloader
               if: ${{ env.VC_DOWNLOAD_RUN }}
               run: |
-                cat search_results.json | jq -r -c '.results[] | .video' | while read -r video; do
-                    video_id=$(echo "$video" | sed 's/^.*=//' | cut -d'&' -f1)
-                    echo "Download snippets for $video_id"
-                    command="./scripts/snippets/yt_snippets.sh --videoid $video_id --count ${{ env.VC_DOWNLOAD_COUNT }} --duration ${{ env.VC_DOWNLOAD_DURATION }}"
-                    if [ -n "${{ env.VC_DOWNLOAD_TIMESTAMPS }}" ]; then
-                        command+=" --timestamps ${{ env.VC_DOWNLOAD_TIMESTAMPS }}"
-                    fi        
-                    eval "$command"
-                done
-                mkdir videos
-                mv -- *.mp4 ./videos
-                ls -la
-                ls -la ./videos 
+                cat config.json | jq -r '.download.downloads' > ./config_download.json
+                ./scripts/download/download.sh \
+                    --json ${GITHUB_WORKSPACE}/config_download.json \
+                    --searchresults ${GITHUB_WORKSPACE}/search_results.json \
+                    --sshuser ${{ secrets.SSH_USER }} \
+                    --sshpass ${{ secrets.SSH_PASS }} \
+                    --rclone ./rclone.conf
+              
+              # mkdir videos
+              # mv -- *.mp4 ./videos
+              # ls -la
+              # ls -la ./videos 
                     
 
 

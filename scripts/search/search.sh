@@ -189,8 +189,6 @@ function main()
             section_content=$(echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section]')
         fi
 
-        
-
         run_script "$section" "$section_content"
     done
 
