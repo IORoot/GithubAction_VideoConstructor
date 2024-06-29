@@ -97,6 +97,7 @@ jobs:
               if: ${{ env.VC_SEARCH_RUN }}
               run: |
                   cat config.json | jq -r '.search.searches' > ./config_search.json
+                  cat ./config_search.json
                   ./scripts/search/search.sh --json ${GITHUB_WORKSPACE}/config_search.json
                 
 
@@ -143,6 +144,7 @@ jobs:
               if: ${{ env.VC_DOWNLOAD_RUN }}
               run: |
                 cat config.json | jq -r '.download.downloads' > ./config_download.json
+                cat ./config_download.json
                 ./scripts/download/download.sh \
                     --json ${GITHUB_WORKSPACE}/config_download.json \
                     --searchresults ${GITHUB_WORKSPACE}/search_results.json \
@@ -227,6 +229,7 @@ jobs:
               if: ${{ env.VC_OVERLAY_RUN }}
               run: |   
                 cat config.json | jq -r '.overlay.inputs' > ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/inputs.json
+                cat ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/inputs.json
                 
                 
             
@@ -319,6 +322,7 @@ jobs:
               if: ${{ env.VC_VIDEO_RUN }}
               run: |
                 cat config.json | jq -r '.video.config' > ${GITHUB_WORKSPACE}/video_config.json
+                cat ${GITHUB_WORKSPACE}/video_config.json
                 export PATH=$PATH:$(pwd)
                 scriptflow.sh --config $(realpath ./video_config.json) -t
 
