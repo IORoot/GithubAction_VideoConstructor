@@ -325,6 +325,8 @@ jobs:
                 cat ${GITHUB_WORKSPACE}/video_config.json
                 export PATH=$PATH:$(pwd)
                 scriptflow.sh --config $(realpath ./video_config.json) -t
+                ls -la
+
 
                   
             # ╭──────────────────────────────────────────────────────────────────────────╮
@@ -341,15 +343,15 @@ jobs:
             # │                     GOOGLE DRIVE                      │
             # ╰───────────────────────────────────────────────────────╯
             - name: 📬 OUTPUTS - Install rClone
-              if: ${{ env.VC_OUTPUTS_GDRIVE_RUN }}
+              if: ${{ env.VC_OUTPUT_OUTPUTS_GDRIVE_RUN }}
               run: |
                 sudo apt install rclone
 
             - name: 📬 OUTPUTS - rClone copy
-              if: ${{ env.VC_OUTPUTS_GDRIVE_RUN }}
+              if: ${{ env.VC_OUTPUT_OUTPUTS_GDRIVE_RUN }}
               run: |
                   CURRENT_DATE=$(date +"%Y%m%d_%H%M%S")
-                  rclone copy ./output.mp4 GDrive:${{ env.VC_OUTPUTS_GDRIVE_FOLDER }}/${CURRENT_DATE}_${UUID}/ --config rclone.conf 
+                  rclone copy ./output.mp4 GDrive:${{ env.VC_OUTPUT_OUTPUTS_GDRIVE_FOLDER }}/${CURRENT_DATE}_${UUID}/ --config rclone.conf 
     
             
 
