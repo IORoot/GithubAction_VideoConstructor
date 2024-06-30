@@ -374,40 +374,9 @@ jobs:
                     --sshuser ${{ secrets.SSH_USER }} \
                     --sshpass ${{ secrets.SSH_PASS }}
 
-        
 
-            # ╭───────────────────────────────────────────────────────╮
-            # │                        WEBHOOK                        │
-            # ╰───────────────────────────────────────────────────────╯
-            # - name: Trigger Return Webhook
-            #   if: ${{ env.VC_OUTPUTS_WEBHOOK_RUN }}
-            #   run: |
-            #     curl -X POST \
-            #       -H "Content-Type: text/plain" \
-            #       -d "" \
-            #       ${{ env.VC_OUTPUTS_WEBHOOK_URL }}
 
      
-
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │                   CREATE A RELEASE                    │
-            # ╰───────────────────────────────────────────────────────╯
-            # - name: Create a Release
-            #   if: ${{ env.VC_OUTPUTS_RELEASE_RUN }}
-            #   run: |
-            #       CURRENT_DATE=$(date +"%Y%m%d_%H%M%S")
-            #       TARGET_DIR="${{ env.VC_OUTPUTS_SSH_FOLDER }}/${CURRENT_DATE}_${UUID}/"
-            #       create_release.sh \
-            #       --target ${{ env.VC_OUTPUTS_RELEASE_API_URL }} \
-            #       --token ${{ env.VC_OUTPUTS_RELEASE_API_TOKEN }} \
-            #       --schedule "${{ env.VC_OUTPUTS_RELEASE_SCHEDULE  }}" \
-            #       --title "${{ env.VC_OUTPUTS_RELEASE_ACTION }} - ${UUID}" \
-            #       --content "" \
-            #       --gdrive ${GDRIVE_FILE_ID} \
-            #       --video ${{ env.VC_OUTPUTS_SSH_SERVER }}/${{ env.VC_OUTPUTS_SSH_FOLDER }}/${TARGET_DIR}/video.mp4 \
-            #       --thumbnail ${{ env.VC_OUTPUTS_SSH_SERVER }}/${{ env.VC_OUTPUTS_SSH_FOLDER }}/${TARGET_DIR}/thumbnail.png
-
 
             # ╭──────────────────────────────────────────────────────────────────────────╮
             # │                                                                          │░
