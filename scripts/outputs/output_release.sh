@@ -83,8 +83,8 @@ function main()
 
     VIDEO_URL=$(cat $FILELIST | grep SSHVIDEO | tail -n 1 | cut -d ':' -f 2-)
     THUMBNAIL_URL=$(cat $FILELIST | grep SSHIMAGE | tail -n 1 | cut -d ':' -f 2-)
-    GDRIVE_FOLDER=$(cat $FILELIST | grep GDRIVE | tail -n 1 | cut -d ':' -f 2- | dirname)
-
+    GDRIVE_FOLDER=$(cat $FILELIST | grep GDRIVE | tail -n 1 | cut -d ':' -f 2-)
+    GDRIVE_FOLDER=$(dirname "$GDRIVE_FOLDER")
 
     if [[ $URL != *"/wp-json/custom/v1/release"* ]]; then
         URL="${URL%/}/wp-json/custom/v1/release"

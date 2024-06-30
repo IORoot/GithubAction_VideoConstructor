@@ -1,5 +1,0 @@
-{
-  "run": true,
-  "server": "media.londonparkour.com",
-  "folder": "/var/www/vhosts/media.londonparkour.com/processed"
-}
