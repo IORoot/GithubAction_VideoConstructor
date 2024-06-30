@@ -310,10 +310,6 @@ jobs:
 
 
 
-            # - name: 🪲 DEBUG - Setup upterm session
-            #   uses: lhotari/action-upterm@v1
-
-
 
             # ╭───────────────────────────────────────────────────────╮
             # │  Run /usr/local/bin/scriptflow.sh with the config.json  │
@@ -325,7 +321,13 @@ jobs:
                 cat ${GITHUB_WORKSPACE}/video_config.json
                 export PATH=$PATH:$(pwd)
                 scriptflow.sh --config $(realpath ./video_config.json) -t
+                
+                mkdir -p uploads
+                mv *.mp4 uploads
+                mv *.jpg uploads
+                mv *.png uploads
                 ls -la
+                ls -la uploads
 
 
                   
@@ -338,74 +340,73 @@ jobs:
             # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 
-
             # ╭───────────────────────────────────────────────────────╮
-            # │                     GOOGLE DRIVE                      │
+            # │       Install rClone to output to Google Drive        │
             # ╰───────────────────────────────────────────────────────╯
             - name: 📬 OUTPUTS - Install rClone
               if: ${{ env.VC_OUTPUT_OUTPUTS_GDRIVE_RUN }}
               run: |
                 sudo apt install rclone
 
-            - name: 📬 OUTPUTS - rClone copy
-              if: ${{ env.VC_OUTPUT_OUTPUTS_GDRIVE_RUN }}
-              run: |
-                  CURRENT_DATE=$(date +"%Y%m%d_%H%M%S")
-                  rclone copy ./output.mp4 GDrive:${{ env.VC_OUTPUT_OUTPUTS_GDRIVE_FOLDER }}/${CURRENT_DATE}_${UUID}/ --config rclone.conf 
-    
-            
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │                        WEBHOOK                        │
-            # ╰───────────────────────────────────────────────────────╯
-            - name: Trigger Return Webhook
-              if: ${{ env.VC_OUTPUTS_WEBHOOK_RUN }}
-              run: |
-                curl -X POST \
-                  -H "Content-Type: text/plain" \
-                  -d "" \
-                  ${{ env.VC_OUTPUTS_WEBHOOK_URL }}
-
 
 
             # ╭───────────────────────────────────────────────────────╮
-            # │                        SERVER                         │
+            # │       Install SSH/SSHPass for saving to server        │
             # ╰───────────────────────────────────────────────────────╯
-            - name: install dependencies
+            - name: 📬 OUTPUTS - Install ssh/sshpass
               if: ${{ env.VC_OUTPUTS_SSH_RUN }}
               run: |
                 sudo apt-get install --no-install-recommends ssh sshpass
 
-            - name: Copy Video to Server
-              if: ${{ env.VC_OUTPUTS_SSH_RUN }}
+
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                  Run outputs script                   │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: 📬 OUTPUTS - Run Outputs
+              if: ${{ env.VC_OUTPUT_RUN }}
               run: |
-                  mkdir ~/.ssh
-                  ssh-keyscan -H ${{ env.VC_OUTPUTS_SSH_SERVER }} >> ~/.ssh/known_hosts
-                  CURRENT_DATE=$(date +"%Y%m%d_%H%M%S")
-                  TARGET_DIR="${{ env.VC_OUTPUTS_SSH_FOLDER }}/${CURRENT_DATE}_${UUID}/"
-                  sshpass -p '${{ secrets.SSH_PASS }}' ssh -v -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ secrets.SSH_USER }}@${{ env.VC_OUTPUTS_SSH_SERVER }} "mkdir -p ${TARGET_DIR}"
-                  cd ./${UUID}_processed_video
-                  sshpass -p '${{ secrets.SSH_PASS }}' scp -v -p -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null * ${{ secrets.SSH_USER }}@${{ env.VC_OUTPUTS_SSH_SERVER }}:${TARGET_DIR}
-      
+                cat config.json | jq -r '.output.outputs' > ${GITHUB_WORKSPACE}/output_config.json
+                cat ./output_config.json
+                ./scripts/outputs/outputs.sh \
+                    --json ${GITHUB_WORKSPACE}/output_config.json \
+                    --rclone ./rclone.conf \
+                    --sshuser ${{ secrets.SSH_USER }} \
+                    --sshpass ${{ secrets.SSH_PASS }}
+
+        
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                        WEBHOOK                        │
+            # ╰───────────────────────────────────────────────────────╯
+            # - name: Trigger Return Webhook
+            #   if: ${{ env.VC_OUTPUTS_WEBHOOK_RUN }}
+            #   run: |
+            #     curl -X POST \
+            #       -H "Content-Type: text/plain" \
+            #       -d "" \
+            #       ${{ env.VC_OUTPUTS_WEBHOOK_URL }}
+
+     
 
 
             # ╭───────────────────────────────────────────────────────╮
             # │                   CREATE A RELEASE                    │
             # ╰───────────────────────────────────────────────────────╯
-            - name: Create a Release
-              if: ${{ env.VC_OUTPUTS_RELEASE_RUN }}
-              run: |
-                  CURRENT_DATE=$(date +"%Y%m%d_%H%M%S")
-                  TARGET_DIR="${{ env.VC_OUTPUTS_SSH_FOLDER }}/${CURRENT_DATE}_${UUID}/"
-                  create_release.sh \
-                  --target ${{ env.VC_OUTPUTS_RELEASE_API_URL }} \
-                  --token ${{ env.VC_OUTPUTS_RELEASE_API_TOKEN }} \
-                  --schedule "${{ env.VC_OUTPUTS_RELEASE_SCHEDULE  }}" \
-                  --title "${{ env.VC_OUTPUTS_RELEASE_ACTION }} - ${UUID}" \
-                  --content "" \
-                  --gdrive ${GDRIVE_FILE_ID} \
-                  --video ${{ env.VC_OUTPUTS_SSH_SERVER }}/${{ env.VC_OUTPUTS_SSH_FOLDER }}/${TARGET_DIR}/video.mp4 \
-                  --thumbnail ${{ env.VC_OUTPUTS_SSH_SERVER }}/${{ env.VC_OUTPUTS_SSH_FOLDER }}/${TARGET_DIR}/thumbnail.png
+            # - name: Create a Release
+            #   if: ${{ env.VC_OUTPUTS_RELEASE_RUN }}
+            #   run: |
+            #       CURRENT_DATE=$(date +"%Y%m%d_%H%M%S")
+            #       TARGET_DIR="${{ env.VC_OUTPUTS_SSH_FOLDER }}/${CURRENT_DATE}_${UUID}/"
+            #       create_release.sh \
+            #       --target ${{ env.VC_OUTPUTS_RELEASE_API_URL }} \
+            #       --token ${{ env.VC_OUTPUTS_RELEASE_API_TOKEN }} \
+            #       --schedule "${{ env.VC_OUTPUTS_RELEASE_SCHEDULE  }}" \
+            #       --title "${{ env.VC_OUTPUTS_RELEASE_ACTION }} - ${UUID}" \
+            #       --content "" \
+            #       --gdrive ${GDRIVE_FILE_ID} \
+            #       --video ${{ env.VC_OUTPUTS_SSH_SERVER }}/${{ env.VC_OUTPUTS_SSH_FOLDER }}/${TARGET_DIR}/video.mp4 \
+            #       --thumbnail ${{ env.VC_OUTPUTS_SSH_SERVER }}/${{ env.VC_OUTPUTS_SSH_FOLDER }}/${TARGET_DIR}/thumbnail.png
 
 
             # ╭──────────────────────────────────────────────────────────────────────────╮

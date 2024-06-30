@@ -1,0 +1,79 @@
+{
+    "title": "Testing each download config",
+    "description": "Testing out each combination of downloads",
+    "search": {
+        "run": true,
+        "searches": {
+            "keyword": {
+                "run": true,
+                "keyword": "parkour",
+                "filter": "duration <= 60",
+                "count": "3"
+            }
+        }
+    },
+    "download": {
+        "run": true,
+        "downloads": {
+            "from_search": {
+                "run": true,
+                "count": "2",
+                "duration": "3",
+                "timestamps": ""
+            }
+        }
+    },
+    "overlay": {
+        "run": true,
+        "timecut_selector": "#SR7_2_1",
+        "timecut_viewport": "1920,1080",
+        "timecut_settings": "--fps=30 --start=0 --duration=3",
+        "template": "003-bottomleft-title"
+    },
+    "video": {
+        "run": true,
+        "config": {
+            "ff_concat": {
+                "output": "ff_concat.mp4",
+                "loglevel": "error",
+                "input0": "./videos"
+            },
+            "ff_overlay": {
+                "input": "ff_concat.mp4",
+                "overlay": "./overlay/overlay_video.mov",
+                "start": "1",
+                "end": "4",
+                "output": "output.mp4",
+                "loglevel": "quiet"
+            }
+        }
+    },
+    "output": {
+        "run": true,
+        "outputs": {
+            "gdrive": {
+                "run": true,
+                "folder": "PostPlanPro"
+            },
+            "ssh": {
+                "run": false,
+                "server": "",
+                "folder": ""
+            },
+            "webhook": {
+                "run": false,
+                "url": ""
+            },
+            "release": {
+                "run": false,
+                "api-url": "",
+                "api-token": "",
+                "schedule": "",
+                "action": "",
+                "gdrive": "",
+                "video": "",
+                "thumbnail": ""
+            }
+        }
+    }
+}
