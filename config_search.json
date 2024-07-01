@@ -1,0 +1,16 @@
+{
+    "keyword_in_channels": {
+      "run": true,
+      "keyword": "cute+puppies",
+      "filter": "",
+      "count": "3",
+      "channels": [
+        {
+          "channel": "https://www.youtube.com/@Welovedogs-sc1ov"
+        },
+        {
+          "channel": "https://www.youtube.com/@pawsinthescreen"
+        }
+      ]
+    }
+  }

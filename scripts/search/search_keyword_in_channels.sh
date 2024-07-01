@@ -116,17 +116,10 @@ function do_search()
       # Construct the search URL for the channel
       search_url="${channel}/search?query=${KEYWORD}"
 
-      # Use yt-dlp to list videos matching the keyword in the channel
-      yt-dlp -J "$search_url" | jq -r \
-      --arg keyword "$KEYWORD" \
-      '[
-          .entries[] |
-          select(
-              (.title | ascii_downcase | contains($keyword | ascii_downcase)) or
-              (.description | ascii_downcase | contains($keyword | ascii_downcase))
-          ) |
-          {title: .title, id: .id, channel: .uploader}
-      ]' > "$TEMP_FILE"
+      echo $search_url
+
+      # Get results
+      yt-dlp --flat-playlist -J "$search_url" | jq -r --argjson limit "$COUNT" '[ limit($limit; .entries[] | {title: .title, id: .id, channel: .uploader} ) ]' > "$TEMP_FILE"
 
   done < "$CHANNELSFILE"
 
