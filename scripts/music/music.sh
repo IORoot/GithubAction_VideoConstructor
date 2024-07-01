@@ -6,7 +6,7 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 # │                        VARIABLES                         │
 # ╰──────────────────────────────────────────────────────────╯
 FOLDER="./scripts/music"
-STRATEGY_FLAG="--playlist-random"
+STRATEGY_FLAG=""
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -78,28 +78,6 @@ function pre_flight_checks()
 }
 
 
-
-function read_config()
-{
-    SECTION=$1
-
-    URL=$(cat $JSON | jq -r --arg section "$SECTION" -c '.[$section].url')
-    STRATEGY=$(cat $JSON | jq -r --arg section "$SECTION" -c '.[$section].strategy')
-    ITEMS=$(cat $JSON | jq -r --arg section "$SECTION" -c '.[$section].items')
-    RANGE=$(cat $JSON | jq -r --arg section "$SECTION" -c '.[$section].range')
-    TOP=$(cat $JSON | jq -r --arg section "$SECTION" -c '.[$section].top')
-    BOTTOM=$(cat $JSON | jq -r --arg section "$SECTION" -c '.[$section].bottom')
-    START=$(cat $JSON | jq -r --arg section "$SECTION" -c '.[$section].start')
-    START_MILLI=$START".00"
-    END=$(cat $JSON | jq -r --arg section "$SECTION" -c '.[$section].end')
-    END_MILLI=$END".00"
-    MAX=$(cat $JSON | jq -r --arg section "$SECTION" -c '.[$section].max')
-
-
-    
-
-}
-
 # ╭──────────────────────────────────────────────────────────╮
 # │                                                          │
 # │                      Main Function                       │
@@ -112,7 +90,20 @@ function main()
 
     for section in $(cat "$JSON" | jq -r 'keys[]'); do
 
-        read_config $section
+        URL=$(cat $JSON | jq -r --arg section "$section" -c '.[$section].url')
+        STRATEGY=$(cat $JSON | jq -r --arg section "$section" -c '.[$section].strategy')
+        ITEMS=$(cat $JSON | jq -r --arg section "$section" -c '.[$section].items')
+        RANGE=$(cat $JSON | jq -r --arg section "$section" -c '.[$section].range')
+        TOP=$(cat $JSON | jq -r --arg section "$section" -c '.[$section].top')
+        BOTTOM=$(cat $JSON | jq -r --arg section "$section" -c '.[$section].bottom')
+        START=$(cat $JSON | jq -r --arg section "$section" -c '.[$section].start')
+        START_MILLI=$START".00"
+        END=$(cat $JSON | jq -r --arg section "$section" -c '.[$section].end')
+        END_MILLI=$END".00"
+        MAX=$(cat $JSON | jq -r --arg section "$section" -c '.[$section].max')
+
+        echo $section
+        echo $URL
 
         if [ $STRATEGY == "random" ]; then
             STRATEGY_FLAG="--playlist-random --max-downloads $MAX"
@@ -131,10 +122,12 @@ function main()
         fi 
 
         COMMAND="yt-dlp $URL $STRATEGY_FLAG --restrict-filenames --trim-filenames 20 --extract-audio --audio-format mp3 --postprocessor-args \"-ss $START_MILLI -t $END_MILLI\" --output music_%\(epoch\)s.mp3 --force-overwrites"
+
         echo $COMMAND
 
         eval "$COMMAND"
 
+        STRATEGY_FLAG=""
     done
 
 
