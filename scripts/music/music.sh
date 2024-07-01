@@ -88,6 +88,8 @@ function main()
 
     pre_flight_checks
 
+    LOOP=1
+
     for section in $(cat "$JSON" | jq -r 'keys[]'); do
 
         URL=$(cat $JSON | jq -r --arg section "$section" -c '.[$section].url')
@@ -121,13 +123,14 @@ function main()
             STRATEGY_FLAG="--playlist-end  $BOTTOM"
         fi 
 
-        COMMAND="yt-dlp $URL $STRATEGY_FLAG --restrict-filenames --trim-filenames 20 --extract-audio --audio-format mp3 --postprocessor-args \"-ss $START_MILLI -t $END_MILLI\" --output music_%\(epoch\)s.mp3 --force-overwrites"
+        COMMAND="yt-dlp $URL $STRATEGY_FLAG --restrict-filenames --trim-filenames 20 --extract-audio --audio-format mp3 --postprocessor-args \"-ss $START_MILLI -t $END_MILLI\" --output music_${section}_%\(autonumber\)s.mp3 --force-overwrites"
 
         echo $COMMAND
 
         eval "$COMMAND"
 
         STRATEGY_FLAG=""
+        ((LOOP++))
     done
 
 
