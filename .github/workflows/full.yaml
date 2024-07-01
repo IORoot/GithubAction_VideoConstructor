@@ -323,9 +323,12 @@ jobs:
                 scriptflow.sh --config $(realpath ./video_config.json) -t
                 
                 mkdir -p uploads
-                mv *.mp4 uploads || true
-                mv *.jpg uploads || true
-                mv *.png uploads || true
+                mv output.mp4 uploads || true
+                mv output.jpg uploads || true
+                mv output.png uploads || true
+
+                cp overlay/* uploads || true
+
                 ls -la
                 ls -la uploads
 
