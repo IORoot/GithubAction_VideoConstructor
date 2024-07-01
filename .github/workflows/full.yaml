@@ -348,8 +348,6 @@ jobs:
                 mv output.jpg uploads || true
                 mv output.png uploads || true
 
-                cp overlay/* uploads || true
-
                 ls -la
                 ls -la uploads
 
