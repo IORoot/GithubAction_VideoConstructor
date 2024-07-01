@@ -123,7 +123,7 @@ function main()
             STRATEGY_FLAG="--playlist-end  $BOTTOM"
         fi 
 
-        COMMAND="yt-dlp $URL $STRATEGY_FLAG --restrict-filenames --trim-filenames 20 --extract-audio --audio-format mp3 --postprocessor-args \"-ss $START_MILLI -t $END_MILLI\" --output music_${section}_%\(autonumber\)s.mp3 --force-overwrites"
+        COMMAND="yt-dlp -vU $URL $STRATEGY_FLAG --restrict-filenames --trim-filenames 20 --extract-audio --audio-format mp3 --postprocessor-args \"-ss $START_MILLI -t $END_MILLI\" --output music_${section}_%\(autonumber\)s.mp3 --force-overwrites"
 
         echo $COMMAND
 
