@@ -346,6 +346,8 @@ jobs:
                 mv output.jpg uploads || true
                 mv output.png uploads || true
 
+                mv overlay_video.mov uploads || true
+
                 ls -la
                 ls -la uploads
 
