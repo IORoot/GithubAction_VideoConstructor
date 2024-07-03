@@ -345,6 +345,7 @@ jobs:
             # ╭───────────────────────────────────────────────────────╮
             # │  Run /usr/local/bin/scriptflow.sh with the config.json  │
             # ╰───────────────────────────────────────────────────────╯
+            # mv ./overlay/overlay_video.mov uploads || true
             - name: 🎥 VIDEO - Run ScriptFlow
               if: ${{ env.VC_VIDEO_RUN }}
               run: |
@@ -357,8 +358,6 @@ jobs:
                 mv output.mp4 uploads || true
                 mv output.jpg uploads || true
                 mv output.png uploads || true
-
-                mv ./overlay/overlay_video.mov uploads || true
 
                 ls -la
                 ls -la uploads
