@@ -160,17 +160,30 @@ jobs:
 
 
             # ╭───────────────────────────────────────────────────────╮
-            # │                    Run Midjourney                     │
+            # │                    Setup Midjourney                   │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🏞️ Generate - Use Midjourney
-              if: ${{ env.VC_MIDJOURNEY_RUN }}
+              if: ${{ env.VC_GENERATE_RUN }}
               run: |
                   env
                   sudo git clone https://github.com/IORoot/MidjourneyAPI ${GITHUB_WORKSPACE}/midjourney
                   cp midjourney.env.conf ${GITHUB_WORKSPACE}/midjourney/.env
                   cd midjourney
                   npm install
-                  npx tsx imagine.ts ${{ env.VC_MIDJOURNEY_PROMPT }}
+                  cat ${GITHUB_WORKSPACE}/config.json | jq -r '.generate.generators' > ./config_generators.json
+                  ls -la
+
+                  
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                    Run Midjourney                     │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: 🏞️ Generate - Use Midjourney
+              if: ${{ env.VC_GENERATE_RUN }}
+              run: |  
+                  ls -la  
+                  cd midjourney    
+                  ../scripts/generate/midjourney.sh --json ./config_generators.json
                   ./download_images.sh
                   ls -la
                   node ./slice-images.js midjourney_image01.png
