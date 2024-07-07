@@ -167,13 +167,13 @@ jobs:
               run: |
                   env
                   sudo git clone https://github.com/IORoot/MidjourneyAPI ${GITHUB_WORKSPACE}/midjourney
-                  cp midjourney.env.conf ${GITHUB_WORKSPACE}/midjourney/.env
-                  cd midjourney
-                  npm install
-                  cat ${GITHUB_WORKSPACE}/config.json | jq -r '.generate.generators' > ./config_generators.json
-                  ls -la
+                  sudo cp midjourney.env.conf ${GITHUB_WORKSPACE}/midjourney/.env
+                  sudo cd midjourney
+                  sudo npm install
+                  sudo cat ${GITHUB_WORKSPACE}/config.json | jq -r '.generate.generators' > ./config_generators.json
+                  sudo ls -la
 
-                  
+
 
             # ╭───────────────────────────────────────────────────────╮
             # │                    Run Midjourney                     │
