@@ -157,12 +157,13 @@ jobs:
               with:
                 node-version: "18.x"
 
-
+            - name: 🪲 DEBUG - Setup upterm session
+              uses: lhotari/action-upterm@v1
 
             # ╭───────────────────────────────────────────────────────╮
             # │                    Setup Midjourney                   │
             # ╰───────────────────────────────────────────────────────╯
-            - name: 🏞️ Generate - Use Midjourney
+            - name: 🏞️ Generate - Setup Midjourney
               if: ${{ env.VC_GENERATE_RUN }}
               run: |
                   env
@@ -182,7 +183,7 @@ jobs:
               if: ${{ env.VC_GENERATE_RUN }}
               run: |  
                   ls -la  
-                  cd midjourney    
+                  cd ./midjourney    
                   ../scripts/generate/midjourney.sh --json ./config_generators.json
                   ./download_images.sh
                   ls -la
