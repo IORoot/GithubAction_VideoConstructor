@@ -3,9 +3,10 @@
 # ╰───────────────────────────────────────────────────────────────────────────╯
 #
 # Make sure the following SECRET variables are set to access your server.
-# SSH_PASS        = Password to your server to upload video to.  
-# SSH_USER        = Username to your server to upload video to.
-# RCLONE_CONF_B64 = Configuration of rCLone to allow access to Google Drive.
+# SSH_PASS            = Password to your server to upload video to.  
+# SSH_USER            = Username to your server to upload video to.
+# RCLONE_CONF_B64     = Configuration of rCLone to allow access to Google Drive.
+# MIDJOURNEY_ENV_B64  = The .env file to run Midjourney
 
 name: 🎢 Full Video Constructor
 
@@ -47,6 +48,7 @@ jobs:
             - name: 🎛️ SETUP - Base64 decode Configs
               run: |
                 echo "${{ secrets.RCLONE_CONF_B64 }}" | base64 --decode > rclone.conf
+                echo "${{ secrets.MIDJOURNEY_ENV_B64 }}" | base64 --decode > midjourney.env.conf
                 echo "${{ github.event.inputs.config_b64 }}" | base64 --decode > config.json
                 cat config.json
 
@@ -138,6 +140,43 @@ jobs:
                   mv music*.mp3 music || true
                   ls -la
                   ls -la music 
+
+
+            # ╭──────────────────────────────────────────────────────────────────────────╮
+            # │                                                                          │░
+            # │                                                                          │░
+            # │                                GENERATOR                                 │░
+            # │                                                                          │░
+            # │                                                                          │░
+            # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                      Setup Node                       │
+            # ╰───────────────────────────────────────────────────────╯
+            - uses: actions/setup-node@v3.6.0
+              with:
+                node-version: "18.x"
+
+
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                    Run Midjourney                     │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: 🏞️ Generate - Use Midjourney
+              if: ${{ env.VC_MIDJOURNEY_RUN }}
+              run: |
+                  env
+                  sudo git clone https://github.com/IORoot/MidjourneyAPI ${GITHUB_WORKSPACE}/midjourney
+                  cp midjourney.env.conf ${GITHUB_WORKSPACE}/midjourney/.env
+                  cd midjourney
+                  npm install
+                  npx tsx imagine.ts ${{ env.VC_MIDJOURNEY_PROMPT }}
+                  ./download_images.sh
+                  ls -la
+                  node ./slice-images.js midjourney_image01.png
+                  ls -la
+                  cp *.png ${GITHUB_WORKSPACE}
+
 
 
             # ╭──────────────────────────────────────────────────────────────────────────╮
