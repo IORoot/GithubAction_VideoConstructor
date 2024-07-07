@@ -173,7 +173,6 @@ jobs:
                   cd midjourney
                   npm install
                   cat ${GITHUB_WORKSPACE}/config.json | jq -r '.generate.generators' > ./config_generators.json
-                  ls -la
 
 
 
@@ -184,12 +183,17 @@ jobs:
               continue-on-error: true
               if: ${{ env.VC_GENERATE_RUN }}
               run: |  
-                  ls -la  
                   cd ${GITHUB_WORKSPACE}/midjourney    
                   ../scripts/generate/midjourney.sh --json ./config_generators.json
                   ./download_images.sh
                   ls -la
-                  node ./slice-images.js midjourney_image01.png
+
+                  for file in midjourney_image01*; do
+                      if [ -f "$file" ]; then
+                          node ./slice-images.js "$file"
+                      fi
+                  done
+
                   ls -la
                   cp *.png ${GITHUB_WORKSPACE}
                   cd ${GITHUB_WORKSPACE}
