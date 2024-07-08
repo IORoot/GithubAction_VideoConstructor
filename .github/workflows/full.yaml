@@ -137,7 +137,7 @@ jobs:
                   ./scripts/music/music.sh --json ${GITHUB_WORKSPACE}/config_music.json
 
                   mkdir -p music
-                  mv music*.mp3 music || true
+                  cp music*.mp3 music || true
                   ls -la
                   ls -la music 
 
@@ -192,10 +192,6 @@ jobs:
                       rm -f $file
                   done
 
-                  mkdir -p ${GITHUB_WORKSPACE}/uploads
-                  cp *.png ${GITHUB_WORKSPACE} || true
-                  mv *.png ${GITHUB_WORKSPACE}/uploads || true
-
 
 
             # ╭──────────────────────────────────────────────────────────────────────────╮
@@ -248,11 +244,11 @@ jobs:
               
                 mkdir -p videos
                 
-                find . -maxdepth 1 -iname "*.mp4" -exec mv {} videos/ \; || true
-                find . -maxdepth 1 -iname "*.avi" -exec mv {} videos/ \; || true
-                find . -maxdepth 1 -iname "*.mkv" -exec mv {} videos/ \; || true
-                find . -maxdepth 1 -iname "*.mov" -exec mv {} videos/ \; || true
-                find . -maxdepth 1 -iname "*.flv" -exec mv {} videos/ \; || true
+                find . -maxdepth 1 -iname "*.mp4" -exec cp {} videos/ \; || true
+                find . -maxdepth 1 -iname "*.avi" -exec cp {} videos/ \; || true
+                find . -maxdepth 1 -iname "*.mkv" -exec cp {} videos/ \; || true
+                find . -maxdepth 1 -iname "*.mov" -exec cp {} videos/ \; || true
+                find . -maxdepth 1 -iname "*.flv" -exec cp {} videos/ \; || true
 
                 ls -la
                 ls -la videos 
@@ -371,7 +367,7 @@ jobs:
               run: |
                 node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ env.VC_OVERLAY_TIMECUT_TARGET }}" --viewport="${{ env.VC_OVERLAY_TIMECUT_VIEWPORT }}" ${{ env.VC_OVERLAY_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
                 mkdir overlay
-                mv overlay_video.mov ./overlay
+                cp overlay_video.mov ./overlay
                 ls -la
                 ls -la ./overlay
 
@@ -411,14 +407,6 @@ jobs:
                 cat ${GITHUB_WORKSPACE}/video_config.json
                 export PATH=$PATH:$(pwd)
                 scriptflow.sh --config $(realpath ./video_config.json) -t
-                
-                mkdir -p uploads
-                mv output.mp4 uploads || true
-                mv output.jpg uploads || true
-                mv output.png uploads || true
-
-                ls -la
-                ls -la uploads
 
 
                   
@@ -429,6 +417,19 @@ jobs:
             # │                                                                          │░
             # │                                                                          │░
             # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │           Copy specific files into uploads              │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: 📬 OUTPUTS - Create uploads folder
+              if: ${{ env.VC_OUTPUT_OUTPUTS_GDRIVE_RUN }}
+              run: |
+                mkdir -p ${GITHUB_WORKSPACE}/uploads
+                cp ${{ env.VC_OUTPUT_OUTPUTS_GDRIVE_INCLUDE }} ${GITHUB_WORKSPACE}/uploads || true
+                ls -la
+                ls -la uploads
+
 
 
             # ╭───────────────────────────────────────────────────────╮
