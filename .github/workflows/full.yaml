@@ -423,10 +423,10 @@ jobs:
             # │           Copy specific files into uploads              │
             # ╰───────────────────────────────────────────────────────╯
             - name: 📬 OUTPUTS - Create uploads folder
-              if: ${{ env.VC_OUTPUT_OUTPUTS_GDRIVE_RUN }}
+              if: ${{ env.VC_OUTPUT_RUN }}
               run: |
                 mkdir -p ${GITHUB_WORKSPACE}/uploads
-                cp ${{ env.VC_OUTPUT_OUTPUTS_GDRIVE_INCLUDE }} ${GITHUB_WORKSPACE}/uploads || true
+                cp ${{ env.VC_OUTPUT_INCLUDE }} ${GITHUB_WORKSPACE}/uploads || true
                 ls -la
                 ls -la uploads
 
