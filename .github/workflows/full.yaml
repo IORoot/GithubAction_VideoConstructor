@@ -193,6 +193,7 @@ jobs:
                   done
 
                   mkdir -p ${GITHUB_WORKSPACE}/uploads
+                  cp *.png ${GITHUB_WORKSPACE} || true
                   mv *.png ${GITHUB_WORKSPACE}/uploads || true
 
 
