@@ -192,6 +192,12 @@ jobs:
                       rm -f $file
                   done
 
+                  ls -la 
+                  mv *.png ${GITHUB_WORKSPACE} || true
+                  cd ${GITHUB_WORKSPACE}
+                  ls -la ${GITHUB_WORKSPACE}
+                  ls -la ${GITHUB_WORKSPACE}/midjourney
+
 
 
             # ╭──────────────────────────────────────────────────────────────────────────╮
