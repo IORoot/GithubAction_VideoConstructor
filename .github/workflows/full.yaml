@@ -184,18 +184,16 @@ jobs:
               run: |  
                   cd ${GITHUB_WORKSPACE}/midjourney    
                   ../scripts/generate/midjourney.sh --json ./config_generators.json
-                  ./download_images.sh
 
-                  for file in midjourney_lg_image01*; do
+                  for file in mj_quad*; do
                       if [ -f "$file" ]; then
                           node ./slice-images.js "$file"
                       fi
+                      rm -f $file
                   done
 
-                  cp *.png ${GITHUB_WORKSPACE}
-                  cd ${GITHUB_WORKSPACE}
-                  mkdir -p uploads
-                  mv *.png uploads || true
+                  mkdir -p ${GITHUB_WORKSPACE}/uploads
+                  mv *.png ${GITHUB_WORKSPACE}/uploads || true
 
 
 
