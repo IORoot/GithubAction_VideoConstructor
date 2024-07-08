@@ -94,12 +94,13 @@ function run_midjourney()
         # Extract the run value
         run=$(echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section].run')
         prompt=$(echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section].prompt')
+        upscale=$(echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section].upscale')
 
         printf "🏞️ %-10s : %s\n" "Prompt" "${prompt}"
 
         # Proceed only if run is true
         if [ "$run" == true ]; then
-            npx tsx imagine.ts "${prompt}"
+            npx tsx imagine.ts "${prompt}" "${upscale}"
         fi
         
     done
