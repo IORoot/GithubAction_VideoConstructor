@@ -192,11 +192,9 @@ jobs:
                       rm -f $file
                   done
 
-                  ls -la 
                   mv *.png ${GITHUB_WORKSPACE} || true
                   cd ${GITHUB_WORKSPACE}
                   ls -la ${GITHUB_WORKSPACE}
-                  ls -la ${GITHUB_WORKSPACE}/midjourney
 
 
 
@@ -299,7 +297,7 @@ jobs:
             - name: 🎨 OVERLAY - Setup Overlay
               if: ${{ env.VC_OVERLAY_RUN }}
               run: | 
-                unzip ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/*.zip -d ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/
+                unzip ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/template.zip -d ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/
 
 
                 

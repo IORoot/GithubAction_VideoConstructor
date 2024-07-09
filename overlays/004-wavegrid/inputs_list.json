@@ -1,0 +1,20 @@
+[
+    "AllClass",
+        
+        "LogoID",
+        "LogoClass",
+
+        "TextClass",
+
+            "Slide1Class",
+                "Slide1Text1ID",
+                "Slide1Text1Class", 
+                "Slide1Text2ID",
+                "Slide1Text2Class",
+                
+            "Slide2Class", 
+                "Slide2Text1ID",
+                "Slide2Text1Class",
+                "Slide2Text2ID",
+                "Slide2Text2Class"
+]
