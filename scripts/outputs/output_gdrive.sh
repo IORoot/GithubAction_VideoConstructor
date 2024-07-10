@@ -106,7 +106,7 @@ function main()
     CURRENT_DATE=$(date +"%Y%m%d_%H%M%S")
 
     # Copy everything in uploads folder to google drive
-    rclone copy $UPLOADS_FOLDER GDrive:${FOLDER}/${FOLDER_PREFIX}_${CURRENT_DATE} --config $RCLONE_CONFIG 
+    rclone copy $UPLOADS_FOLDER GDrive:${FOLDER}/${FOLDER_PREFIX}_${CURRENT_DATE} --retries 5 --low-level-retries 10 --retries-sleep 1s --retries-max-sleep 60s --timeout 30min --contimeout 60s --expect-continue-timeout 30s --max-duration 30m --config $RCLONE_CONFIG 
 
     # Send to output_filelist.txt
     for file in $UPLOADS_FOLDER/*; do
