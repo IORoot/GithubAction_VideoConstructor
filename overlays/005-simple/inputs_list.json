@@ -1,7 +1,14 @@
 [
     "AllClass",
-    "TitleID",
-    "TitleClass",
-    "ContentID",
-    "ContentClass"
+        "LogoID",
+        "LogoClass",
+            "ContentClass",
+                "Slide1ContentID",
+                "Slide1ContentClass",
+                "Slide2ContentID",
+                "Slide2ContentClass",
+                "Slide3ContentID",
+                "Slide3ContentClass",
+                "Slide4ContentID",
+                "Slide4ContentClass"
 ]
