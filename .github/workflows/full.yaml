@@ -460,7 +460,9 @@ jobs:
             # │                  Run outputs script                   │
             # ╰───────────────────────────────────────────────────────╯
             - name: 📬 OUTPUTS - Run Outputs
+              
               if: ${{ env.VC_OUTPUT_RUN }}
+              continue-on-error: true
               run: |
                 cat config.json | jq -r '.output.outputs' > ${GITHUB_WORKSPACE}/output_config.json
                 cat ./output_config.json
