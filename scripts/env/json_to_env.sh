@@ -24,16 +24,13 @@
 # done
 
 
-
-#!/bin/bash
-
 # Read and flatten JSON into environment variables
 jq -r '
 def to_env: gsub("[^a-zA-Z0-9]"; "_") | ascii_upcase;
 
 # Function to escape newlines
-def escape_newlines($str):
-  $str | gsub("\r\n"; "__NEWLINE__") | gsub("\n"; "__NEWLINE__") | gsub("\r"; "__NEWLINE__");
+def escape_newlines:
+  gsub("\r\n"; "__NEWLINE__") | gsub("\n"; "__NEWLINE__") | gsub("\r"; "__NEWLINE__");
 
 # Recursive function to flatten nested objects and output as environment variables
 def recurse_to_env($prefix; $obj):
@@ -51,3 +48,4 @@ recurse_to_env("VC"; .)
   echo "$line"
   echo "$line" >> $GITHUB_ENV
 done
+
