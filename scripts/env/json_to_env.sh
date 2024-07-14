@@ -2,7 +2,7 @@
 
 mv config.json config_original.json
 
-sed 's/\r\n/ /g' config_original.json > config.json
+sed 's/\\r\\n/ /g' config_original.json > config.json
 
 cat config.json
 
