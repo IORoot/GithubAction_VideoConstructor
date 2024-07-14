@@ -25,6 +25,8 @@
 
 
 
+#!/bin/bash
+
 # Read and flatten JSON into environment variables
 jq -r '
 def to_env: gsub("[^a-zA-Z0-9]"; "_") | ascii_upcase;
