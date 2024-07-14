@@ -20,7 +20,7 @@ def recurse_to_env($prefix; $obj):
 
 # Start recursion from the root object
 recurse_to_env("VC"; .)
-' config_clean.json | while IFS= read -r line; do
+' config.json | while IFS= read -r line; do
   echo "$line"
   echo "$line" >> $GITHUB_ENV
 done
