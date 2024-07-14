@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cp config.json config_original.json
+mv config.json config_original.json
 
 sed 's/\r\n/ /g' config_original.json > config.json
 
@@ -22,7 +22,7 @@ def recurse_to_env($prefix; $obj):
 
 # Start recursion from the root object
 recurse_to_env("VC"; .)
-' config_no_newlines.json | while IFS= read -r line; do
+' config.json | while IFS= read -r line; do
   echo "$line"
   echo "$line" >> $GITHUB_ENV
 done
