@@ -127,7 +127,7 @@ function main()
         fi   
 
         if [ -n "${SUBTITLES}" ]; then
-            command+=" --write-subs --write-auto-subs --convert-subs=srt --sub-lang "en.*"
+            command+=' --write-subs --write-auto-subs --convert-subs=srt --sub-lang "en.*"'
         fi   
 
         eval "$command"
