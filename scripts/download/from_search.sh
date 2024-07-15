@@ -130,6 +130,8 @@ function main()
             command+=' --write-subs --write-auto-subs --convert-subs=srt --sub-lang "en.*"'
         fi   
 
+        echo $command
+        
         eval "$command"
 
     done
