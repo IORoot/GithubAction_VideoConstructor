@@ -99,6 +99,7 @@ function read_config()
     COUNT=$(cat $JSON | jq -r -c '.count')
     DURATION=$(cat $JSON | jq -r -c '.duration')
     TIMESTAMPS=$(cat $JSON | jq -r -c '.timestamps')
+    SUBTITLES=$(cat $JSON | jq -r -c '.subtitles')
 }
 
 # ╭──────────────────────────────────────────────────────────╮
@@ -121,8 +122,12 @@ function main()
 
         command="${SNIPPETFOLDER}/yt_snippets.sh --videoid $video_id --count ${COUNT} --duration ${DURATION}"
         
-        if [ -n "${TIMESTAMPS}" ]; then
+         if [ -n "${TIMESTAMPS}" ]; then
             command+=" --timestamps ${TIMESTAMPS}"
+        fi   
+
+        if [ -n "${SUBTITLES}" ]; then
+            command+=" --write-auto-sub --convert-subs=srt"
         fi   
 
         eval "$command"
