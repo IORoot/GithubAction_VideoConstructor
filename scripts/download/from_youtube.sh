@@ -8,7 +8,6 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 # ╰──────────────────────────────────────────────────────────╯
 FOLDER="./scripts/download"
 PWD=$(pwd)
-SEARCHRESULTS=""
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
