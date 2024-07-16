@@ -106,7 +106,7 @@ function read_config()
 
 function download_subtitles()
 {
-    yt-dlp https://www.youtube.com/watch?v=${video_id} --skip-download --write-subs --write-auto-subs --sub-lang en --convert-subs=srt 
+    yt-dlp https://www.youtube.com/watch?v=${video_id} --skip-download --write-subs --write-auto-subs --sub-lang en --convert-subs=srt -o "subtitle_%(id)s"
 }
 
 
