@@ -99,7 +99,6 @@ function read_config()
     COUNT=$(cat $JSON | jq -r -c '.count')
     DURATION=$(cat $JSON | jq -r -c '.duration')
     TIMESTAMPS=$(cat $JSON | jq -r -c '.timestamps')
-    SUBTITLES=$(cat $JSON | jq -r -c '.subtitles')
 }
 
 # ╭──────────────────────────────────────────────────────────╮
@@ -124,11 +123,7 @@ function main()
         
          if [ -n "${TIMESTAMPS}" ]; then
             command+=" --timestamps ${TIMESTAMPS}"
-        fi   
-
-        if [ -n "${SUBTITLES}" ]; then
-            command+=' --write-subs --write-auto-subs --convert-subs=srt --sub-lang "en.*"'
-        fi   
+        fi    
 
         echo $command
         
