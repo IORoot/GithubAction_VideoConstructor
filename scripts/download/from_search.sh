@@ -99,7 +99,17 @@ function read_config()
     COUNT=$(cat $JSON | jq -r -c '.count')
     DURATION=$(cat $JSON | jq -r -c '.duration')
     TIMESTAMPS=$(cat $JSON | jq -r -c '.timestamps')
+    SUBTITLES=$(cat $JSON | jq -r -c '.subtitles')
 }
+
+
+
+function download_subtitles()
+{
+    yt-dlp https://www.youtube.com/watch?v=${video_id} --skip-download --write-subs --write-auto-subs --sub-lang en --convert-subs=srt 
+}
+
+
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                                                          │
@@ -121,13 +131,18 @@ function main()
 
         command="${SNIPPETFOLDER}/yt_snippets.sh --videoid $video_id --count ${COUNT} --duration ${DURATION}"
         
-         if [ -n "${TIMESTAMPS}" ]; then
+        if [ -n "${TIMESTAMPS}" ]; then
             command+=" --timestamps ${TIMESTAMPS}"
         fi    
 
         echo $command
         
         eval "$command"
+
+        # Download subtitles if on.
+        if [ -n "${SUBTITLES}" ]; then
+            download_subtitles
+        fi 
 
     done
 
