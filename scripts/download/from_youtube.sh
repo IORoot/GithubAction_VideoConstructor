@@ -7,6 +7,7 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 # │                        VARIABLES                         │
 # ╰──────────────────────────────────────────────────────────╯
 FOLDER="./scripts/download"
+SUBTITLES_FOLDER="./scripts/subtitles"
 PWD=$(pwd)
 
 # ╭──────────────────────────────────────────────────────────╮
@@ -82,6 +83,8 @@ function read_config()
 {
     URL=$(cat $JSON | jq -r -c '.url')
     SUBTITLES=$(cat $JSON | jq -r -c '.subtitles')  
+    DEDUPE=$(cat $JSON | jq -r -c '.dedupe')  
+    DYNAMICTEXT=$(cat $JSON | jq -r -c '.dynamictext')  
 }
 
 
@@ -93,9 +96,28 @@ function download()
         SUBTITLE_STRING=" --write-subs --write-auto-subs --sub-lang en --convert-subs=srt "
     fi 
 
-    yt-dlp ${SUBTITLE_STRING} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' -o "youtube_%(id)s.%(ext)s" ${URL}
+    OUTPUT=$(yt-dlp ${SUBTITLE_STRING} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' -o "youtube_%(id)s.%(ext)s" ${URL})
+
+    OUTPUT_FILENAME=$(echo "$OUTPUT" | grep -oP '(?<=Destination: )[^ ]+')
 }
 
+
+
+function remove_duplicates()
+{
+    if [ -n "${OUTPUT_FILENAME}" ]; then
+        bash $SUBTITLES_FOLDER/remove_dupes.sh $OUTPUT_FILENAME
+    fi
+}
+
+
+
+function dynamic_text()
+{
+    if [ -n "${OUTPUT_FILENAME}" ]; then
+        bash $SUBTITLES_FOLDER/dynamic_subs.sh $OUTPUT_FILENAME 
+    fi
+}
 
 
 # ╭──────────────────────────────────────────────────────────╮
