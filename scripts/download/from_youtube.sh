@@ -98,6 +98,10 @@ function download()
 
     OUTPUT=$(yt-dlp ${SUBTITLE_STRING} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' -o "youtube_%(id)s.%(ext)s" ${URL})
 
+    echo "-------"
+    echo $OUTPUT
+    echo "-------"
+
     OUTPUT_FILENAME=$(echo "$OUTPUT" | grep -oP '(?<=Destination: )[^ ]+')
 }
 
@@ -136,9 +140,9 @@ function main()
 
     download
 
-    remove_duplicates
+    # remove_duplicates
 
-    dynamic_text
+    # dynamic_text
 
 }
 
