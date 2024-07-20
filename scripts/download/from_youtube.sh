@@ -110,6 +110,7 @@ function download()
 
 function remove_duplicates()
 {
+    echo "DEDUPE:${DEDUPE}"
     if [[ "${DEDUPE}" = "true" ]]; then
         bash $SUBTITLES_FOLDER/remove_dupes.sh $OUTPUT_FILENAME
     fi
@@ -119,6 +120,7 @@ function remove_duplicates()
 
 function dynamic_text()
 {
+    echo "DYNAMICTEXT:${DYNAMICTEXT}"
     if [[ "${DYNAMICTEXT}" = "true" ]]; then
         bash $SUBTITLES_FOLDER/dynamic_subs.sh $OUTPUT_FILENAME 
     fi
@@ -141,9 +143,9 @@ function main()
 
     download
 
-    # remove_duplicates
+    remove_duplicates
 
-    # dynamic_text
+    dynamic_text
 
 }
 
