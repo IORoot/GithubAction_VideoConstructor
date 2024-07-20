@@ -1,14 +1,12 @@
 #!/bin/bash
-
 if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show debugging.
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                        VARIABLES                         │
 # ╰──────────────────────────────────────────────────────────╯
-FOLDER="./scripts/download"
-SUBTITLES_FOLDER="./scripts/subtitles"
+FOLDER="./scripts/generate"
 PWD=$(pwd)
-EXT="srt"
+
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -17,10 +15,10 @@ EXT="srt"
 usage()
 {
     if [ "$#" -lt 1 ]; then
-        printf "ℹ️ Usage:\n $0 --json [data.json]\n\n" >&2 
+        printf "ℹ️ Usage:\n $0 --json [data.json] \n\n" >&2 
 
         printf "Summary:\n"
-        printf "This will download any youtube video listed.\n\n"
+        printf "This will switch the generate to the correct script.\n\n"
 
         printf "Flags:\n"
 
@@ -56,7 +54,6 @@ function arguments()
             ;;
 
 
-
         *)
             POSITIONAL_ARGS+=("$1") # save positional arg back onto variable
             shift                   # remove argument and shift past it.
@@ -74,56 +71,9 @@ function pre_flight_checks()
 {
     
     if [ ! -f "$JSON" ]; then
-        printf "No config file found."
-    fi    
-
-}
-
-function read_config()
-{
-    URL=$(cat $JSON | jq -r -c '.url')
-    SUBTITLES=$(cat $JSON | jq -r -c '.subtitles')  
-    DEDUPE=$(cat $JSON | jq -r -c '.dedupe')  
-    DYNAMICTEXT=$(cat $JSON | jq -r -c '.dynamictext')  
-}
-
-
-
-function download()
-{
-    SUBTITLE_STRING=""
-    if [ -n "${SUBTITLES}" ]; then
-        SUBTITLE_STRING=" --write-subs --write-auto-subs --sub-lang en --convert-subs=srt "
-    fi 
-
-    OUTPUT=$(yt-dlp ${SUBTITLE_STRING} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' -o "youtube_%(id)s.%(ext)s" ${URL})
-
-    echo $OUTPUT
-
-    OUTPUT_FILENAME=$(echo "$OUTPUT" | sed -n 's/.*Writing video subtitles to: \(youtube_[^ ]*\)\.vtt.*/\1/p').$EXT
-
-    echo "OUTPUT_FILENAME:$OUTPUT_FILENAME"
-
-}
-
-
-
-function remove_duplicates()
-{
-    echo "Run DEDUPE:${DEDUPE}"
-    if [[ "${DEDUPE}" = "true" ]]; then
-        bash $SUBTITLES_FOLDER/remove_dupes.sh $OUTPUT_FILENAME
+        printf "No file found."
     fi
-}
 
-
-
-function dynamic_text()
-{
-    echo "Run DYNAMICTEXT:${DYNAMICTEXT}"
-    if [[ "${DYNAMICTEXT}" = "true" ]]; then
-        bash $SUBTITLES_FOLDER/dynamic_subs.sh $OUTPUT_FILENAME 
-    fi
 }
 
 
@@ -137,15 +87,25 @@ function main()
 
     pre_flight_checks
 
-    read_config
-    
-    printf "📥 %-10s : %s\n" "YouTube" "$video_id"
+    JSON_CONTENT=$(cat "$JSON")
 
-    download
+    # Iterate through each top-level key in the JSON
+    for section in $(echo "$JSON_CONTENT" | jq -r 'keys[]'); do
 
-    remove_duplicates
+        # Remove digits from the end of the section name to get the script name
+        base_section_name=$(echo "$section" | grep -o '^[a-zA-Z_-]*')
+        script_name="${base_section_name}.sh"
 
-    dynamic_text
+        # Extract the run value
+        run=$(echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section].run')
+
+        # Proceed only if run is true
+        if [ "$run" == true ]; then
+            echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section]' > $PWD/generate_${section}.json
+            bash $FOLDER/$script_name --json $PWD/generate_${section}.json 
+        fi
+        
+    done
 
 }
 
