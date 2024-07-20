@@ -4,6 +4,7 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 # ╭──────────────────────────────────────────────────────────╮
 # │                        VARIABLES                         │
 # ╰──────────────────────────────────────────────────────────╯
+MIDJOURNEY_FOLDER="./midjourney"
 FOLDER="./scripts/generate"
 PWD=$(pwd)
 
@@ -154,6 +155,16 @@ function download_images()
 }
 
 
+function slice_images()
+{
+    for file in mj_quad*; do
+        if [ -f "$file" ]; then
+            node ./slice-images.js "$file"
+        fi
+        rm -f $file
+    done
+}
+
 # ╭──────────────────────────────────────────────────────────╮
 # │                                                          │
 # │                      Main Function                       │
@@ -161,6 +172,7 @@ function download_images()
 # ╰──────────────────────────────────────────────────────────╯
 function main()
 {
+    cd $MIDJOURNEY_FOLDER
 
     pre_flight_checks
 
@@ -169,7 +181,13 @@ function main()
     download_images "midjourney_images_quad_urls.txt"
     download_images "midjourney_images_upscaled_urls.txt"
 
+    slice_images
+
+    mv *.png $PWD
+
+    cd $PWD
 }
+
 
 usage "$@"
 arguments "$@"

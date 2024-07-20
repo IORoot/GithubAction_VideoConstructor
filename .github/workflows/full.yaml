@@ -175,26 +175,45 @@ jobs:
 
 
 
+
             # ╭───────────────────────────────────────────────────────╮
-            # │                    Run Midjourney                     │
+            # │                  RUN THE GENERATORS                   │
             # ╰───────────────────────────────────────────────────────╯
-            - name: 🏞️ Generate - Use Midjourney
-              continue-on-error: true
+            - name: 🏞️ Generate - Run Generator
               if: ${{ env.VC_GENERATE_RUN }}
-              run: |  
-                  cd ${GITHUB_WORKSPACE}/midjourney    
-                  ../scripts/generate/midjourney.sh --json ./config_generators.json
+              continue-on-error: true
+              run: |
+                cd ${GITHUB_WORKSPACE}
+                cat config.json | jq -r '.generate.generators' > ./config_generate.json
+                cat ./config_generate.json
+                ./scripts/generate/generate.sh --json ${GITHUB_WORKSPACE}/config_generate.json
 
-                  for file in mj_quad*; do
-                      if [ -f "$file" ]; then
-                          node ./slice-images.js "$file"
-                      fi
-                      rm -f $file
-                  done
+                ls -la
+                
+                ls -la ${GITHUB_WORKSPACE}
 
-                  mv *.png ${GITHUB_WORKSPACE} || true
-                  cd ${GITHUB_WORKSPACE}
-                  ls -la ${GITHUB_WORKSPACE}
+
+
+            # # ╭───────────────────────────────────────────────────────╮
+            # # │                    Run Midjourney                     │
+            # # ╰───────────────────────────────────────────────────────╯
+            # - name: 🏞️ Generate - Use Midjourney
+            #   continue-on-error: true
+            #   if: ${{ env.VC_GENERATE_RUN }}
+            #   run: |  
+            #       cd ${GITHUB_WORKSPACE}/midjourney    
+            #       ../scripts/generate/midjourney.sh --json ./config_generators.json
+
+            #       for file in mj_quad*; do
+            #           if [ -f "$file" ]; then
+            #               node ./slice-images.js "$file"
+            #           fi
+            #           rm -f $file
+            #       done
+
+            #       mv *.png ${GITHUB_WORKSPACE} || true
+            #       cd ${GITHUB_WORKSPACE}
+            #       ls -la ${GITHUB_WORKSPACE}
 
 
 
