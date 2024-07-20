@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 input_file="$1"
 output_file="dedupe_${input_file}"
 
@@ -8,6 +9,8 @@ if [ -z "$input_file" ]; then
     echo "Usage: $0 <input_srt_file>"
     exit 1
 fi
+
+printf "Removing Duplicate Lines in %s\n" ${input_file}
 
 temp_file=$(mktemp)
 

@@ -9,6 +9,9 @@ if [ -z "$input_file" ]; then
     exit 1
 fi
 
+
+printf "Creating dynamic subtitles for %s\n" ${input_file}
+
 temp_file1='temp1.srt'
 temp_file2='temp2.srt'
 temp_file3='temp3.srt'

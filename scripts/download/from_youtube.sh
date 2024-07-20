@@ -105,7 +105,7 @@ function download()
 
 function remove_duplicates()
 {
-    if [ -n "${OUTPUT_FILENAME}" ]; then
+    if [ -n "${DEDUPE}" ]; then
         bash $SUBTITLES_FOLDER/remove_dupes.sh $OUTPUT_FILENAME
     fi
 }
@@ -114,7 +114,7 @@ function remove_duplicates()
 
 function dynamic_text()
 {
-    if [ -n "${OUTPUT_FILENAME}" ]; then
+    if [ -n "${DYNAMICTEXT}" ]; then
         bash $SUBTITLES_FOLDER/dynamic_subs.sh $OUTPUT_FILENAME 
     fi
 }
@@ -135,6 +135,10 @@ function main()
     printf "📥 %-10s : %s\n" "YouTube" "$video_id"
 
     download
+
+    remove_duplicates
+
+    dynamic_text
 
 }
 
