@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
 if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show debugging.
 
 # ╭──────────────────────────────────────────────────────────╮
@@ -9,6 +8,7 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 FOLDER="./scripts/download"
 SUBTITLES_FOLDER="./scripts/subtitles"
 PWD=$(pwd)
+EXT="srt"
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -98,18 +98,19 @@ function download()
 
     OUTPUT=$(yt-dlp ${SUBTITLE_STRING} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' -o "youtube_%(id)s.%(ext)s" ${URL})
 
-    echo "-------"
     echo $OUTPUT
-    echo "-------"
 
-    OUTPUT_FILENAME=$(echo "$OUTPUT" | grep -oP '(?<=Destination: )[^ ]+')
+    OUTPUT_FILENAME=$(echo "$OUTPUT" | sed -n 's/.*Writing video subtitles to: \(youtube_[^ ]*\)\.vtt.*/\1/p').$EXT
+
+    echo "OUTPUT_FILENAME:$OUTPUT_FILENAME"
+
 }
 
 
 
 function remove_duplicates()
 {
-    if [ -n "${DEDUPE}" ]; then
+    if [[ "${DEDUPE}" = "true" ]]; then
         bash $SUBTITLES_FOLDER/remove_dupes.sh $OUTPUT_FILENAME
     fi
 }
@@ -118,7 +119,7 @@ function remove_duplicates()
 
 function dynamic_text()
 {
-    if [ -n "${DYNAMICTEXT}" ]; then
+    if [[ "${DYNAMICTEXT}" = "true" ]]; then
         bash $SUBTITLES_FOLDER/dynamic_subs.sh $OUTPUT_FILENAME 
     fi
 }

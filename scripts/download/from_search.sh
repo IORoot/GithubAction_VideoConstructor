@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
 if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show debugging.
 
 # ╭──────────────────────────────────────────────────────────╮
