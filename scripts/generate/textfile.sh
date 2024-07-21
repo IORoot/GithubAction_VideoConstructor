@@ -84,28 +84,22 @@ function create_textfile()
     JSON_CONTENT=$(cat "$JSON")
     JSON_KEYS=$(echo "$JSON_CONTENT" | jq -r 'keys[]')
 
-    # Iterate through each top-level key in the JSON
-    for section in $JSON_KEYS; do
+    # Extract the run value
+    RUN=$(echo "$JSON_CONTENT" | jq -r '.run')
+    FILENAME=$(echo "$JSON_CONTENT" | jq -r '.filename')
+    TEXT=$(echo "$JSON_CONTENT" | jq -r '.text')
+    PERMISSIONS=$(echo "$JSON_CONTENT" | jq -r '.permissions')
 
-        # Remove digits from the end of the section name to get the script name
-        base_section_name=$(echo "$section" | grep -o '^[a-zA-Z_-]*')
-        # script_name="output_${base_section_name}.sh"
+    printf "🗒️ %-10s : %s\n" "TextFile" "${FILENAME}"
+    printf "🗒️ %-10s : %s\n" "Text" "${TEXT}"
 
-        # Extract the run value
-        RUN=$(echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section].run')
-        FILENAME=$(echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section].filename')
-        TEXT=$(echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section].text')
-        PERMISSIONS=$(echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section].permissions')
+    if [[ ${FILENAME} == "" ]]; then echo "No Filename given. Using Default. textfile.txt"; FILENAME="textfile.txt"; fi
+    if [[ ${PERMISSIONS} == "" ]]; then PERMISSIONS="400"; fi
 
-        printf "🗒️ %-10s : %s\n" "TextFile" "${FILENAME}"
-
-        if [[ ${FILENAME} == "" ]]; then echo "No Filename given. Using Default. textfile.txt"; FILENAME="textfile.txt"; fi
-        if [[ ${PERMISSIONS} == "" ]]; then PERMISSIONS="400"; fi
-
-        echo $TEXT > $FILENAME
+    if [ "$run" == true ]; then
+        echo "${TEXT}" > $FILENAME
         chmod $PERMISSIONS $FILENAME 
-        
-    done
+    fi
 }
 
 

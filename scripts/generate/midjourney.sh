@@ -85,26 +85,18 @@ function run_midjourney()
     JSON_CONTENT=$(cat "$JSON")
     JSON_KEYS=$(echo "$JSON_CONTENT" | jq -r 'keys[]')
 
-    # Iterate through each top-level key in the JSON
-    for section in $JSON_KEYS; do
+    # Extract the run value
+    run=$(echo "$JSON_CONTENT" | jq -r '.run')
+    prompt=$(echo "$JSON_CONTENT" | jq -r '.prompt')
+    upscale=$(echo "$JSON_CONTENT" | jq -r '.upscale')
 
-        # Remove digits from the end of the section name to get the script name
-        base_section_name=$(echo "$section" | grep -o '^[a-zA-Z_-]*')
-        # script_name="output_${base_section_name}.sh"
+    printf "🏞️ %-10s : %s\n" "Prompt" "${prompt}"
 
-        # Extract the run value
-        run=$(echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section].run')
-        prompt=$(echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section].prompt')
-        upscale=$(echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section].upscale')
-
-        printf "🏞️ %-10s : %s\n" "Prompt" "${prompt}"
-
-        # Proceed only if run is true
-        if [ "$run" == true ]; then
-            npx tsx imagine.ts "${prompt}" "${upscale}"
-        fi
+    # Proceed only if run is true
+    if [ "$run" == true ]; then
+        npx tsx imagine.ts "${prompt}" "${upscale}"
+    fi
         
-    done
 }
 
 
@@ -187,7 +179,6 @@ function main()
 
     cd $PWD
 }
-
 
 usage "$@"
 arguments "$@"

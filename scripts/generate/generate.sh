@@ -92,6 +92,8 @@ function main()
     # Iterate through each top-level key in the JSON
     for section in $(echo "$JSON_CONTENT" | jq -r 'keys[]'); do
 
+        echo "Running: $section"
+
         # Remove digits from the end of the section name to get the script name
         base_section_name=$(echo "$section" | grep -o '^[a-zA-Z_-]*')
         script_name="${base_section_name}.sh"

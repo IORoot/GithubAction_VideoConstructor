@@ -1,92 +1,46 @@
 {
-    "title": "Testing each download config",
-    "description": "Testing out each combination of downloads",
-    "search": {
+    "title": "Dynamic Subtitles",
+    "id": "SUBS01",
+    "description": "Uses dynamic subtitles",
+    "generate": {
         "run": true,
-        "searches": {
-            "keyword": {
+        "generators": {
+            "midjourney": {
                 "run": true,
-                "keyword": "cute+cats",
-                "filter": "",
-                "count": "5"
-            }
-        }
-    },
-    "download": {
-        "run": true,
-        "downloads": {
-            "from_search": {
-                "run": true,
-                "count": "1",
-                "duration": "5",
-                "timestamps": ""
-            }
-        }
-    },
-    "overlay": {
-        "run": true,
-        "timecut_selector": "#SR7_2_1",
-        "timecut_viewport": "1080,1920",
-        "timecut_settings": "--fps=30 --start=0 --duration=10",
-        "template": "002-fluid"
-    },
-    "music": {
-        "run": true,
-        "musics": {
-            "playlist": {
-                "run": true,
-                "url": "https://www.youtube.com/playlist?list=PLzCxunOM5WFKNv_NaoVO6DWNkR3K8K9WC",
-                "strategy": "specific",
-                "items": "1,3,5",
-                "top": "",
-                "bottom": "1",
-                "max": "1",
-                "start": "00:00:00",
-                "end": "00:01:00"
+                "prompt": "Fun-looking cute pixar character created around the idea of the periodic table of elements. Fantastic action shot on gopro with magnificent sun lighting and lens flares. super realistic photo, hyper detail, professional photo, photorealistic, 32k uhd --s 1000 --ar 9:16",
+                "upscale": ""
             },
-            "url": {
+            "textfile": {
                 "run": true,
-                "url": "https://www.youtube.com/playlist?list=PLzCxunOM5WFKNv_NaoVO6DWNkR3K8K9WC",
-                "start": "00:00:00",
-                "end": "00:00:05"
-            }
-        }
-    },
-    "video": {
-        "run": true,
-        "config": {
-            "ff_transcode": {
-                "input": "./videos",
-                "fps": "30",
-                "width": "1080",
-                "height": "1920",
-                "output": "ff_transcode.mp4",
-                "loglevel": "quiet"
-            },
-            "ff_transition": {
-                "grep": "ff_transcode",
-                "effects": "fade,distance,vdslice",
-                "duration": "1",
-                "output": "ff_transition.mp4",
-                "loglevel": "quiet",
-                "input0": "./"
-            },
-            "ff_overlay": {
-                "input": "ff_transition.mp4",
-                "overlay": "./overlay/overlay_video.mov",
-                "start": "1",
-                "end": "4",
-                "output": "output.mp4",
-                "loglevel": "quiet"
+                "filename": "hello.txt",
+                "permissions": "600",
+                "text": "Hello There."
             }
         }
     },
     "output": {
         "run": true,
+        "include": "hello.txt",
         "outputs": {
             "gdrive": {
                 "run": true,
-                "folder": "PostPlanPro"
+                "folder": "Automation/DynamicSubs"
+            }
+        }
+    },
+    "scheduler": {
+        "schedules": {
+            "webhook": {
+                "run": false,
+                "interval": "604800",
+                "uri": "https://hook.eu1.make.com/lodakxyt2tup41woe2itttum2s96r9qj",
+                "headers": [
+                    {
+                        "header": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "additional_data": false
             }
         }
     }
