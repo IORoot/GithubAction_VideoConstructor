@@ -96,7 +96,7 @@ function create_textfile()
     if [[ ${FILENAME} == "" ]]; then echo "No Filename given. Using Default. textfile.txt"; FILENAME="textfile.txt"; fi
     if [[ ${PERMISSIONS} == "" ]]; then PERMISSIONS="400"; fi
 
-    if [ "$run" == true ]; then
+    if [[ "$RUN" == "true" ]]; then
         echo "${TEXT}" > $FILENAME
         chmod $PERMISSIONS $FILENAME
     fi

@@ -111,7 +111,7 @@ function download_images()
     # Check if input file exists
     if [ ! -f "$INPUT_FILE" ]; then
         echo "File not found: $INPUT_FILE"
-        exit 0
+        return
     fi
 
     # Get name of TXT file and remove extension
@@ -175,7 +175,7 @@ function main()
 
     slice_images
 
-    mv *.png $PWD
+    mv *.png ..
 
     cd $PWD
 }
