@@ -99,8 +99,6 @@ function create_textfile()
     if [ "$run" == true ]; then
         echo "${TEXT}" > $FILENAME
         chmod $PERMISSIONS $FILENAME
-        mv $FILENAME "${PWD}/../.."
-        ls -la
     fi
 }
 
