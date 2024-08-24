@@ -1,0 +1,96 @@
+{
+    "title": "Dynamic Subtitles",
+    "id": "SUBS02",
+    "description": "Uses chatgpt to generate dynamic subtitles",
+    "generate": {
+        "run": true,
+        "generators": {
+            "textfile": {
+                "run": true,
+                "filename": "chatgpt_subtitles.srt",
+                "permissions": "600",
+                "text": "1
+00:00:00,000 --> 00:00:05,000
+[Upbeat music playing]
+
+2
+00:00:05,500 --> 00:00:10,000
+In the realm of fitness, battles are fought every day.
+
+3
+00:00:10,500 --> 00:00:15,000
+The battlefield is your mind, and the enemy is your doubt.
+
+4
+00:00:15,500 --> 00:00:20,000
+But fear not, for within you lies the power to conquer.
+
+5
+00:00:20,500 --> 00:00:25,000
+Ignite the fire within, unleash the warrior inside.
+
+6
+00:00:25,500 --> 00:00:30,000
+With every rep, every step, you grow stronger.
+
+7
+00:00:30,500 --> 00:00:35,000
+Embrace the pain, for it is the catalyst of change.
+
+8
+00:00:35,500 --> 00:00:40,000
+Push beyond your limits, defy the boundaries of possibility.",
+
+                "output": "ff_transition.mp4",
+                "loglevel": "quiet",
+                "input0": "./"
+            },
+            "ff_audio": {
+                "input": "ff_transition.mp4",
+                "audio": "./music/music_playlist_00001.mp3",
+                "output": "ff_audio.mp4",
+                "loglevel": "quiet"
+            },
+            "ff_subtitles": {
+                "input": "ff_audio.mp4",
+                "subtitles": "chatgpt_subtitles.srt",
+                "dynamictext": true,
+                "output": "ff_subtitles.mp4",
+                "loglevel": "quiet"
+            },
+            "ff_cut": {
+                "input": "ff_subtitles.mp4",
+                "start": "00:00:00",
+                "end": "00:01:00",
+                "output": "output.mp4",
+                "loglevel": "quiet"
+            }
+        }
+    },
+    "output": {
+        "run": true,
+        "include": "output.mp4",
+        "outputs": {
+            "gdrive": {
+                "run": true,
+                "folder": "Automation/ChatGPTSubs"
+            }
+        }
+    },
+    "scheduler": {
+        "schedules": {
+            "webhook": {
+                "run": false,
+                "interval": "604800",
+                "uri": "https://hook.eu1.make.com/lodakxyt2tup41woe2itttum2s96r9qj",
+                "headers": [
+                    {
+                        "header": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "additional_data": false
+            }
+        }
+    }
+}

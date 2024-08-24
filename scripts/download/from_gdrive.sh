@@ -8,6 +8,7 @@ FOLDER="./scripts/download"
 PWD=$(pwd)
 FILELIST="./download_from_server_filelist.txt"
 COUNT=1
+TRANSACTIONSPERSECOND=5
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -117,13 +118,13 @@ function download_single_file()
             # print to screen
             printf "📥 %-10s : %s\n" "Single" "$FOLDER"
 
-            rclone copyto GDrive:$FOLDER ${OUTPUT_FILE_LOOPNAME}  --config ${RCLONE_CONFIG}
+            rclone copyto GDrive:$FOLDER ${OUTPUT_FILE_LOOPNAME} --fast-list --tpslimit ${TRANSACTIONSPERSECOND} --config ${RCLONE_CONFIG}
 
         done
     else
         OUTPUT_FILE=$(basename $FOLDER)
         printf "📥 %-10s : %s\n" "Single" "$FOLDER"
-        rclone copy GDrive:$FOLDER ${OUTPUT_FILE}  --config ${RCLONE_CONFIG}
+        rclone copy GDrive:$FOLDER ${OUTPUT_FILE} --fast-list --tpslimit ${TRANSACTIONSPERSECOND} --config ${RCLONE_CONFIG}
     fi
     
 }
@@ -150,7 +151,7 @@ function download_files_with_strategy_newest()
 
     # Loop through the selected files and download each one
     for FILE in $SELECTED_FILES; do
-        rclone copyto --config $RCLONE_CONFIG "GDrive:$FOLDER/$FILE" "./$FILE"
+        rclone copyto --fast-list --tpslimit ${TRANSACTIONSPERSECOND} --config $RCLONE_CONFIG "GDrive:$FOLDER/$FILE" "./$FILE"
         printf "📥 %-10s : %s\n" "Newest" "GDrive:$FOLDER/$FILE"
     done
 }
@@ -176,7 +177,7 @@ function download_files_with_strategy_oldest()
 
     # Loop through the selected files and download each one
     for FILE in $SELECTED_FILES; do
-        rclone copyto --config $RCLONE_CONFIG "GDrive:$FOLDER/$FILE" "./$FILE"
+        rclone copyto --fast-list --tpslimit ${TRANSACTIONSPERSECOND} --config $RCLONE_CONFIG "GDrive:$FOLDER/$FILE" "./$FILE"
         printf "📥 %-10s : %s\n" "Oldest" "GDrive:$FOLDER/$FILE"
     done
 }
@@ -202,7 +203,7 @@ function download_files_with_strategy_random()
 
     # Loop through the selected files and download each one
     for FILE in $SELECTED_FILES; do
-        rclone copyto --config $RCLONE_CONFIG "GDrive:$FOLDER/$FILE" "./$FILE"
+        rclone copyto --fast-list --tpslimit ${TRANSACTIONSPERSECOND} --config $RCLONE_CONFIG "GDrive:$FOLDER/$FILE" "./$FILE"
         printf "📥 %-10s : %s\n" "Random" "GDrive:$FOLDER/$FILE"
     done
 }
@@ -225,7 +226,7 @@ function download_specific_files()
         printf "📥 %-10s : %s\n" "Specific" "$FOLDER/$DOWNLOADFILE"
 
         # download
-        rclone copyto --config $RCLONE_CONFIG "GDrive:$FOLDER/$DOWNLOADFILE" "./$DOWNLOADFILE"
+        rclone copyto --fast-list --tpslimit ${TRANSACTIONSPERSECOND} --config $RCLONE_CONFIG "GDrive:$FOLDER/$DOWNLOADFILE" "./$DOWNLOADFILE"
 
     done
 }

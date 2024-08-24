@@ -1,6 +1,0 @@
-{
-  "run": true,
-  "filename": "hello.txt",
-  "permissions": "600",
-  "text": "Hello There."
-}
