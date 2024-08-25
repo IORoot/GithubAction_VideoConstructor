@@ -420,17 +420,11 @@ jobs:
             - name: 🎥 VIDEO - Run ScriptFlow
               if: ${{ env.VC_VIDEO_RUN }}
               run: |
-                cat config.json | jq -r '.video.config' > ${GITHUB_WORKSPACE}/video_config.json
-                cat ${GITHUB_WORKSPACE}/video_config.json
+                cat config.json | jq -r '.video.config' > ${GITHUB_WORKSPACE}/config_scriptflow.json
+                cat ${GITHUB_WORKSPACE}/config_scriptflow.json
                 export PATH=$PATH:$(pwd)
-                scriptflow.sh --config $(realpath ./video_config.json) -t
+                scriptflow.sh --config $(realpath ./config_scriptflow.json) -t
 
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │                          SSH                          │
-            # ╰───────────────────────────────────────────────────────╯
-            - name: 🪲 DEBUG - Setup upterm session
-              uses: lhotari/action-upterm@v1
 
                   
             # ╭──────────────────────────────────────────────────────────────────────────╮
