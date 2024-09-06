@@ -312,6 +312,9 @@ jobs:
               if: ${{ env.VC_OVERLAY_RUN }}
               run: | 
                 unzip ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/template.zip -d ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/
+                if [ -f "${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/lottie.json" ]; then
+                  cp ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/lottie.json ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/template/public/js/lottie.json
+                fi
 
 
                 
@@ -346,6 +349,9 @@ jobs:
                 cat config.json | jq -r '.lottie.override' > ${GITHUB_WORKSPACE}/lottie_overrides.json
                 cat ${GITHUB_WORKSPACE}/lottie_overrides.json
 
+                if [ -f "${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/template/public/js/lottie.json" ]; then
+                  echo "lottie"
+                fi
 
 
             # ╭───────────────────────────────────────────────────────╮
