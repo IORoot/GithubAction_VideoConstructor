@@ -390,13 +390,6 @@ jobs:
                 curl "http://localhost:8080"
 
 
-            # # ╭───────────────────────────────────────────────────────╮
-            # # │                          SSH                          │
-            # # ╰───────────────────────────────────────────────────────╯
-            # - name: 🪲 DEBUG - Setup upterm session
-            #   uses: lhotari/action-upterm@v1
-
-
             # ╭───────────────────────────────────────────────────────╮
             # │             Use Timecut to capture Video              │
             # ╰───────────────────────────────────────────────────────╯
@@ -407,6 +400,7 @@ jobs:
                 node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ env.VC_OVERLAY_TIMECUT_TARGET }}" --viewport="${{ env.VC_OVERLAY_TIMECUT_VIEWPORT }}" ${{ env.VC_OVERLAY_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
                 mkdir overlay
                 cp overlay_video.mov ./overlay
+                cp overlay_video.mov ./uploads
                 ls -la
                 ls -la ./overlay
 
@@ -518,7 +512,6 @@ jobs:
 
 
             - name: 📦 ARTIFACTS - Upload ./uploads folder as artifact if Upload to outputs Fails
-              if: failure()  
               uses: actions/upload-artifact@v3
               with:
                 name: uploads
