@@ -517,11 +517,12 @@ jobs:
 
 
 
-            # - name: 📦 ARTIFACTS - Upload ./uploads folder as artifact
-            #   uses: actions/upload-artifact@v3
-            #   with:
-            #     name: uploads-artifact
-            #     path: ./uploads/
+            - name: 📦 ARTIFACTS - Upload ./uploads folder as artifact if Upload to outputs Fails
+              if: failure()  
+              uses: actions/upload-artifact@v3
+              with:
+                name: uploads
+                path: ./uploads/
                 
 
             # ╭──────────────────────────────────────────────────────────────────────────╮

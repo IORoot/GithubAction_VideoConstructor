@@ -8,6 +8,8 @@ PWD=$(pwd)
 UPLOADS_FOLDER="./uploads"
 FOLDER_PREFIX="videoconstructor"
 OUTPUT_FILELIST="./output_filelist.txt"
+MAX_RETRIES=3  # Maximum number of retries
+RETRY_DELAY=60 # Delay in seconds between retries
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -88,35 +90,90 @@ function pre_flight_checks()
 }
 
 
+# Upload to Google Drive with retry logic
+function upload_to_gdrive() {
+    local attempt=1
+    local success=0
+    while [[ $attempt -le $MAX_RETRIES ]]; do
+        # Copy everything in uploads folder to Google Drive
+        rclone copy $UPLOADS_FOLDER GDrive:${FOLDER}/${FOLDER_PREFIX}_${CURRENT_DATE} --retries 5 --low-level-retries 10 --retries-sleep 5s --config $RCLONE_CONFIG 
 
-# ╭──────────────────────────────────────────────────────────╮
-# │                                                          │
-# │                      Main Function                       │
-# │                                                          │
-# ╰──────────────────────────────────────────────────────────╯
-function main()
-{
+        # Check the exit status
+        if [[ $? -eq 0 ]]; then
+            success=1
+            break
+        else
+            echo "Attempt $attempt failed. Retrying in $RETRY_DELAY seconds..."
+            sleep $RETRY_DELAY
+            ((attempt++))
+        fi
+    done
 
+    if [[ $success -eq 0 ]]; then
+        echo "Upload to Google Drive failed after $MAX_RETRIES attempts."
+        return 1
+    fi
+    return 0
+}
+
+
+
+# Main function
+function main() {
     pre_flight_checks
 
-    # Get the folder to upload onto google drive
+    # Get the folder to upload onto Google Drive
     FOLDER=$(cat $JSON | jq -r -c '.folder')
 
     # Get current date for folder creation
     CURRENT_DATE=$(date +"%Y%m%d_%H%M%S")
 
-    # Copy everything in uploads folder to google drive
-    rclone copy $UPLOADS_FOLDER GDrive:${FOLDER}/${FOLDER_PREFIX}_${CURRENT_DATE} --retries 5 --low-level-retries 10 --retries-sleep 5s  --config $RCLONE_CONFIG 
+    # Try uploading to Google Drive
+    if ! upload_to_gdrive; then
+        exit 1  # Exit with error code to trigger the fallback in GitHub Actions
+    else
+        # Send to output_filelist.txt
+        for file in $UPLOADS_FOLDER/*; do
+            if [ -f "$file" ]; then
+                echo "GDRIVE:${FOLDER}/${FOLDER_PREFIX}_${CURRENT_DATE}/$(basename "$file")" >> $OUTPUT_FILELIST
+            fi
+        done
 
-    # Send to output_filelist.txt
-    for file in $UPLOADS_FOLDER/*; do
-        if [ -f "$file" ]; then
-            echo "GDRIVE:${FOLDER}/${FOLDER_PREFIX}_${CURRENT_DATE}/$(basename "$file")" >> $OUTPUT_FILELIST
-        fi
-    done
-
-    printf "📬 %-10s : %s\n" "GDrive" "${FOLDER}/${FOLDER_PREFIX}_${CURRENT_DATE}"
+        printf "📬 %-10s : %s\n" "GDrive" "${FOLDER}/${FOLDER_PREFIX}_${CURRENT_DATE}"
+    fi
 }
+
+
+
+
+# # ╭──────────────────────────────────────────────────────────╮
+# # │                                                          │
+# # │                      Main Function                       │
+# # │                                                          │
+# # ╰──────────────────────────────────────────────────────────╯
+# function main()
+# {
+
+#     pre_flight_checks
+
+#     # Get the folder to upload onto google drive
+#     FOLDER=$(cat $JSON | jq -r -c '.folder')
+
+#     # Get current date for folder creation
+#     CURRENT_DATE=$(date +"%Y%m%d_%H%M%S")
+
+#     # Copy everything in uploads folder to google drive
+#     rclone copy $UPLOADS_FOLDER GDrive:${FOLDER}/${FOLDER_PREFIX}_${CURRENT_DATE} --retries 5 --low-level-retries 10 --retries-sleep 5s  --config $RCLONE_CONFIG 
+
+#     # Send to output_filelist.txt
+#     for file in $UPLOADS_FOLDER/*; do
+#         if [ -f "$file" ]; then
+#             echo "GDRIVE:${FOLDER}/${FOLDER_PREFIX}_${CURRENT_DATE}/$(basename "$file")" >> $OUTPUT_FILELIST
+#         fi
+#     done
+
+#     printf "📬 %-10s : %s\n" "GDrive" "${FOLDER}/${FOLDER_PREFIX}_${CURRENT_DATE}"
+# }
 
 usage "$@"
 arguments "$@"
