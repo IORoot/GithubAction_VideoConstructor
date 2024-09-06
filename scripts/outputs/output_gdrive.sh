@@ -92,10 +92,14 @@ function pre_flight_checks()
 
 # Upload to Google Drive with retry logic
 function upload_to_gdrive() {
+
+    printf "upload_to_gdrive()\n"
+
     local attempt=1
     local success=0
     while [[ $attempt -le $MAX_RETRIES ]]; do
         # Copy everything in uploads folder to Google Drive
+        printf "rclone attempt\n"
         rclone copy $UPLOADS_FOLDER GDrive:${FOLDER}/${FOLDER_PREFIX}_${CURRENT_DATE} --retries 5 --low-level-retries 10 --retries-sleep 5s --config $RCLONE_CONFIG 
 
         # Check the exit status
@@ -120,6 +124,9 @@ function upload_to_gdrive() {
 
 # Main function
 function main() {
+
+    printf "main()\n"
+
     pre_flight_checks
 
     # Get the folder to upload onto Google Drive
