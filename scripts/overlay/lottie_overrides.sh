@@ -24,8 +24,8 @@ usage()
         printf " --lottiefile <TARGET>\n"
         printf "\tInput Lottie JSON File.\n\n"
 
-        printf " --json <JSON>\n"
-        printf "\tJSON File of each search/replace fields.\n\n"
+        printf " --overridefile <JSON>\n"
+        printf "\tOverride JSON File of each search/replace fields.\n\n"
 
         exit 1
     fi
@@ -44,14 +44,14 @@ function arguments()
 
 
         --lottiefile)
-            INPUT="$2"
+            LOTTIEFILE="$2"
             shift
             shift
             ;;
 
 
-        --json)
-            JSON="$2"
+        --overridefile)
+            OVERRIDEFILE="$2"
             shift 
             shift
             ;;
@@ -81,12 +81,12 @@ function arguments()
 function pre_flight_checks()
 {
 
-    if [[ -z "${INPUT+x}" ]]; then 
+    if [[ -z "${LOTTIEFILE+x}" ]]; then 
         printf "❌ No INPUT FILE specified. Exiting.\n"
         exit 1
     fi
 
-    if [[ -z "${JSON+x}" ]]; then 
+    if [[ -z "${OVERRIDEFILE+x}" ]]; then 
         printf "❌ No JSON FILE specified. Exiting.\n"
         exit 1
     fi
@@ -104,7 +104,39 @@ function main()
 {
 
     pre_flight_checks
+
+    printf "SED Replacement in lottie JSON files\n"
     
+    cat ${OVERRIDEFILE} | jq -c '.[]' | while read -r override; do
+
+        lottie_search=$(echo "$override" | jq -r '.lottie_search')
+        lottie_replacement=$(echo "$override" | jq -r '.lottie_replacement')
+        lottie_global=$(echo "$override" | jq -r '.lottie_global')
+
+        # Escape special characters in search and replacement strings
+        escaped_search=$(printf '%s\n' "$lottie_search" | sed -e 's/[]\/$*.^[]/\\&/g')
+        escaped_replacement=$(printf '%s\n' "$lottie_replacement" | sed -e 's/[&/\]/\\&/g')
+
+        # Set sed flags for global or non-global replacement
+        if [ "$lottie_global" = "true" ]; then
+            sed_flag="g"
+        else
+            sed_flag=""
+        fi
+
+        # Perform sed search and replace
+        # Detect the OS and set the appropriate sed command
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # macOS
+            echo sed -i '' -e "s/${escaped_search}/${escaped_replacement}/${sed_flag}" "${LOTTIEFILE}"
+            sed -i '' -e "s/${escaped_search}/${escaped_replacement}/${sed_flag}" "${LOTTIEFILE}"
+        else
+            # Linux and other Unix-like systems
+            echo sed -i -e "s/${escaped_search}/${escaped_replacement}/${sed_flag}" "${LOTTIEFILE}"
+            sed -i -e "s/${escaped_search}/${escaped_replacement}/${sed_flag}" "${LOTTIEFILE}"
+        fi
+
+    done
 
 }
 
