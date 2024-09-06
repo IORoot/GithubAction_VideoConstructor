@@ -400,7 +400,6 @@ jobs:
                 node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ env.VC_OVERLAY_TIMECUT_TARGET }}" --viewport="${{ env.VC_OVERLAY_TIMECUT_VIEWPORT }}" ${{ env.VC_OVERLAY_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
                 mkdir overlay
                 cp overlay_video.mov ./overlay
-                cp overlay_video.mov ./uploads
                 ls -la
                 ls -la ./overlay
 
@@ -459,6 +458,7 @@ jobs:
               run: |
                 mkdir -p ${GITHUB_WORKSPACE}/uploads
                 cp ${{ env.VC_OUTPUT_INCLUDE }} ${GITHUB_WORKSPACE}/uploads || true
+                cp ${GITHUB_WORKSPACE}/overlay/overlay_video.mov ${GITHUB_WORKSPACE}/uploads || true
                 ls -la
                 ls -la uploads
 
@@ -512,6 +512,7 @@ jobs:
 
 
             - name: 📦 ARTIFACTS - Upload ./uploads folder as artifact if Upload to outputs Fails
+
               uses: actions/upload-artifact@v3
               with:
                 name: uploads
