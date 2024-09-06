@@ -346,12 +346,30 @@ jobs:
             - name: 🎨 OVERLAY - Override Lottie.json
               if: ${{ env.VC_OVERLAY_LOTTIE_OVERRIDES != '' && env.VC_OVERLAY_LOTTIE_OVERRIDES != null }}
               run: |   
-                cat config.json | jq -r '.lottie.override' > ${GITHUB_WORKSPACE}/lottie_overrides.json
+                cat config.json
+                cat config.json | jq -r '.overlay.lottie_overrides' > ${GITHUB_WORKSPACE}/lottie_overrides.json
                 cat ${GITHUB_WORKSPACE}/lottie_overrides.json
 
                 if [ -f "${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/template/public/js/lottie.json" ]; then
-                  echo "lottie"
+                  cat ${GITHUB_WORKSPACE}/lottie_overrides.json | jq -c '.[]' | while read -r override; do
+                      lottie_search=$(echo "$override" | jq -r '.lottie_search')
+                      lottie_replacement=$(echo "$override" | jq -r '.lottie_replacement')
+                      lottie_global=$(echo "$override" | jq -r '.lottie_global')
+
+                      # Set sed flags for global or non-global replacement
+                      if [ "$lottie_global" = "true" ]; then
+                        sed_flag="g"
+                      else
+                        sed_flag=""
+                      fi
+
+                      # Perform sed search and replace
+                      sed -i "s/${lottie_search}/${lottie_replacement}/${sed_flag}" ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/template/public/js/lottie.json
+                    done
+                  fi
                 fi
+
+
 
 
             # ╭───────────────────────────────────────────────────────╮
