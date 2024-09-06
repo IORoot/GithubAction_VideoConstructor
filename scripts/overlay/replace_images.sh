@@ -21,8 +21,8 @@ search_dir="$1"
 
 # Check if the directory exists
 if [ ! -d "$search_dir" ]; then
-    echo "Directory $search_dir does not exist."
-    exit 1
+    echo "Directory $search_dir does not exist. Skipping"
+    exit 0
 fi
 
 # Process all JSON files in the specified directory

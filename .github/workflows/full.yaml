@@ -330,7 +330,7 @@ jobs:
             # │             Optional setup of inputs.json             │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Setup Inputs.json
-              if: ${{ env.VC_OVERLAY_RUN }}
+              if: ${{ env.VC_OVERLAY_INPUTS != '' && env.VC_OVERLAY_INPUTS != null }}
               run: |   
                 cat config.json | jq -r '.overlay.inputs' > ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/inputs.json
                 cat ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/inputs.json
@@ -341,7 +341,7 @@ jobs:
             # │         Optional Search/Replace Lottie JSON           │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Override Lottie.json
-              if: ${{ env.VC_OVERLAY_RUN }}
+              if: ${{ env.VC_OVERLAY_LOTTIE_OVERRIDES != '' && env.VC_OVERLAY_LOTTIE_OVERRIDES != null }}
               run: |   
                 cat config.json | jq -r '.lottie.override' > ${GITHUB_WORKSPACE}/lottie_overrides.json
                 cat ${GITHUB_WORKSPACE}/lottie_overrides.json
@@ -349,7 +349,7 @@ jobs:
 
 
 
-                
+
             # ╭───────────────────────────────────────────────────────╮
             # │                          SSH                          │
             # ╰───────────────────────────────────────────────────────╯
