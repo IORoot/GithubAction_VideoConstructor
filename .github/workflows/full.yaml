@@ -44,12 +44,12 @@ jobs:
           id: set-matrix
           run: |
             matrix=$(echo "$VC_OVERLAY_OVERLAYS" | jq -c '{"include": [.[]]}')
-            echo "matrix=$matrix"
+            echo "matrix=$matrix" >> $GITHUB_ENV
             echo "matrix=$matrix" >> $GITHUB_OUTPUT
-
 
         - name: Output Matrix
           run: echo "${{ steps.set-matrix.outputs.matrix }}"
+
 
 
     debug_matrix:
@@ -68,14 +68,15 @@ jobs:
             echo "Inputs: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].inputs }}"
             echo "Lottie Overrides: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].lottie_overrides }}"
             echo "matrix: ${{ matrix }}"
-            echo "include: ${{ matrix.include }}"
-            echo "template: ${{ matrix.include.template }}"
-            echo "timecut_selector: ${{ matrix.include.timecut-selector }}"
-            echo "timecut_viewport: ${{ matrix.include.timecut-viewport }}"
-            echo "timecut_settings: ${{ matrix.include.timecut-settings }}"
-            echo "inputs: ${{ matrix.include.inputs }}"
-            echo "lottie_overrides: ${{ matrix.include.lottie_overrides }}"
+            echo "include: ${{ matrix.include[0] }}"
+            echo "template: ${{ matrix.include[0].template }}"
+            echo "timecut_selector: ${{ matrix.include[0].timecut-selector }}"
+            echo "timecut_viewport: ${{ matrix.include[0].timecut-viewport }}"
+            echo "timecut_settings: ${{ matrix.include[0].timecut-settings }}"
+            echo "inputs: ${{ matrix.include[0].inputs }}"
+            echo "lottie_overrides: ${{ matrix.include[0].lottie_overrides }}"
             
+
             
     process_overlays:
       needs: setup_overlays
@@ -84,14 +85,13 @@ jobs:
         matrix: ${{ fromJson(needs.setup_overlays.outputs.matrix) }}
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
-        include: ${{ matrix.include }}
-        template: ${{ matrix.include.template }}
-        timecut_selector: ${{ matrix.include.timecut-selector }}
-        timecut_viewport: ${{ matrix.include.timecut-viewport }}
-        timecut_settings: ${{ matrix.include.timecut-settings }}
-        inputs: ${{ matrix.include.inputs }}
-        lottie_overrides: ${{ matrix.include.lottie_overrides }}
-
+        include: ${{ matrix.include[0] }}
+        template: ${{ matrix.include[0].template }}
+        timecut_selector: ${{ matrix.include[0].timecut-selector }}
+        timecut_viewport: ${{ matrix.include[0].timecut-viewport }}
+        timecut_settings: ${{ matrix.include[0].timecut-settings }}
+        inputs: ${{ matrix.include[0].inputs }}
+        lottie_overrides: ${{ matrix.include[0].lottie_overrides }}
 
 
 
