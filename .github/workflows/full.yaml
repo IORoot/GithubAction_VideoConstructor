@@ -44,7 +44,6 @@ jobs:
           id: set-matrix
           run: |
             matrix=$(echo "$VC_OVERLAY_OVERLAYS" | jq -c '{"include": [.[]]}')
-            echo "matrix=$matrix" >> $GITHUB_ENV
             echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
         - name: Output Matrix
@@ -59,13 +58,7 @@ jobs:
         matrix: ${{ fromJson(needs.setup_overlays.outputs.matrix) }}
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
-        include: ${{ matrix.include[0] }}
-        template: ${{ matrix.include[0].template }}
-        timecut_selector: ${{ matrix.include[0].timecut-selector }}
-        timecut_viewport: ${{ matrix.include[0].timecut-viewport }}
-        timecut_settings: ${{ matrix.include[0].timecut-settings }}
-        inputs: ${{ matrix.include[0].inputs }}
-        lottie_overrides: ${{ matrix.include[0].lottie_overrides }}
+        include: ${{ matrix.include }} 
 
 
 
