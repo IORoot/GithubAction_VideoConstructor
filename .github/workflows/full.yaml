@@ -59,7 +59,6 @@ jobs:
         matrix: ${{ fromJson(needs.setup_overlays.outputs.matrix) }}
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
-        matrix: ${{ matrix }}
         include: ${{ matrix.include[0] }}
         template: ${{ matrix.include[0].template }}
         timecut_selector: ${{ matrix.include[0].timecut-selector }}
