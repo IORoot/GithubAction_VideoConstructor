@@ -75,12 +75,14 @@ jobs:
         matrix: ${{ fromJson(needs.setup_overlays.outputs.matrix) }}
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
-        template: ${{ matrix.include[0].template[0] }}
-        timecut_selector: ${{ matrix.include[0].timecut-selector }}
-        timecut_viewport: ${{ matrix.include[0].timecut-viewport }}
-        timecut_settings: ${{ matrix.include[0].timecut-settings }}
-        inputs: ${{ matrix.include[0].inputs }}
-        lottie_overrides: ${{ matrix.include[0].lottie_overrides }}
+        matrix: ${{ matrix }}
+        include: ${{ matrix.include }}
+        template: ${{ matrix.include.template }}
+        timecut_selector: ${{ matrix.include.timecut-selector }}
+        timecut_viewport: ${{ matrix.include.timecut-viewport }}
+        timecut_settings: ${{ matrix.include.timecut-settings }}
+        inputs: ${{ matrix.include.inputs }}
+        lottie_overrides: ${{ matrix.include.lottie_overrides }}
 
 
 

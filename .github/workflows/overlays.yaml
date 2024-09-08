@@ -8,6 +8,14 @@ on:
                 type: string
                 description: 'Base64 configuration for Video Constructor'     
                 required: true
+            matrix:
+                  description: 'matrix'
+                  required: true
+                  type: string
+            include:
+                  description: 'include'
+                  required: true
+                  type: string
             template:
                 description: 'Template name'
                 required: true
@@ -42,7 +50,7 @@ jobs:
         continue-on-error: true
         steps:
 
-          
+
             - name: Log Inputs
               run: |
                 echo "Config Base64: ${{ inputs.config_b64 }}"
