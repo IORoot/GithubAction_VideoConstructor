@@ -55,6 +55,8 @@ jobs:
     debug_matrix:
       needs: setup_overlays
       runs-on: ubuntu-latest
+      strategy:
+        matrix: ${{ fromJson(needs.setup_overlays.outputs.matrix) }}
       steps:
         - name: Debug Matrix Values
           run: |
@@ -65,7 +67,14 @@ jobs:
             echo "Timecut Settings: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].timecut-settings }}"
             echo "Inputs: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].inputs }}"
             echo "Lottie Overrides: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].lottie_overrides }}"
-
+            echo "matrix: ${{ matrix }}"
+            echo "include: ${{ matrix.include }}"
+            echo "template: ${{ matrix.include.template }}"
+            echo "timecut_selector: ${{ matrix.include.timecut-selector }}"
+            echo "timecut_viewport: ${{ matrix.include.timecut-viewport }}"
+            echo "timecut_settings: ${{ matrix.include.timecut-settings }}"
+            echo "inputs: ${{ matrix.include.inputs }}"
+            echo "lottie_overrides: ${{ matrix.include.lottie_overrides }}"
             
             
     process_overlays:
