@@ -48,6 +48,10 @@ jobs:
             echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
 
+        - name: Output Matrix
+          run: echo "${{ steps.set-matrix.outputs.matrix }}"
+
+
 
     process_overlays:
       needs: setup_overlays
