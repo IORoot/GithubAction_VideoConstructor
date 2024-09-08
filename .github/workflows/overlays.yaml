@@ -42,6 +42,24 @@ jobs:
         continue-on-error: true
         steps:
 
+          
+            - name: Log Inputs
+              run: |
+                echo "Config Base64: ${{ inputs.config_b64 }}"
+                echo "Template: ${{ inputs.template }}"
+                echo "Timecut Selector: ${{ inputs.timecut_selector }}"
+                echo "Timecut Viewport: ${{ inputs.timecut_viewport }}"
+                echo "Timecut Settings: ${{ inputs.timecut_settings }}"
+                echo "Inputs: ${{ inputs.inputs }}"
+      
+                if [[ "${{ inputs.lottie_overrides }}" != "false" ]]; then
+                  echo "Lottie Overrides: ${{ inputs.lottie_overrides }}"
+                else
+                  echo "No Lottie Overrides"
+                fi
+
+
+              
             # ╭───────────────────────────────────────────────────────╮
             # │             GET CONTENTS OF CURRENT REPO              │
             # ╰───────────────────────────────────────────────────────╯
