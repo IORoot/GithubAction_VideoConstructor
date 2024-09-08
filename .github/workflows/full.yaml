@@ -52,7 +52,22 @@ jobs:
           run: echo "${{ steps.set-matrix.outputs.matrix }}"
 
 
+    debug_matrix:
+      needs: setup_overlays
+      runs-on: ubuntu-latest
+      steps:
+        - name: Debug Matrix Values
+          run: |
+            echo "Matrix: ${{ needs.setup_overlays.outputs.matrix }}"
+            echo "Template: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].template[0] }}"
+            echo "Timecut Selector: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].timecut-selector }}"
+            echo "Timecut Viewport: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].timecut-viewport }}"
+            echo "Timecut Settings: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].timecut-settings }}"
+            echo "Inputs: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].inputs }}"
+            echo "Lottie Overrides: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].lottie_overrides }}"
 
+            
+            
     process_overlays:
       needs: setup_overlays
       uses: ./.github/workflows/overlays.yaml
