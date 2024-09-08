@@ -51,34 +51,6 @@ jobs:
           run: echo "${{ steps.set-matrix.outputs.matrix }}"
 
 
-
-    debug_matrix:
-      needs: setup_overlays
-      runs-on: ubuntu-latest
-      strategy:
-        matrix: ${{ fromJson(needs.setup_overlays.outputs.matrix) }}
-      steps:
-        - name: Debug Matrix Values
-          run: |
-            echo "Matrix: ${{ needs.setup_overlays.outputs.matrix }}"
-            echo "Template: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].template[0] }}"
-            echo "Timecut Selector: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].timecut-selector }}"
-            echo "Timecut Viewport: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].timecut-viewport }}"
-            echo "Timecut Settings: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].timecut-settings }}"
-            echo "Inputs: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].inputs }}"
-            echo "Lottie Overrides: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].lottie_overrides }}"
-            echo "matrix: ${{ matrix }}"
-            echo ${{ matrix }} > matrix.json
-            cat matrix.json
-            echo "include: ${{ matrix.include[0] }}"
-            echo "template: ${{ matrix.include[0].template }}"
-            echo "timecut_selector: ${{ matrix.include[0].timecut-selector }}"
-            echo "timecut_viewport: ${{ matrix.include[0].timecut-viewport }}"
-            echo "timecut_settings: ${{ matrix.include[0].timecut-settings }}"
-            echo "inputs: ${{ matrix.include[0].inputs }}"
-            echo "lottie_overrides: ${{ matrix.include[0].lottie_overrides }}"
-            
-
             
     process_overlays:
       needs: setup_overlays
@@ -87,6 +59,7 @@ jobs:
         matrix: ${{ fromJson(needs.setup_overlays.outputs.matrix) }}
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
+        matrix: ${{ matrix }}
         include: ${{ matrix.include[0] }}
         template: ${{ matrix.include[0].template }}
         timecut_selector: ${{ matrix.include[0].timecut-selector }}
