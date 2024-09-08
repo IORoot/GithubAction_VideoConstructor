@@ -59,7 +59,7 @@ jobs:
           uses: actions/checkout@v3
 
         - name: Call Child Workflow
-          uses: ./.github/workflows/overlays.yaml
+          uses: ./.github/workflows/overlays.yml
           with:
             config_b64: ${{ github.event.inputs.config_b64 }} 
             template: ${{ matrix.include.template[0] }}
