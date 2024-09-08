@@ -68,6 +68,8 @@ jobs:
             echo "Inputs: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].inputs }}"
             echo "Lottie Overrides: ${{ fromJson(needs.setup_overlays.outputs.matrix).include[0].lottie_overrides }}"
             echo "matrix: ${{ matrix }}"
+            echo ${{ matrix }} > matrix.json
+            cat matrix.json
             echo "include: ${{ matrix.include[0] }}"
             echo "template: ${{ matrix.include[0].template }}"
             echo "timecut_selector: ${{ matrix.include[0].timecut-selector }}"
