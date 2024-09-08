@@ -54,19 +54,16 @@ jobs:
       strategy:
         matrix: ${{ fromJson(needs.setup_overlays.outputs.matrix) }}
       steps:
-
-        - name: Checkout code
-          uses: actions/checkout@v3
-
         - name: Call Child Workflow
-          uses: actions/github-script@v6
+          uses: ./.github/workflows/overlays.yaml
           with:
-            script: |
-              const { execSync } = require('child_process');
-              const matrix = ${{ fromJson(needs.setup_overlays.outputs.matrix) }};
-              matrix.include.forEach(template => {
-                execSync(`gh workflow run overlays.yml --field config_b64=${{ github.event.inputs.config_b64 }} --field template=${template.template[0]} --field timecut_selector=${template.timecut_selector} --field timecut_viewport=${template.timecut_viewport} --field timecut_settings=${template.timecut_settings} --field inputs=${template.inputs} --field lottie_overrides=${template.lottie_overrides}`, {stdio: 'inherit'});
-              });
+            config_b64: ${{ github.event.inputs.config_b64 }} 
+            template: ${{ matrix.include.template[0] }}
+            timecut_selector: ${{ matrix.include.timecut-selector }}
+            timecut_viewport: ${{ matrix.include.timecut-viewport }}
+            timecut_settings: ${{ matrix.include.timecut-settings }}
+            inputs: ${{ matrix.include.inputs }}
+            lottie_overrides: ${{ matrix.include.lottie_overrides }}
         
 
 
