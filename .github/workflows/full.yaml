@@ -43,7 +43,7 @@ jobs:
         - name: Generate Matrix from JSON
           id: set-matrix
           run: |
-            matrix=$(echo "$VC_OVERLAY_OVERLAYS" | jq -c '[.[]]')
+            matrix=$(echo "$VC_OVERLAY_OVERLAYS" | jq -c '{"include": [.[]]}')
             echo "matrix=$matrix"
             echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
