@@ -8,10 +8,6 @@ on:
                 type: string
                 description: 'Base64 configuration for Video Constructor'     
                 required: true
-            matrix:
-                  description: 'matrix'
-                  required: true
-                  type: string
             include:
                   description: 'include'
                   required: true
@@ -54,7 +50,6 @@ jobs:
             - name: Log Inputs
               run: |
                 echo "Config Base64: ${{ inputs.config_b64 }}"
-                echo "Matrix: ${{ inputs.matrix }}"
                 echo "Include: ${{ inputs.include }}"
                 echo "Template: ${{ inputs.template }}"
                 echo "Timecut Selector: ${{ inputs.timecut_selector }}"
