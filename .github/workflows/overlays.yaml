@@ -8,10 +8,36 @@ on:
                 type: string
                 description: 'Base64 configuration for Video Constructor'     
                 required: true
+            template:
+                description: 'Template name'
+                required: true
+                type: string
+            timecut_selector:
+                description: 'Timecut Selector'
+                required: true
+                type: string
+            timecut_viewport:
+                description: 'Timecut Viewport'
+                required: true
+                type: string
+            timecut_settings:
+                description: 'Timecut Settings'
+                required: true
+                type: string
+            inputs:
+                description: 'Inputs for overlay'
+                required: false
+                type: string
+            lottie_overrides:
+                description: 'Lottie Overrides for overlay'
+                required: false
+                type: string
+
+
+
 jobs:
 
-
-    overlays:
+    generate_overlay:
         runs-on: ubuntu-latest
         continue-on-error: true
         steps:
@@ -75,15 +101,18 @@ jobs:
 
 
 
+
+            # START LOOP
+
             # ╭───────────────────────────────────────────────────────╮
             # │                   Setup the Overlay                   │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Setup Overlay
               if: ${{ env.VC_OVERLAY_RUN }}
               run: | 
-                unzip ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/template.zip -d ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/
-                if [ -f "${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/lottie.json" ]; then
-                  cp ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/lottie.json ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/public/js/lottie.json
+                unzip ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/template.zip -d ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/
+                if [ -f "${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/lottie.json" ]; then
+                  cp ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/lottie.json ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/public/js/lottie.json
                 fi
 
 
@@ -94,7 +123,7 @@ jobs:
             - name: 🎨 OVERLAY - Replace Remote Images for local Assets
               if: ${{ env.VC_OVERLAY_RUN }}
               run: |
-                ./scripts/overlay/replace_images.sh ./overlays/${{ env.VC_OVERLAY_TEMPLATE }}/assets
+                ./scripts/overlay/replace_images.sh ./overlays/${{ inputs.template }}/assets
 
 
 
@@ -103,10 +132,10 @@ jobs:
             # │             Optional setup of inputs.json             │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Setup Inputs.json
-              if: ${{ env.VC_OVERLAY_INPUTS != '' && env.VC_OVERLAY_INPUTS != null }}
+              if: ${{ inputs.inputs != '' && inputs.inputs != null }}
               run: |   
-                cat config.json | jq -r '.overlay.inputs' > ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/inputs.json
-                cat ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/inputs.json
+                cat config.json | jq -r '.overlay.inputs' > ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/inputs.json
+                cat ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/inputs.json
 
 
 
@@ -114,11 +143,11 @@ jobs:
             # │         Optional Search/Replace Lottie JSON           │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Override Lottie.json
-              if: ${{ env.VC_OVERLAY_LOTTIE_OVERRIDES != '' && env.VC_OVERLAY_LOTTIE_OVERRIDES != null }}
+              if: ${{ inputs.lottie_overrides != '' && inputs.lottie_overrides != null }}
               run: |   
                 cat config.json | jq -r '.overlay.lottie_overrides' > ${GITHUB_WORKSPACE}/lottie_overrides.json
                 cat ${GITHUB_WORKSPACE}/lottie_overrides.json
-                ./scripts/overlay/lottie_overrides.sh --lottiefile ${GITHUB_WORKSPACE}/overlays/${{ env.VC_OVERLAY_TEMPLATE }}/public/js/lottie.json --overridefile ${GITHUB_WORKSPACE}/lottie_overrides.json
+                ./scripts/overlay/lottie_overrides.sh --lottiefile ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/public/js/lottie.json --overridefile ${GITHUB_WORKSPACE}/lottie_overrides.json
 
 
 
@@ -128,7 +157,7 @@ jobs:
             - name: 🎨 OVERLAY - Start PHP server in background
               if: ${{ env.VC_OVERLAY_RUN }}
               run: |
-                php -S 0.0.0.0:8080 -t ./overlays/${{ env.VC_OVERLAY_TEMPLATE }}/ &
+                php -S 0.0.0.0:8080 -t ./overlays/${{ inputs.template }}/ &
         
 
 
@@ -167,7 +196,7 @@ jobs:
               continue-on-error: true
               if: ${{ env.VC_OVERLAY_RUN }}
               run: |
-                node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ env.VC_OVERLAY_TIMECUT_TARGET }}" --viewport="${{ env.VC_OVERLAY_TIMECUT_VIEWPORT }}" ${{ env.VC_OVERLAY_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
+                node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ inputs.timecut_selector }}" --viewport="${{ inputs.timecut_viewport }}" ${{ inputs.timecut_settings }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
                 mkdir overlay
                 cp overlay_video.mov ./overlay
                 ls -la
@@ -181,7 +210,7 @@ jobs:
             - name: Upload file as artifact
               uses: actions/upload-artifact@v4  # Use v4
               with:
-                name: overlay
+                name: overlay-${{ inputs.template }}
                 path: ./overlay
 
 
