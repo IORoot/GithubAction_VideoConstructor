@@ -1,10 +1,13 @@
 #!/bin/bash
 
-mv config.json config_original.json
+# Check if an argument is provided; use it as the filename, otherwise default to 'config.json'
+FILE="${1:-config.json}"
 
-sed 's/\\r\\n/ /g' config_original.json > config.json
+mv "$FILE" config_original.json
 
-cat config.json
+sed 's/\\r\\n/ /g' config_original.json > "$FILE"
+
+cat "$FILE"
 
 # Read and flatten JSON into environment variables
 jq -r '
@@ -22,7 +25,7 @@ def recurse_to_env($prefix; $obj):
 
 # Start recursion from the root object
 recurse_to_env("VC"; .)
-' config.json | while IFS= read -r line; do
+' "$FILE" | while IFS= read -r line; do
   echo "$line"
   echo "$line" >> $GITHUB_ENV
 done

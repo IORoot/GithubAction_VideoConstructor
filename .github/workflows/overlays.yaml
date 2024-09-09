@@ -82,7 +82,6 @@ jobs:
             # │                      Setup Node                       │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Set up Node.js
-              if: ${{ env.VC_OVERLAY_RUN }}
               uses: actions/setup-node@v2
               with:
                 node-version: '22'
@@ -93,7 +92,6 @@ jobs:
             # │                  Install PHP Server                   │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Set up PHP
-              if: ${{ env.VC_OVERLAY_RUN }}
               uses: shivammathur/setup-php@v2
               with:
                 php-version: '8.0' 
@@ -107,7 +105,6 @@ jobs:
             # │                   Setup the Overlay                   │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Setup Overlay
-              if: ${{ env.VC_OVERLAY_RUN }}
               run: | 
                 unzip ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/template.zip -d ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/
                 if [ -f "${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/lottie.json" ]; then
@@ -120,7 +117,6 @@ jobs:
             # │        The Slider Revolution Local Assets fix          │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Replace Remote Images for local Assets
-              if: ${{ env.VC_OVERLAY_RUN }}
               run: |
                 ./scripts/overlay/replace_images.sh ./overlays/${{ inputs.template }}/assets
 
@@ -154,7 +150,6 @@ jobs:
             # │                   Start PHP Server                    │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Start PHP server in background
-              if: ${{ env.VC_OVERLAY_RUN }}
               run: |
                 php -S 0.0.0.0:8080 -t ./overlays/${{ inputs.template }}/ &
         
@@ -164,7 +159,6 @@ jobs:
             # │         Install Timecut with latest puppeteer         │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Setup Timecut
-              if: ${{ env.VC_OVERLAY_RUN }}
               continue-on-error: true
               run: |
                 npm install puppeteer@22.10.0
@@ -183,7 +177,6 @@ jobs:
             # │               Ensure website is running               │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Test Site Running
-              if: ${{ env.VC_OVERLAY_RUN }}
               run: |
                 curl "http://localhost:8080"
 
@@ -193,7 +186,6 @@ jobs:
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Capture Video
               continue-on-error: true
-              if: ${{ env.VC_OVERLAY_RUN }}
               run: |
                 node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ inputs.timecut_selector }}" --viewport="${{ inputs.timecut_viewport }}" ${{ inputs.timecut_settings }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
                 mkdir overlay
