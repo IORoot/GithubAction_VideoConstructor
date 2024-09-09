@@ -91,11 +91,6 @@ jobs:
 
 
 
-              
-            - name: List Downloaded Artifacts
-              run: |
-                  ls -la ./overlay
-
             # ╭───────────────────────────────────────────────────────╮
             # │                  Download Artifacts                   │
             # ╰───────────────────────────────────────────────────────╯
@@ -104,9 +99,10 @@ jobs:
               with:
                 name: overlay-*
                 path: ./overlay
-
-
-            
+                         
+            - name: List Downloaded Artifacts
+              run: |
+                  ls -la ./overlay
 
 
 

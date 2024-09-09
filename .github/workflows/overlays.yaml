@@ -196,7 +196,7 @@ jobs:
               uses: actions/upload-artifact@v4  # Use v4
               with:
                 name: overlay-${{ inputs.template_name }}
-                path: ./overlay/overlay_${{ inputs.template_name }}.mov
+                path: ./overlay/overlay-${{ inputs.template_name }}.mov
 
 
 
