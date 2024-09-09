@@ -199,8 +199,12 @@ jobs:
               if: steps.capture_video.outcome == 'failure'
               run: |
                 printf "Timecut video capture failed. Please check the following:\n"
+                
                 printf "1. Make SURE that the timecut target "#home" is set correctly in the HTML. It is the <sr7-module> block ID. eg.\n"
                 printf "<sr7-module data-alias=\"CleanTitle-001\" data-id=\"13\" id=\"home\" class=\"rs-ov-hidden\" data-version=\"6.7.13\">\n\n"
+
+                printf "2. Has the template been zipped with the ./template folder? It shouldn't have. You should highlight the files in the \n"
+                printf "template folder (assets,public,revslider-lottie-addon, etc..) and zip them. Do not highlight the template folder and zip it. Otherwise the unzip will create a folder and the files won't be located.\n\n"
 
               
             # ╭───────────────────────────────────────────────────────╮
