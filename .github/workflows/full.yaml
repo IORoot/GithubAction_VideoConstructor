@@ -56,7 +56,7 @@ jobs:
             printf "matrix=%s\n" "$matrix" >> "$GITHUB_OUTPUT"
 
         - name: Output Matrix
-          run: echo "${{ steps.set-matrix.outputs.matrix }}" | jq
+          run: echo "${{ steps.set-matrix.outputs.matrix }}"
 
 
             
