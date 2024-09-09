@@ -50,13 +50,14 @@ jobs:
         - name: Generate Matrix from JSON
           id: set-matrix
           run: |
-            jq -c '.overlay.overlays[] | {template: .template[], encoded: (tojson | @base64)}' config.json > matrix.json
+            jq -c '{"include": [.overlay.overlays[] | {template: .template[], encoded: (tojson | @base64)}]}' config.json > matrix.json
             cat matrix.json
             echo "matrix=$(cat matrix.json)" >> $GITHUB_OUTPUT
 
         - name: Output Matrix
-          run: echo ${{ steps.set-matrix.outputs.matrix }}
-
+          run: |
+            echo "Matrix Output:"
+            cat $GITHUB_OUTPUT
         # ╭───────────────────────────────────────────────────────╮
         # │                          SSH                          │
         # ╰───────────────────────────────────────────────────────╯
