@@ -1,0 +1,360 @@
+{
+	"settings": {
+		"id": "home",
+		"migrated": "sr6",
+		"addOns": { "lottie": { "u": true } },
+		"title": "CleanTitle-001",
+		"alias": "CleanTitle-001",
+		"type": "standard",
+		"prem": true,
+		"vPort": ["100px", "100px", "100px", "100px", "100px"],
+		"size": {
+			"fullWidth": false,
+			"fullHeightOffset": ",",
+			"contentFH": true,
+			"width": [1080, 1080, 1024, 778, 480],
+			"height": [1920, 1920, 1820, 1383, 853],
+			"cachedHeight": [1920, 1920, 768, 960, 720],
+			"minHeight": ["1920px", "1920px", "1920px", "1920px", "1920px"],
+			"maxHeight": ["1920px", "1920px", "1920px", "1920px", "1920px"],
+			"maxWidth": "1080px"
+		},
+		"codes": {
+			"js": "\n// \u256d\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n// \u2502          This will fetch the JSON will from one of two locations          \u2502\n// \u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\nfunction fetchFile(url1, url2) {\n    return new Promise((resolve, reject) => {\n        // Attempt to fetch from the first URL\n        fetch(url1)\n            .then(response => {\n                if (response.ok) {\n                    resolve(response);\n                } else {\n                    // If fetch from the first URL fails, attempt the second URL\n                    fetch(url2)\n                        .then(response => {\n                            if (response.ok) {\n                                resolve(response);\n                            } else {\n                                reject(new Error('File not found in both locations'));\n                            }\n                        })\n                        .catch(error => reject(error));\n                }\n            })\n            .catch(() => {\n                // If fetch from the first URL fails, attempt the second URL\n                fetch(url2)\n                    .then(response => {\n                        if (response.ok) {\n                            resolve(response);\n                        } else {\n                            reject(new Error('File not found in both locations'));\n                        }\n                    })\n                    .catch(error => reject(error));\n            });\n    });\n}\n\n\n\n// \u256d\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n// \u2502              Use JSON file and then substitute text in file                 \u2502\n// \u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n\n// Check both of the locations for file\nvar url1 = './inputs.json';\nvar url2 = './wp-content/themes/slider/inputs.json';\n\nsetTimeout(() => {\nfetchFile(url1, url2)\n    .then(response => response.json())\n    .then(data => {\n        console.log(data);\n        \n        // \u256d\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n        // \u2502       Override STYLE with !important CSS Rules        \u2502\n        // \u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n        let cssRules = '';\n        for (const key in data) {\n            if (data.hasOwnProperty(key)) {\n                if (typeof data[key] === 'object' && data[key].hasOwnProperty('style')) {\n                    const styleObj = data[key].style;\n                    cssRules += `${key} {`;\n                    for (const styleKey in styleObj) {\n                        if (styleObj.hasOwnProperty(styleKey)) {\n                            cssRules += `${styleKey}: ${styleObj[styleKey]} !important; `;\n                        }\n                    }\n                    cssRules += `}\\n`;\n                }\n            }\n        }\n\n        // Create <style> element and append to <head>\n        const styleElement = document.createElement('style');\n        styleElement.textContent = cssRules;\n        document.head.appendChild(styleElement);\n        \n\n        // \u256d\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256e\n        // \u2502                 Replace the InnerText                 \u2502\n        // \u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u256f\n        for (const key in data) {\n            if (data.hasOwnProperty(key)) {\n                const elementsByClass = document.querySelectorAll(`${key}`);\n                elementsByClass.forEach(element => {\n                    if (data[key].hasOwnProperty('innertext') && data[key].innertext !== \"\") {\n                        element.innerText = data[key].innertext;\n                        element.offsetHeight;\n                        element.style.display = 'none';\n                        element.offsetHeight; // Reflow again to ensure the display change takes effect\n                        element.style.display = ''; // Repaint\n                    }\n                });\n            }\n        }\n    })\n    .catch(error => console.error('Error fetching or parsing JSON:', error));\n}, 100);"
+		},
+		"carousel": {
+			"type": "h",
+			"align": "center",
+			"maxV": 3,
+			"justify": false,
+			"scale": false,
+			"minS": 50,
+			"vScale": false,
+			"oScale": false,
+			"space": 0,
+			"rotation": false,
+			"maxR": 0,
+			"varR": false,
+			"opacity": true,
+			"maxO": 100,
+			"varO": false,
+			"spin": "off",
+			"spinA": 0,
+			"snap": true,
+			"infinity": false,
+			"skewX": 0,
+			"skewY": 0,
+			"ease": "power3.inOut",
+			"dur": 800,
+			"overshoot": false,
+			"stretch": false,
+			"showAllLayers": "false",
+			"jMWidth": false,
+			"bR": 0,
+			"bRU": "px",
+			"pNV": "50px",
+			"pT": 0,
+			"pB": 0
+		},
+		"shdw": 0,
+		"bg": {
+			"color": {
+				"type": "solid",
+				"orig": "rgba(242, 237, 226, 0)",
+				"string": "rgba(242, 237, 226, 0)"
+			}
+		},
+		"mod": { "use": true },
+		"nav": { "p": { "w": 50, "h": 100 } },
+		"sbt": {
+			"use": true,
+			"f": false,
+			"fStart": 2000,
+			"fEnd": 4000,
+			"layers": false,
+			"e": "none",
+			"s": 0.5,
+			"pull": false,
+			"nL": true
+		},
+		"thumb": "assets/TITLE-001.png",
+		"aU": ["lottie"],
+		"imgs": [],
+		"version": ""
+	},
+	"slides": {
+		"18": {
+			"id": 18,
+			"slide": {
+				"addOns": [],
+				"id": "18",
+				"version": "6.7.13",
+				"title": "",
+				"parentId": null,
+				"language": "default",
+				"order": 1,
+				"thumb": {
+					"src": "assets/csw-hero-thumb.jpg",
+					"srcId": "",
+					"admin": "assets/TITLE-001.png",
+					"adminId": "69",
+					"dimension": "slider"
+				},
+				"description": "",
+				"attr": {
+					"class": "",
+					"data": "",
+					"id": "",
+					"a": "",
+					"aO": "ml",
+					"t": "",
+					"tO": "",
+					"deepLink": "",
+					"attr": ""
+				},
+				"publish": { "from": "", "to": "", "state": "" },
+				"slideshow": {
+					"stop": false,
+					"len": "default",
+					"hal": 0,
+					"hom": false,
+					"hfn": false
+				},
+				"loop": { "u": false, "r": -1, "s": 0, "e": 99999 }
+			},
+			"layers": [
+				{
+					"addOns": {
+						"lottie": {
+							"u": true,
+							"config": {
+								"jsonUrl": "public/js/lottie.json",
+								"duration": 11445,
+								"autoplay": true,
+								"respectTlStart": false,
+								"endlessLoop": false,
+								"reverse": false,
+								"repeat": -1,
+								"displayFrame": 343
+							},
+							"interaction": {
+								"type": "disabled",
+								"lerp": 0,
+								"continue": false,
+								"actions": false,
+								"scrollLerp": 0.1
+							},
+							"renderer": {
+								"type": "svg",
+								"size": "contain",
+								"progressiveLoad": false,
+								"hideTransparent": false,
+								"maxdpr": 3
+							},
+							"editor": { "enabled": true, "meta": false }
+						}
+					},
+					"fluid": { "tx": true, "tr": true, "sp": true },
+					"id": 0,
+					"alias": "Lottie-0",
+					"subtype": "lottie",
+					"size": {
+						"w": ["1080", "1080", "1024", "778", "480"],
+						"h": ["648", "648", "614", "466", "287"],
+						"minW": ["none", "none", "none", "none", "none"],
+						"minH": ["none", "none", "none", "none", "none"]
+					},
+					"pos": {
+						"x": ["auto", "auto", "auto", "auto", "auto"],
+						"y": ["auto", "auto", "auto", "auto", "auto"],
+						"v": ["middle", "middle", "middle", "middle", "middle"],
+						"pos": "absolute",
+						"float": ["none", "none", "none", "none", "none"],
+						"clear": ["none", "none", "none", "none", "none"]
+					},
+					"zIndex": 12,
+					"order": 12,
+					"display": ["block", "block", "block", "block", "block"],
+					"vA": "top",
+					"bg": {
+						"color": {
+							"orig": "transparent",
+							"type": "solid",
+							"string": "transparent"
+						}
+					},
+					"attr": {
+						"aO": "ml",
+						"tO": "ml",
+						"iClass": "tp-shape tp-shapewrapper tp-lottie"
+					},
+					"tl": {
+						"in": {
+							"content": {
+								"pers": "600px",
+								"orig": { "x": "50%", "y": "50%", "z": "0" },
+								"all": [
+									{
+										"t": 0,
+										"d": 0,
+										"f": 0,
+										"e": "power3.inOut",
+										"pE": "d",
+										"x": [
+											"0px",
+											"0px",
+											"0px",
+											"0px",
+											"0px"
+										],
+										"y": [
+											"0px",
+											"0px",
+											"0px",
+											"0px",
+											"0px"
+										],
+										"o": 0,
+										"xRe": 0,
+										"yRe": 0,
+										"off": 0
+									},
+									{
+										"t": 0,
+										"d": 300,
+										"f": 300,
+										"e": "power3.inOut",
+										"pE": "d",
+										"x": [
+											"0px",
+											"0px",
+											"0px",
+											"0px",
+											"0px"
+										],
+										"y": [
+											"0px",
+											"0px",
+											"0px",
+											"0px",
+											"0px"
+										],
+										"o": 1,
+										"xRe": 0,
+										"yRe": 0,
+										"off": 0
+									}
+								]
+							}
+						},
+						"out": {
+							"content": {
+								"pers": "600px",
+								"orig": { "x": "50%", "y": "50%", "z": "0" },
+								"all": [
+									{
+										"t": 0,
+										"d": 300,
+										"f": 300,
+										"e": "power3.inOut",
+										"pE": "n",
+										"x": [
+											"inherit",
+											"inherit",
+											"inherit",
+											"inherit",
+											"inherit"
+										],
+										"y": [
+											"inherit",
+											"inherit",
+											"inherit",
+											"inherit",
+											"inherit"
+										],
+										"o": 0,
+										"xRe": 0,
+										"yRe": 0,
+										"off": 0
+									}
+								]
+							}
+						}
+					},
+					"p": {
+						"t": [0, 0, 0, 0, 0],
+						"b": [0, 0, 0, 0, 0],
+						"l": [0, 0, 0, 0, 0],
+						"r": [0, 0, 0, 0, 0]
+					},
+					"m": {
+						"t": [0, 0, 0, 0, 0],
+						"b": [0, 0, 0, 0, 0],
+						"l": [0, 0, 0, 0, 0],
+						"r": [0, 0, 0, 0, 0]
+					},
+					"mod": { "s": { "ut": false, "so": 0 } },
+					"type": "shape"
+				},
+				{
+					"rTo": "slide",
+					"id": 1,
+					"alias": "Slide BG Layer",
+					"subtype": "slidebg",
+					"size": { "cMode": "cover" },
+					"pos": {
+						"h": ["center", "center", "center", "center", "center"],
+						"v": ["center", "center", "center", "center", "center"],
+						"pos": "absolute"
+					},
+					"zIndex": 0,
+					"order": 0,
+					"display": ["block", "block", "block", "block", "block"],
+					"tl": {
+						"in": {
+							"bg": {
+								"ms": 1000,
+								"rnd": false,
+								"temp": {
+									"t": "*west* Uniform",
+									"p": "slotslide-horizontal",
+									"m": "columns",
+									"g": "slide"
+								},
+								"addOns": [],
+								"f": "nodelay",
+								"in": {
+									"o": 1,
+									"x": "(100%)",
+									"m": true,
+									"col": 5
+								},
+								"out": { "a": false }
+							}
+						}
+					},
+					"type": "shape"
+				}
+			]
+		},
+		"10": {
+			"id": "10",
+			"slide": {
+				"addOns": [],
+				"id": "10",
+				"version": "6.7.13",
+				"title": "Global Layers",
+				"parentId": null,
+				"language": "default",
+				"oflow": false,
+				"global": true,
+				"respVP": true,
+				"pos": "front",
+				"fullHeight": true
+			},
+			"layers": []
+		}
+	},
+	"id": "13",
+	"addOns": { "lottie": "revslider-lottie-addon/public/js/lottie.js" }
+}
