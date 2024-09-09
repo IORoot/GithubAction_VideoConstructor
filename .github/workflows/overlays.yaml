@@ -26,20 +26,6 @@ jobs:
         continue-on-error: true
         steps:
 
-
-            - name: Log Inputs
-              run: |
-                # Decode the Base64 encoded template
-                decoded_template=$(echo "${{ inputs.encoded_template }}" | base64 --decode)
-                
-                # Output the decoded template for debugging
-                echo "$decoded_template" > decoded_template.json
-                cat decoded_template.json
-
-                # Example usage of the template name
-                echo "Processing template: ${{ inputs.template_name_name }}"
-
-
               
             # ╭───────────────────────────────────────────────────────╮
             # │             GET CONTENTS OF CURRENT REPO              │
@@ -48,12 +34,13 @@ jobs:
               uses: actions/checkout@v3
 
 
-
             # ╭───────────────────────────────────────────────────────╮
             # │             JSON TO ENVIRONMENT VARIABLES             │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎛️ SETUP - JSON to Environment Variables
               run: |
+                decoded_template=$(echo "${{ inputs.encoded_template }}" | base64 --decode)
+                echo "$decoded_template" > decoded_template.json
                 ./scripts/env/json_to_env.sh ${GITHUB_WORKSPACE}/decoded_template.json
                 env
 
