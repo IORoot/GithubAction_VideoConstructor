@@ -54,7 +54,7 @@ jobs:
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎛️ SETUP - JSON to Environment Variables
               run: |
-                ./scripts/env/json_to_env.sh decoded_template.json
+                ./scripts/env/json_to_env.sh ${GITHUB_WORKSPACE}/decoded_template.json
                 env
 
 

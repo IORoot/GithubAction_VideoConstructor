@@ -2,7 +2,7 @@
 
 # Check if an argument is provided; use it as the filename, otherwise default to 'config.json'
 FILE="${1:-config.json}"
-BACKUP_FILE="original_${FILE}"
+BACKUP_FILE="${FILE}.original"
 
 mv "$FILE" "$BACKUP_FILE"
 
