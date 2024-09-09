@@ -7,11 +7,15 @@ on:
             config_b64:
                 type: string
                 description: 'Base64 configuration for Video Constructor'     
+                required: false
+            template_name:
+                description: 'Base64 Encoded Template Name'
                 required: true
-            # encoded:
-            #     description: 'Base64 Encoded Template'
-            #     required: true
-            #     type: string
+                type: string
+            encoded_template:
+                description: 'Base64 Encoded Template'
+                required: true
+                type: string
 
 
 
@@ -25,8 +29,15 @@ jobs:
 
             - name: Log Inputs
               run: |
-                echo "Config Base64: ${{ inputs.config_b64 }}"
-                # echo "encoded: ${{ inputs.encoded }}"
+                # Decode the Base64 encoded template
+                decoded_template=$(echo "${{ inputs.encoded_template }}" | base64 --decode)
+                
+                # Output the decoded template for debugging
+                echo "$decoded_template" > decoded_template.json
+                cat decoded_template.json
+
+                # Example usage of the template name
+                echo "Processing template: ${{ inputs.template_name }}"
 
 
               
