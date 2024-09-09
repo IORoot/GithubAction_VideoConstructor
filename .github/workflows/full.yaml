@@ -54,9 +54,10 @@ jobs:
             matrix=$(cat config_overlays.json | jq -c '{"include": [.[]]}')
             # echo "matrix=$matrix" | jq -c . >> $GITHUB_OUTPUT
             printf "matrix=%s\n" "$matrix" >> "$GITHUB_OUTPUT"
+            printf "matrix=%s\n" "$matrix" >> matrix_outputs.json
 
         - name: Output Matrix
-          run: echo ${{ steps.set-matrix.outputs.matrix }} > matrix_outputs.json
+          run: echo ${{ steps.set-matrix.outputs.matrix }} > matrix_outputs_v2.json
 
         # ╭───────────────────────────────────────────────────────╮
         # │                          SSH                          │
