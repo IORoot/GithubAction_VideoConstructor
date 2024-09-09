@@ -44,7 +44,7 @@ jobs:
           id: set-matrix
           run: |
             matrix=$(echo "$VC_OVERLAY_OVERLAYS" | jq -c '{"include": [.[]]}')
-            echo "matrix=$matrix"
+            echo "matrix=$matrix" | jq -c .
             echo "matrix=$matrix" | jq -c . >> $GITHUB_OUTPUT
 
         - name: Output Matrix
