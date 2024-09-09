@@ -182,10 +182,11 @@ jobs:
               continue-on-error: true
               run: |
                 node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ env.VC_TIMECUT_SELECTOR }}" --viewport="${{ env.VC_TIMECUT_VIEWPORT }}" ${{ env.VC_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
-                mkdir overlay
-                cp overlay_video.mov ./overlay/overlay_${{ inputs.template_name }}.mov
+                mkdir -p ${GITHUB_WORKSPACE}/overlay
+                cp overlay_video.mov ${GITHUB_WORKSPACE}/overlay/overlay_${{ inputs.template_name }}.mov
+                pwd
                 ls -la
-                ls -la ./overlay
+                ls -la ${GITHUB_WORKSPACE}/overlay
 
 
             # Check if the previous step failed
@@ -205,10 +206,10 @@ jobs:
             # │           Upload the overlays as artifacts            │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🆙 Upload file as artifact
-              uses: actions/upload-artifact@v4  # Use v4
+              uses: actions/upload-artifact@v4
               with:
                 name: overlay-${{ inputs.template_name }}
-                path: ./overlay/overlay-${{ inputs.template_name }}.mov
+                path: ${GITHUB_WORKSPACE}/overlay
 
 
 
