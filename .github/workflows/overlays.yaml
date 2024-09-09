@@ -94,7 +94,7 @@ jobs:
                 ln -s /opt/hostedtoolcache/ffmpeg/*/x64/ffprobe ./ffprobe 
                 
 
-                
+
             # ╭───────────────────────────────────────────────────────╮
             # │                   Setup the Overlay                   │
             # ╰───────────────────────────────────────────────────────╯
@@ -183,7 +183,7 @@ jobs:
               run: |
                 node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ env.VC_TIMECUT_SELECTOR }}" --viewport="${{ env.VC_TIMECUT_VIEWPORT }}" ${{ env.VC_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
                 mkdir overlay
-                cp overlay_video.mov ./overlay
+                cp overlay_video.mov ./overlay/overlay_${{ inputs.template_name }}.mov
                 ls -la
                 ls -la ./overlay
 
@@ -192,11 +192,11 @@ jobs:
             # ╭───────────────────────────────────────────────────────╮
             # │           Upload the overlays as artifacts            │
             # ╰───────────────────────────────────────────────────────╯
-            - name: Upload file as artifact
+            - name: 🆙 Upload file as artifact
               uses: actions/upload-artifact@v4  # Use v4
               with:
                 name: overlay-${{ inputs.template_name }}
-                path: ./overlay
+                path: ./overlay/overlay_${{ inputs.template_name }}.mov
 
 
 
