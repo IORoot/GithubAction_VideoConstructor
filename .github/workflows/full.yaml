@@ -65,12 +65,12 @@ jobs:
             
     process_overlays:
       needs: setup_overlays
-      uses: ./.github/workflows/overlays.yaml 
+      uses: ./.github/workflows/overlays.yaml  
       strategy:
         matrix: ${{ fromJson(needs.setup_overlays.outputs.matrix) }}
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
-        encoded: ${{ matrix.encoded }}
+        
 
 
 

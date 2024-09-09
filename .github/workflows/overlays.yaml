@@ -8,10 +8,10 @@ on:
                 type: string
                 description: 'Base64 configuration for Video Constructor'     
                 required: true
-            encoded:
-                description: 'Base64 Encoded Template'
-                required: true
-                type: string
+            # encoded:
+            #     description: 'Base64 Encoded Template'
+            #     required: true
+            #     type: string
 
 
 
@@ -26,7 +26,7 @@ jobs:
             - name: Log Inputs
               run: |
                 echo "Config Base64: ${{ inputs.config_b64 }}"
-                echo "encoded: ${{ inputs.encoded }}"
+                # echo "encoded: ${{ inputs.encoded }}"
 
 
               
