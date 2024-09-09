@@ -37,7 +37,7 @@ jobs:
                 cat decoded_template.json
 
                 # Example usage of the template name
-                echo "Processing template: ${{ inputs.template_name }}"
+                echo "Processing template: ${{ inputs.template_name_name }}"
 
 
               
@@ -48,23 +48,13 @@ jobs:
               uses: actions/checkout@v3
 
 
-              
-            # ╭───────────────────────────────────────────────────────╮
-            # │      DECODE THE BASE64 CONFIGS READY TO BE USED       │
-            # ╰───────────────────────────────────────────────────────╯
-            - name: 🎛️ SETUP - Base64 decode Configs
-              run: |
-                echo "${{ inputs.config_b64 }}" | base64 --decode > config.json
-                cat config.json
-
-
 
             # ╭───────────────────────────────────────────────────────╮
             # │             JSON TO ENVIRONMENT VARIABLES             │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎛️ SETUP - JSON to Environment Variables
               run: |
-                ./scripts/env/json_to_env.sh 
+                ./scripts/env/json_to_env.sh decoded_template.json
                 env
 
 
@@ -106,9 +96,9 @@ jobs:
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Setup Overlay
               run: | 
-                unzip ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/template.zip -d ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/
-                if [ -f "${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/lottie.json" ]; then
-                  cp ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/lottie.json ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/public/js/lottie.json
+                unzip ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/template.zip -d ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/
+                if [ -f "${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/lottie.json" ]; then
+                  cp ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/lottie.json ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/public/js/lottie.json
                 fi
 
 
@@ -118,7 +108,7 @@ jobs:
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Replace Remote Images for local Assets
               run: |
-                ./scripts/overlay/replace_images.sh ./overlays/${{ inputs.template }}/assets
+                ./scripts/overlay/replace_images.sh ./overlays/${{ inputs.template_name }}/assets
 
 
 
@@ -129,8 +119,8 @@ jobs:
             - name: 🎨 OVERLAY - Setup Inputs.json
               if: ${{ inputs.inputs != '' && inputs.inputs != null }}
               run: |   
-                cat config.json | jq -r '.overlay.inputs' > ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/inputs.json
-                cat ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/inputs.json
+                cat config.json | jq -r '.overlay.inputs' > ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/inputs.json
+                cat ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/inputs.json
 
 
 
@@ -142,7 +132,7 @@ jobs:
               run: |   
                 cat config.json | jq -r '.overlay.lottie_overrides' > ${GITHUB_WORKSPACE}/lottie_overrides.json
                 cat ${GITHUB_WORKSPACE}/lottie_overrides.json
-                ./scripts/overlay/lottie_overrides.sh --lottiefile ${GITHUB_WORKSPACE}/overlays/${{ inputs.template }}/public/js/lottie.json --overridefile ${GITHUB_WORKSPACE}/lottie_overrides.json
+                ./scripts/overlay/lottie_overrides.sh --lottiefile ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/public/js/lottie.json --overridefile ${GITHUB_WORKSPACE}/lottie_overrides.json
 
 
 
@@ -151,7 +141,7 @@ jobs:
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Start PHP server in background
               run: |
-                php -S 0.0.0.0:8080 -t ./overlays/${{ inputs.template }}/ &
+                php -S 0.0.0.0:8080 -t ./overlays/${{ inputs.template_name }}/ &
         
 
 
@@ -201,7 +191,7 @@ jobs:
             - name: Upload file as artifact
               uses: actions/upload-artifact@v4  # Use v4
               with:
-                name: overlay-${{ inputs.template }}
+                name: overlay-${{ inputs.template_name }}
                 path: ./overlay
 
 

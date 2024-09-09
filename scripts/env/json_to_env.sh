@@ -2,10 +2,11 @@
 
 # Check if an argument is provided; use it as the filename, otherwise default to 'config.json'
 FILE="${1:-config.json}"
+BACKUP_FILE="original_${FILE}"
 
-mv "$FILE" config_original.json
+mv "$FILE" "$BACKUP_FILE"
 
-sed 's/\\r\\n/ /g' config_original.json > "$FILE"
+sed 's/\\r\\n/ /g' "$BACKUP_FILE" > "$FILE"
 
 cat "$FILE"
 
