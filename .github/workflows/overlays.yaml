@@ -194,7 +194,15 @@ jobs:
                 ls -la ./overlay
 
 
+            # Check if the previous step failed
+            - name: ❌ OVERLAY - Capture Video Failed
+              if: steps.capture_video.outcome == 'failure'
+              run: |
+                printf "Timecut video capture failed. Please check the following:\n"
+                printf "1. Make SURE that the timecut target "#home" is set correctly in the HTML. It is the <sr7-module> block ID. eg.\n"
+                printf "<sr7-module data-alias=\"CleanTitle-001\" data-id=\"13\" id=\"home\" class=\"rs-ov-hidden\" data-version=\"6.7.13\">\n\n"
 
+              
             # ╭───────────────────────────────────────────────────────╮
             # │           Upload the overlays as artifacts            │
             # ╰───────────────────────────────────────────────────────╯
