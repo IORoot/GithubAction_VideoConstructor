@@ -50,20 +50,18 @@ jobs:
         - name: Generate Matrix from JSON
           id: set-matrix
           run: |
-            cat config.json | jq -r '.overlay.overlays' > ./config_overlays.json
-            matrix=$(cat config_overlays.json | jq -c '{"include": [.[]]}')
-            # echo "matrix=$matrix" | jq -c . >> $GITHUB_OUTPUT
-            printf "matrix=%s\n" "$matrix" >> "$GITHUB_OUTPUT"
-            printf "matrix=%s\n" "$matrix" >> matrix_outputs.json
+            jq -c '.overlay.overlays[] | {template: .template[], encoded: (tojson | @base64)}' config.json > matrix.json
+            cat matrix.json
+            echo "matrix=$(cat matrix.json)" >> $GITHUB_OUTPUT
 
         - name: Output Matrix
-          run: echo ${{ steps.set-matrix.outputs.matrix }} > matrix_outputs_v2.json
+          run: echo ${{ steps.set-matrix.outputs.matrix }}
 
         # ╭───────────────────────────────────────────────────────╮
         # │                          SSH                          │
         # ╰───────────────────────────────────────────────────────╯
-        - name: 🪲 DEBUG - Setup upterm session
-          uses: lhotari/action-upterm@v1
+        # - name: 🪲 DEBUG - Setup upterm session
+        #   uses: lhotari/action-upterm@v1
             
     process_overlays:
       needs: setup_overlays
@@ -72,12 +70,7 @@ jobs:
         matrix: ${{ fromJson(needs.setup_overlays.outputs.matrix) }}
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
-        template: ${{ matrix.include.template }}
-        timecut_selector: ${{ matrix.include.timecut-selector }}
-        timecut_viewport: ${{ matrix.include.timecut-viewport }}
-        timecut_settings: ${{ matrix.include.timecut-settings }}
-        inputs: ${{ matrix.include.inputs }}
-        lottie_overrides: ${{ matrix.include.lottie_overrides }}
+        encoded: ${{ matrix.encoded }}
 
 
 

@@ -8,29 +8,9 @@ on:
                 type: string
                 description: 'Base64 configuration for Video Constructor'     
                 required: true
-            template:
-                description: 'Template name'
+            encoded:
+                description: 'Base64 Encoded Template'
                 required: true
-                type: string
-            timecut_selector:
-                description: 'Timecut Selector'
-                required: true
-                type: string
-            timecut_viewport:
-                description: 'Timecut Viewport'
-                required: true
-                type: string
-            timecut_settings:
-                description: 'Timecut Settings'
-                required: true
-                type: string
-            inputs:
-                description: 'Inputs for overlay'
-                required: false
-                type: string
-            lottie_overrides:
-                description: 'Lottie Overrides for overlay'
-                required: false
                 type: string
 
 
@@ -46,18 +26,7 @@ jobs:
             - name: Log Inputs
               run: |
                 echo "Config Base64: ${{ inputs.config_b64 }}"
-                echo "Include: ${{ inputs.include }}"
-                echo "Template: ${{ inputs.template }}"
-                echo "Timecut Selector: ${{ inputs.timecut_selector }}"
-                echo "Timecut Viewport: ${{ inputs.timecut_viewport }}"
-                echo "Timecut Settings: ${{ inputs.timecut_settings }}"
-                echo "Inputs: ${{ inputs.inputs }}"
-      
-                if [[ "${{ inputs.lottie_overrides }}" != "false" ]]; then
-                  echo "Lottie Overrides: ${{ inputs.lottie_overrides }}"
-                else
-                  echo "No Lottie Overrides"
-                fi
+                echo "encoded: ${{ inputs.encoded }}"
 
 
               
