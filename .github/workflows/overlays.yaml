@@ -219,12 +219,13 @@ jobs:
             #     path: ${GITHUB_WORKSPACE}/overlay
             - name: Check for overlay files
               run: |
-                if [ -z "$(ls -A ${GITHUB_WORKSPACE}/overlay)" ]; then
-                  echo "No files to upload in the overlay directory."
-                  exit 0
-                else 
-                  echo "files found"
-                fi
+                  if [ -z "$(ls -A ${GITHUB_WORKSPACE}/overlay)" ]; then
+                    echo "No files to upload in the overlay directory."
+                    echo "files_exist=false" >> $GITHUB_OUTPUT
+                  else 
+                    echo "Files found in the overlay directory."
+                    echo "files_exist=true" >> $GITHUB_OUTPUT
+                  fi
                 
 
 
@@ -232,7 +233,7 @@ jobs:
               if: steps.check_for_files.outputs.files_exist == 'true'
               uses: actions/upload-artifact@v3
               with:
-                name: overlay-${{ inputs.template_name }}
+                name: overlay-files
                 path: ${GITHUB_WORKSPACE}/overlay
 
 
