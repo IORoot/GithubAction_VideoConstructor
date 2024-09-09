@@ -229,10 +229,10 @@ jobs:
 
 
             - name: 🆙 Upload file as artifact
-              if: success() && steps.check_for_files.outputs.files_exist == 'true'
+              if: steps.check_for_files.outputs.files_exist == 'true'
               uses: actions/upload-artifact@v3
               with:
-                name: overlay-files
+                name: overlay-${{ inputs.template_name }}
                 path: ${GITHUB_WORKSPACE}/overlay
 
 
