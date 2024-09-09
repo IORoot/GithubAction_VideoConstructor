@@ -7,7 +7,7 @@ on:
             config_b64:
                 type: string
                 description: 'Base64 configuration for Video Constructor'     
-                required: false
+                required: true
             template_name:
                 description: 'Base64 Encoded Template Name'
                 required: true
@@ -39,6 +39,11 @@ jobs:
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎛️ SETUP - JSON to Environment Variables
               run: |
+                # Default base64 config
+                echo "${{ inputs.config_b64 }}" | base64 --decode > config.json
+                ./scripts/env/json_to_env.sh 
+
+                # TEMPLATE config
                 decoded_template=$(echo "${{ inputs.encoded_template }}" | base64 --decode)
                 echo "$decoded_template" > decoded_template.json
                 ./scripts/env/json_to_env.sh ${GITHUB_WORKSPACE}/decoded_template.json
@@ -104,9 +109,9 @@ jobs:
             # │             Optional setup of inputs.json             │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Setup Inputs.json
-              if: ${{ inputs.inputs != '' && inputs.inputs != null }}
+              if: ${{ env.VC_INPUTS != '' && env.VC_INPUTS != null }}
               run: |   
-                cat config.json | jq -r '.overlay.inputs' > ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/inputs.json
+                cat decoded_template.json | jq -r '.inputs' > ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/inputs.json
                 cat ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/inputs.json
 
 
@@ -115,9 +120,9 @@ jobs:
             # │         Optional Search/Replace Lottie JSON           │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Override Lottie.json
-              if: ${{ inputs.lottie_overrides != '' && inputs.lottie_overrides != null }}
+              if: ${{ env.VC_LOTTIE_OVERRIDES != '' && env.VC_LOTTIE_OVERRIDES != null }}
               run: |   
-                cat config.json | jq -r '.overlay.lottie_overrides' > ${GITHUB_WORKSPACE}/lottie_overrides.json
+                cat decoded_template.json | jq -r '.lottie_overrides' > ${GITHUB_WORKSPACE}/lottie_overrides.json
                 cat ${GITHUB_WORKSPACE}/lottie_overrides.json
                 ./scripts/overlay/lottie_overrides.sh --lottiefile ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/public/js/lottie.json --overridefile ${GITHUB_WORKSPACE}/lottie_overrides.json
 
@@ -164,7 +169,7 @@ jobs:
             - name: 🎨 OVERLAY - Capture Video
               continue-on-error: true
               run: |
-                node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ inputs.timecut_selector }}" --viewport="${{ inputs.timecut_viewport }}" ${{ inputs.timecut_settings }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
+                node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ env.VC_TIMECUT_SELECTOR }}" --viewport="${{ env.VC_TIMECUT_VIEWPORT }}" ${{ env.VC_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
                 mkdir overlay
                 cp overlay_video.mov ./overlay
                 ls -la

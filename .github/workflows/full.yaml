@@ -70,7 +70,7 @@ jobs:
       strategy:
         matrix: ${{ fromJson(needs.setup_overlays.outputs.matrix) }}
       with:
-        # Passing both the template name and encoded template to the child workflow
+        config_b64: ${{ github.event.inputs.config_b64 }} 
         template_name: ${{ matrix.template }}
         encoded_template: ${{ matrix.encoded }}
 
