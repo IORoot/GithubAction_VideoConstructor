@@ -222,7 +222,10 @@ jobs:
                 if [ -z "$(ls -A ${GITHUB_WORKSPACE}/overlay)" ]; then
                   echo "No files to upload in the overlay directory."
                   exit 0
+                else 
+                  echo "files found"
                 fi
+                
 
 
             - name: 🆙 Upload file as artifact
