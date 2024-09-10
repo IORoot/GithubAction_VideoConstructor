@@ -26,14 +26,14 @@ jobs:
       runs-on: ubuntu-latest
       outputs:
         matrix: ${{ steps.set-matrix.outputs.matrix }}
-        vc_generate_run: ${{ steps.set-vars.outputs.vc_generate_run }}
-        vc_search_run: ${{ steps.set-vars.outputs.vc_search_run }}
-        vc_download_run: ${{ steps.set-vars.outputs.vc_download_run }}
-        vc_overlay_run: ${{ steps.set-vars.outputs.vc_overlay_run }}
-        vc_music_run: ${{ steps.set-vars.outputs.vc_music_run }}
-        vc_video_run: ${{ steps.set-vars.outputs.vc_video_run }}
-        vc_output_run: ${{ steps.set-vars.outputs.vc_output_run }}
-        vc_scheduler_run: ${{ steps.set-vars.outputs.vc_scheduler_run }}
+        vc_generate_run: ${{ steps.set-vars.outputs.VC_GENERATE_RUN }}
+        vc_search_run: ${{ steps.set-vars.outputs.VC_SEARCH_RUN }}
+        vc_download_run: ${{ steps.set-vars.outputs.VC_DOWNLOAD_RUN }}
+        vc_overlay_run: ${{ steps.set-vars.outputs.VC_OVERLAY_RUN }}
+        vc_music_run: ${{ steps.set-vars.outputs.VC_MUSIC_RUN }}
+        vc_video_run: ${{ steps.set-vars.outputs.VC_VIDEO_RUN }}
+        vc_output_run: ${{ steps.set-vars.outputs.VC_OUTPUT_RUN }}
+        vc_scheduler_run: ${{ steps.set-vars.outputs.VC_SCHEDULER_RUN }}
       steps:
 
 
@@ -52,17 +52,9 @@ jobs:
         - name: 🎛️ SETUP - JSON to Environment Variables
           id: set-vars
           run: |
-            ./scripts/env/json_to_env.sh 
-            echo "vc_generate_run=$(echo ${VC_GENERATE_RUN})" >> $GITHUB_OUTPUT
-            echo "vc_search_run=$(echo ${VC_SEARCH_RUN})" >> $GITHUB_OUTPUT
-            echo "vc_download_run=$(echo ${VC_DOWNLOAD_RUN})" >> $GITHUB_OUTPUT
-            echo "vc_overlay_run=$(echo ${VC_OVERLAY_RUN})" >> $GITHUB_OUTPUT
-            echo "vc_music_run=$(echo ${VC_MUSIC_RUN})" >> $GITHUB_OUTPUT
-            echo "vc_video_run=$(echo ${VC_VIDEO_RUN})" >> $GITHUB_OUTPUT
-            echo "vc_output_run=$(echo ${VC_OUTPUT_RUN})" >> $GITHUB_OUTPUT
-            echo "vc_scheduler_run=$(echo ${VC_SCHEDULER_RUN})" >> $GITHUB_OUTPUT
+            ./scripts/env/json_to_env.sh
             cat $GITHUB_OUTPUT
-            echo ${VC_OVERLAY_RUN}
+            echo "VC_OVERLAY_RUN: ${VC_OVERLAY_RUN}"
 
 
 

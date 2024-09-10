@@ -29,4 +29,5 @@ recurse_to_env("VC"; .)
 ' "$FILE" | while IFS= read -r line; do
   echo "$line"
   echo "$line" >> $GITHUB_ENV
+  echo "$line" >> $GITHUB_OUTPUT
 done
