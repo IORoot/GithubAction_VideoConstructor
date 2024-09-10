@@ -57,18 +57,12 @@ jobs:
 
 
 
-        - name: Output Matrix
-          run: |
-            echo "Matrix Output:"
-            cat $GITHUB_OUTPUT
-
-
             
     overlays:
       needs: setup
       uses: ./.github/workflows/overlays.yaml  
       strategy:
-        matrix: ${{ fromJson(needs.setup_overlays.outputs.matrix) }}
+        matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
         template_name: ${{ matrix.template }}
@@ -77,6 +71,7 @@ jobs:
                    
         
     music:
+      needs: setup
       uses: ./.github/workflows/music.yaml
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
@@ -85,7 +80,7 @@ jobs:
 
     video_constructor:
         runs-on: ubuntu-latest
-        needs: [overlays,music] 
+        needs: [overlays, music] 
         if: always()  
         steps:
 
@@ -108,6 +103,7 @@ jobs:
                 merge-multiple: true
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
 
+                
             - name: ⤵️ Download Music Artifacts
               uses: actions/download-artifact@v4
               continue-on-error: true 
@@ -116,6 +112,11 @@ jobs:
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/music
 
 
+            - name: check downloads
+              run: |
+                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
+                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/music
+                  
             # ╭───────────────────────────────────────────────────────╮
             # │      DECODE THE BASE64 CONFIGS READY TO BE USED       │
             # ╰───────────────────────────────────────────────────────╯
