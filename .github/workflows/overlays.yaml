@@ -217,7 +217,7 @@ jobs:
             #   with:
             #     name: overlay-${{ inputs.template_name }}
             #     path: ${GITHUB_WORKSPACE}/overlay
-            - name: Check for overlay files
+            - name: Check for files
               run: |
                   if [ -z "$(ls -A ${GITHUB_WORKSPACE}/overlay)" ]; then
                     echo "No files to upload in the overlay directory."
