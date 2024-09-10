@@ -18,7 +18,6 @@ on:
                 type: string
 
 
-
 jobs:
 
     generate_overlay:
@@ -175,6 +174,7 @@ jobs:
                 curl "http://localhost:8080"
 
 
+
             # ╭───────────────────────────────────────────────────────╮
             # │             Use Timecut to capture Video              │
             # ╰───────────────────────────────────────────────────────╯
@@ -188,6 +188,7 @@ jobs:
                 ls -la
                 ls -la ${GITHUB_WORKSPACE}/overlay
                 ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
+
 
 
             # Check if the previous step failed
@@ -204,12 +205,6 @@ jobs:
 
 
 
-
-
-
-            
-
-
             # ╭───────────────────────────────────────────────────────╮
             # │           Upload the overlays as artifacts            │
             # ╰───────────────────────────────────────────────────────╯
@@ -220,8 +215,6 @@ jobs:
               with:
                 name: overlay-${{ inputs.template_name }}
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
-
-
                 
 
 

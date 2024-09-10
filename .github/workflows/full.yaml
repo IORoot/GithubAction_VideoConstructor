@@ -22,7 +22,7 @@ on:
 
 jobs:
 
-    setup_overlays:
+    setup:
       runs-on: ubuntu-latest
       outputs:
         matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -65,7 +65,7 @@ jobs:
 
             
     overlays:
-      needs: setup_overlays
+      needs: setup
       uses: ./.github/workflows/overlays.yaml  
       strategy:
         matrix: ${{ fromJson(needs.setup_overlays.outputs.matrix) }}
@@ -74,11 +74,19 @@ jobs:
         template_name: ${{ matrix.template }}
         encoded_template: ${{ matrix.encoded }}
 
+                   
+        
+    music:
+      needs: setup
+      uses: ./.github/workflows/music.yaml
+      with:
+        config_b64: ${{ github.event.inputs.config_b64 }} 
 
 
+        
     video_constructor:
         runs-on: ubuntu-latest
-        needs: overlays  
+        needs: [overlays,music] 
         if: always()  
         steps:
 
@@ -101,17 +109,13 @@ jobs:
                 merge-multiple: true
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
 
+            - name: ⤵️ Download Music Artifacts
+              uses: actions/download-artifact@v4
+              continue-on-error: true 
+              with:
+                merge-multiple: true
+                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/music
 
-            - name: Uncompress Artifacts
-              run: |
-                cd ${GITHUB_WORKSPACE}/overlay
-                ls -la
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │                          SSH                          │
-            # ╰───────────────────────────────────────────────────────╯
-            - name: 🪲 DEBUG - Setup upterm session
-              uses: lhotari/action-upterm@v1
 
             # ╭───────────────────────────────────────────────────────╮
             # │      DECODE THE BASE64 CONFIGS READY TO BE USED       │
@@ -189,28 +193,6 @@ jobs:
                   cat ./config_search.json
                   ./scripts/search/search.sh --json ${GITHUB_WORKSPACE}/config_search.json
                 
-
-
-            # ╭──────────────────────────────────────────────────────────────────────────╮
-            # │                                                                          │░
-            # │                                                                          │░
-            # │                                  MUSIC                                   │░
-            # │                                                                          │░
-            # │                                                                          │░
-            # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-
-
-            - name: 🎸 Music - Download music
-              if: ${{ env.VC_MUSIC_RUN }}
-              run: |
-                  cat config.json | jq -r '.music.musics' > ./config_music.json
-                  cat ./config_music.json
-                  ./scripts/music/music.sh --json ${GITHUB_WORKSPACE}/config_music.json
-
-                  mkdir -p music
-                  cp music*.mp3 music || true
-                  ls -la
-                  ls -la music 
 
 
             # ╭──────────────────────────────────────────────────────────────────────────╮
@@ -428,13 +410,13 @@ jobs:
             # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
 
-
+            # NOTE - UPLOADS/DOWNLOADS Start in the ROOT folder, NOT ${GITHUB_WORKSPACE}
+            # Give full path to file for it to work.
             - name: 📦 ARTIFACTS - Upload ./uploads folder as artifact if Upload to outputs Fails
-
               uses: actions/upload-artifact@v3
               with:
                 name: uploads
-                path: ./uploads/
+                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/uploads/
                 
 
             # ╭──────────────────────────────────────────────────────────────────────────╮
