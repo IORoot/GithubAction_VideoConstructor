@@ -53,7 +53,6 @@ jobs:
           id: set-vars
           run: |
             ./scripts/env/json_to_env.sh 
-
             echo "vc_generate_run=${VC_GENERATE_RUN}" >> $GITHUB_OUTPUT
             echo "vc_search_run=${VC_SEARCH_RUN}" >> $GITHUB_OUTPUT
             echo "vc_download_run=${VC_DOWNLOAD_RUN}" >> $GITHUB_OUTPUT
@@ -62,6 +61,7 @@ jobs:
             echo "vc_video_run=${VC_VIDEO_RUN}" >> $GITHUB_OUTPUT
             echo "vc_output_run=${VC_OUTPUT_RUN}" >> $GITHUB_OUTPUT
             echo "vc_scheduler_run=${VC_SCHEDULER_RUN}" >> $GITHUB_OUTPUT
+            env
 
 
 
@@ -77,7 +77,7 @@ jobs:
             
     overlays:
       needs: setup
-      if: needs.setup.outputs.vc_overlay_run == 'true'
+      if: needs.setup.outputs.vc_overlay_run == true
       uses: ./.github/workflows/overlays.yaml  
       strategy:
         matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
@@ -90,7 +90,7 @@ jobs:
         
     music:
       needs: setup
-      if: needs.setup.outputs.vc_music_run == 'true'
+      if: needs.setup.outputs.vc_music_run == true
       uses: ./.github/workflows/music.yaml
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
