@@ -96,9 +96,9 @@ jobs:
             # ╰───────────────────────────────────────────────────────╯
             - name: ⤵️ Download Overlay Artifacts
               uses: actions/download-artifact@v4
-              continue-on-error: true
-              merge-multiple: true 
+              continue-on-error: true 
               with:
+                merge-multiple: true
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
 
 
