@@ -94,16 +94,20 @@ jobs:
             # ╭───────────────────────────────────────────────────────╮
             # │                  Download Artifacts                   │
             # ╰───────────────────────────────────────────────────────╯
-            - name: Download Artifacts From Overlays
+            - name: ⤵️ Download Overlay Artifacts
               uses: actions/download-artifact@v4
+              continue-on-error: true
               with:
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
-                         
-            - name: List Downloaded Artifacts
+
+
+            - name: Uncompress Artifacts
               run: |
-                  ls -la ./overlay
-
-
+                cd ${GITHUB_WORKSPACE}/overlay
+                ls -la
+                for zip_file in *.zip; do
+                  unzip -o "$zip_file"
+                done
 
             # ╭───────────────────────────────────────────────────────╮
             # │      DECODE THE BASE64 CONFIGS READY TO BE USED       │
