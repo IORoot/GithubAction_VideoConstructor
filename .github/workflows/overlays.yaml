@@ -213,21 +213,13 @@ jobs:
             # ╭───────────────────────────────────────────────────────╮
             # │           Upload the overlays as artifacts            │
             # ╰───────────────────────────────────────────────────────╯
-            # - name: 🆙 Upload file as artifact
-            #   uses: actions/upload-artifact@v4
-            #   with:
-            #     name: overlay-${{ inputs.template_name }}
-            #     path: ${GITHUB_WORKSPACE}/overlay
-
-                
-
-
+            # NOTE - UPLOADS/DOWNLOADS Start in the ROOT folder, NOT ${GITHUB_WORKSPACE}
+            # Give full path to file for it to work.
             - name: 🆙 Upload file as artifact
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
-                name: overlay-files
+                name: overlay-${{ inputs.template_name }}
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
-
 
 
                 
