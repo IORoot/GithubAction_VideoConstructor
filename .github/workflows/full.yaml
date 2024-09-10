@@ -97,7 +97,6 @@ jobs:
             - name: Download Artifacts From Overlays
               uses: actions/download-artifact@v4
               with:
-                name: overlay-*
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
                          
             - name: List Downloaded Artifacts
