@@ -26,6 +26,14 @@ jobs:
       runs-on: ubuntu-latest
       outputs:
         matrix: ${{ steps.set-matrix.outputs.matrix }}
+        vc_generate_run: ${{ steps.set-vars.outputs.vc_generate_run }}
+        vc_search_run: ${{ steps.set-vars.outputs.vc_search_run }}
+        vc_download_run: ${{ steps.set-vars.outputs.vc_download_run }}
+        vc_overlay_run: ${{ steps.set-vars.outputs.vc_overlay_run }}
+        vc_music_run: ${{ steps.set-vars.outputs.vc_music_run }}
+        vc_video_run: ${{ steps.set-vars.outputs.vc_video_run }}
+        vc_output_run: ${{ steps.set-vars.outputs.vc_output_run }}
+        vc_scheduler_run: ${{ steps.set-vars.outputs.vc_scheduler_run }}
       steps:
 
 
@@ -42,13 +50,22 @@ jobs:
 
 
         - name: 🎛️ SETUP - JSON to Environment Variables
+          id: set-vars
           run: |
             ./scripts/env/json_to_env.sh 
-            env
-        
+
+            echo "::set-output name=vc_generate_run::$(echo $VC_GENERATE_RUN)"
+            echo "::set-output name=vc_search_run::$(echo $VC_SEARCH_RUN)"
+            echo "::set-output name=vc_download_run::$(echo $VC_DOWNLOAD_RUN)"
+            echo "::set-output name=vc_overlay_run::$(echo $VC_OVERLAY_RUN)"
+            echo "::set-output name=vc_music_run::$(echo $VC_MUSIC_RUN)"
+            echo "::set-output name=vc_video_run::$(echo $VC_VIDEO_RUN)"
+            echo "::set-output name=vc_output_run::$(echo $VC_OUTPUT_RUN)"
+            echo "::set-output name=vc_scheduler_run::$(echo $VC_SCHEDULER_RUN)"
 
 
-        - name: Generate Matrix from JSON
+
+        - name: ⚙️ Generate Matrix from JSON
           id: set-matrix
           run: |
             jq -c '{"include": [.overlay.overlays[] | {template: .template[], encoded: (tojson | @base64)}]}' config.json > matrix.json
@@ -60,6 +77,7 @@ jobs:
             
     overlays:
       needs: setup
+      if: needs.setup.outputs.vc_overlay_run == 'true'
       uses: ./.github/workflows/overlays.yaml  
       strategy:
         matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
@@ -72,6 +90,7 @@ jobs:
         
     music:
       needs: setup
+      if: needs.setup.outputs.vc_music_run == 'true'
       uses: ./.github/workflows/music.yaml
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
