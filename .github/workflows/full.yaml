@@ -82,16 +82,21 @@ jobs:
         template_name: ${{ matrix.template }}
         encoded_template: ${{ matrix.encoded }}
 
-                   
+              
         
-
-
-
-
     music:
       needs: setup
       if: needs.setup.outputs.vc_music_run == 'true'
       uses: ./.github/workflows/music.yaml
+      with:
+        config_b64: ${{ github.event.inputs.config_b64 }} 
+                   
+
+
+    generator:
+      needs: setup
+      if: needs.setup.outputs.vc_generate_run == 'true'
+      uses: ./.github/workflows/generators.yaml
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
 
@@ -127,18 +132,26 @@ jobs:
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
 
                 
+
             - name: ⤵️ Download Music Artifacts
               uses: actions/download-artifact@v4
               continue-on-error: true 
               with:
                 merge-multiple: true
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/music
+                
 
 
-            - name: check downloads
-              run: |
-                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
-                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/music
+            - name: ⤵️ Download Generator Artifacts
+              uses: actions/download-artifact@v4
+              continue-on-error: true 
+              with:
+                merge-multiple: true
+                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/generators
+
+
+
+
                   
             # ╭───────────────────────────────────────────────────────╮
             # │      DECODE THE BASE64 CONFIGS READY TO BE USED       │
@@ -218,50 +231,6 @@ jobs:
                 
 
 
-            # ╭──────────────────────────────────────────────────────────────────────────╮
-            # │                                                                          │░
-            # │                                                                          │░
-            # │                                GENERATOR                                 │░
-            # │                                                                          │░
-            # │                                                                          │░
-            # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │                      Setup Node                       │
-            # ╰───────────────────────────────────────────────────────╯
-            - uses: actions/setup-node@v3.6.0
-              with:
-                node-version: "18.x"
-
-
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │                    Setup Midjourney                   │
-            # ╰───────────────────────────────────────────────────────╯
-            - name: 🏞️ Generate - Setup Midjourney
-              if: ${{ env.VC_GENERATE_RUN }}
-              run: |
-                  env
-                  sudo git clone https://github.com/IORoot/MidjourneyAPI ${GITHUB_WORKSPACE}/midjourney
-                  sudo chown -Rf runner:docker midjourney
-                  cp midjourney.env.conf ${GITHUB_WORKSPACE}/midjourney/.env
-                  cd midjourney
-                  npm install
-                  cat ${GITHUB_WORKSPACE}/config.json | jq -r '.generate.generators' > ./config_generators.json
-
-
-
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │                  RUN THE GENERATORS                   │
-            # ╰───────────────────────────────────────────────────────╯
-            - name: 🏞️ Generate - Run Generator
-              if: ${{ env.VC_GENERATE_RUN }}
-              continue-on-error: true
-              run: |
-                cat config.json | jq -r '.generate.generators' > ./config_generate.json
-                ./scripts/generate/generate.sh --json ${GITHUB_WORKSPACE}/config_generate.json
-                ls -la
 
 
 

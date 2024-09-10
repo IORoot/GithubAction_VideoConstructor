@@ -1,12 +1,12 @@
 # ╭──────────────────────────────────────────────────────────────────────────╮
 # │                                                                          │░
 # │                                                                          │░
-# │                                  MUSIC                                   │░
+# │                               GENERATORS                                 │░
 # │                                                                          │░
 # │                                                                          │░
 # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-name: 🎸 Music
+name: 🏞️ Generators
 
 on:
     workflow_call:
@@ -45,26 +45,38 @@ jobs:
 
 
             # ╭───────────────────────────────────────────────────────╮
-            # │                    INSTALL YT-DLP                     │
+            # │                      Setup Node                       │
             # ╰───────────────────────────────────────────────────────╯
-            - name: 🔎 SEARCH - Install yt-dlp
-              run: sudo pip install yt-dlp
+            - uses: actions/setup-node@v3.6.0
+              with:
+                node-version: "18.x"
 
 
 
             # ╭───────────────────────────────────────────────────────╮
-            # │                    Download Music                     │
+            # │                    Setup Midjourney                   │
             # ╰───────────────────────────────────────────────────────╯
-            - name: 🎸 Music - Download music
+            - name: 🏞️ Generate - Setup Midjourney
               run: |
-                  cat config.json | jq -r '.music.musics' > ./config_music.json
-                  cat ./config_music.json
-                  ./scripts/music/music.sh --json ${GITHUB_WORKSPACE}/config_music.json
+                  env
+                  sudo git clone https://github.com/IORoot/MidjourneyAPI ${GITHUB_WORKSPACE}/midjourney
+                  sudo chown -Rf runner:docker midjourney
+                  cp midjourney.env.conf ${GITHUB_WORKSPACE}/midjourney/.env
+                  cd midjourney
+                  npm install
+                  cat ${GITHUB_WORKSPACE}/config.json | jq -r '.generate.generators' > ./config_generators.json
 
-                  mkdir -p music
-                  cp music*.mp3 music || true
-                  ls -la
-                  ls -la music 
+
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                  RUN THE GENERATORS                   │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: 🏞️ Generate - Run Generator
+              continue-on-error: true
+              run: |
+                cat config.json | jq -r '.generate.generators' > ./config_generate.json
+                ./scripts/generate/generate.sh --json ${GITHUB_WORKSPACE}/config_generate.json
+                ls -la
 
 
 
@@ -76,8 +88,8 @@ jobs:
             - name: 🆙 Upload file as artifact
               uses: actions/upload-artifact@v4
               with:
-                name: music
-                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/music
+                name: generators
+                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/generators
                 
 
 
