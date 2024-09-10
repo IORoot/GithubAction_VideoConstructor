@@ -182,11 +182,11 @@ jobs:
               continue-on-error: true
               run: |
                 node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ env.VC_TIMECUT_SELECTOR }}" --viewport="${{ env.VC_TIMECUT_VIEWPORT }}" ${{ env.VC_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
-                mkdir -p ${GITHUB_WORKSPACE}/overlay
-                cp overlay_video.mov ${GITHUB_WORKSPACE}/overlay/overlay_${{ inputs.template_name }}.mov
+                mkdir -p /overlay
+                cp overlay_video.mov /overlay/overlay_${{ inputs.template_name }}.mov
                 pwd
                 ls -la
-                ls -la ${GITHUB_WORKSPACE}/overlay
+                ls -la /overlay
 
 
             # Check if the previous step failed
@@ -201,39 +201,26 @@ jobs:
                 printf "2. Has the template been zipped with the ./template folder? It shouldn't have. You should highlight the files in the \n"
                 printf "template folder (assets,public,revslider-lottie-addon, etc..) and zip them. Do not highlight the template folder and zip it. Otherwise the unzip will create a folder and the files won't be located.\n\n"
 
-
-
-
-
-
             
 
 
             # ╭───────────────────────────────────────────────────────╮
             # │           Upload the overlays as artifacts            │
             # ╰───────────────────────────────────────────────────────╯
-            # - name: 🆙 Upload file as artifact
-            #   uses: actions/upload-artifact@v4
-            #   with:
-            #     name: overlay-${{ inputs.template_name }}
-            #     path: ${GITHUB_WORKSPACE}/overlay
-            - name: Check for files
-              run: |
-                  if [ -z "$(ls -A ${GITHUB_WORKSPACE}/overlay)" ]; then
-                    echo "No files to upload in the overlay directory."
-                    echo "files_exist=false" >> $GITHUB_OUTPUT
-                  else 
-                    echo "Files found in the overlay directory."
-                    echo "files_exist=true" >> $GITHUB_OUTPUT
-                  fi
+            - name: 🆙 Upload file as artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: overlay-${{ inputs.template_name }}
+                path: /overlay
+
                 
 
 
-            - name: 🆙 Upload file as artifact
-              uses: actions/upload-artifact@v3
-              with:
-                name: overlay-files
-                path: ${GITHUB_WORKSPACE}/overlay
+            # - name: 🆙 Upload file as artifact
+            #   uses: actions/upload-artifact@v3
+            #   with:
+            #     name: overlay-files
+            #     path: ${GITHUB_WORKSPACE}/overlay
 
 
 
