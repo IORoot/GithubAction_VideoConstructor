@@ -54,14 +54,14 @@ jobs:
           run: |
             ./scripts/env/json_to_env.sh 
 
-            echo "::set-output name=vc_generate_run::$(echo $VC_GENERATE_RUN)"
-            echo "::set-output name=vc_search_run::$(echo $VC_SEARCH_RUN)"
-            echo "::set-output name=vc_download_run::$(echo $VC_DOWNLOAD_RUN)"
-            echo "::set-output name=vc_overlay_run::$(echo $VC_OVERLAY_RUN)"
-            echo "::set-output name=vc_music_run::$(echo $VC_MUSIC_RUN)"
-            echo "::set-output name=vc_video_run::$(echo $VC_VIDEO_RUN)"
-            echo "::set-output name=vc_output_run::$(echo $VC_OUTPUT_RUN)"
-            echo "::set-output name=vc_scheduler_run::$(echo $VC_SCHEDULER_RUN)"
+            echo "vc_generate_run=${VC_GENERATE_RUN}" >> $GITHUB_OUTPUT
+            echo "vc_search_run=${VC_SEARCH_RUN}" >> $GITHUB_OUTPUT
+            echo "vc_download_run=${VC_DOWNLOAD_RUN}" >> $GITHUB_OUTPUT
+            echo "vc_overlay_run=${VC_OVERLAY_RUN}" >> $GITHUB_OUTPUT
+            echo "vc_music_run=${VC_MUSIC_RUN}" >> $GITHUB_OUTPUT
+            echo "vc_video_run=${VC_VIDEO_RUN}" >> $GITHUB_OUTPUT
+            echo "vc_output_run=${VC_OUTPUT_RUN}" >> $GITHUB_OUTPUT
+            echo "vc_scheduler_run=${VC_SCHEDULER_RUN}" >> $GITHUB_OUTPUT
 
 
 
