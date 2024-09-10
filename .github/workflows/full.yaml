@@ -67,10 +67,13 @@ jobs:
 
 
 
+
+
+
             
     overlays:
       needs: setup
-      if: needs.setup.outputs.vc_overlay_run == true
+      if: needs.setup.outputs.vc_overlay_run == 'true'
       uses: ./.github/workflows/overlays.yaml  
       strategy:
         matrix: ${{ fromJson(needs.setup.outputs.matrix) }}
@@ -81,12 +84,20 @@ jobs:
 
                    
         
+
+
+
+
     music:
       needs: setup
-      if: needs.setup.outputs.vc_music_run == true
+      if: needs.setup.outputs.vc_music_run == 'true'
       uses: ./.github/workflows/music.yaml
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
+
+
+
+
 
 
 
