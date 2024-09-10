@@ -61,7 +61,7 @@ jobs:
             echo "vc_video_run=${VC_VIDEO_RUN}" >> $GITHUB_OUTPUT
             echo "vc_output_run=${VC_OUTPUT_RUN}" >> $GITHUB_OUTPUT
             echo "vc_scheduler_run=${VC_SCHEDULER_RUN}" >> $GITHUB_OUTPUT
-            env
+            cat $GITHUB_OUTPUT
 
 
 
