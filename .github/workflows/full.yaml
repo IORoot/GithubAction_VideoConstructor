@@ -97,6 +97,7 @@ jobs:
             - name: ⤵️ Download Overlay Artifacts
               uses: actions/download-artifact@v4
               continue-on-error: true
+              merge-multiple: true 
               with:
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
 
@@ -105,9 +106,12 @@ jobs:
               run: |
                 cd ${GITHUB_WORKSPACE}/overlay
                 ls -la
-                for zip_file in *.zip; do
-                  unzip -o "$zip_file"
-                done
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                          SSH                          │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: 🪲 DEBUG - Setup upterm session
+              uses: lhotari/action-upterm@v1
 
             # ╭───────────────────────────────────────────────────────╮
             # │      DECODE THE BASE64 CONFIGS READY TO BE USED       │
