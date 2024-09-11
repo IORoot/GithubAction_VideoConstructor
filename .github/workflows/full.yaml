@@ -66,10 +66,6 @@ jobs:
             echo "matrix=$(cat matrix.json)" >> $GITHUB_OUTPUT
 
 
-
-
-
-
             
     overlays:
       needs: setup
@@ -102,6 +98,12 @@ jobs:
 
 
 
+    searches:
+      needs: setup
+      if: needs.setup.outputs.vc_search_run == 'true'
+      uses: ./.github/workflows/search.yaml
+      with:
+        config_b64: ${{ github.event.inputs.config_b64 }} 
 
 
 
@@ -125,7 +127,7 @@ jobs:
             # │                  Download Artifacts                   │
             # ╰───────────────────────────────────────────────────────╯
 
-            
+
             - name: ⤵️ Download Overlay Artifacts
               uses: actions/download-artifact@v4
               continue-on-error: true 
@@ -152,9 +154,24 @@ jobs:
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/generators
 
 
+            - name: ⤵️ Download Searches Artifacts
+              uses: actions/download-artifact@v4
+              continue-on-error: true
+              with:
+                merge-multiple: true
+                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/searches
 
+
+
+            - name: 🎛️ ls
+              run: |
+                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
+                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/music
+                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/generators
+                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/searches
 
                   
+
             # ╭───────────────────────────────────────────────────────╮
             # │      DECODE THE BASE64 CONFIGS READY TO BE USED       │
             # ╰───────────────────────────────────────────────────────╯
@@ -197,43 +214,6 @@ jobs:
                 env
                 ln -s /opt/hostedtoolcache/ffmpeg/*/x64/ffmpeg ./ffmpeg
                 ln -s /opt/hostedtoolcache/ffmpeg/*/x64/ffprobe ./ffprobe 
-
-
-
-            # ╭──────────────────────────────────────────────────────────────────────────╮
-            # │                                                                          │░
-            # │                                                                          │░
-            # │                              YOUTUBE SEARCH                              │░
-            # │                                                                          │░
-            # │                                                                          │░
-            # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-
-
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │                    INSTALL YT-DLP                     │
-            # ╰───────────────────────────────────────────────────────╯
-            - name: 🔎 SEARCH - Install yt-dlp
-              run: sudo pip install yt-dlp
-
-
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │                     RUN SEARCH                        │
-            # ╰───────────────────────────────────────────────────────╯
-            #
-            # OUTPUTS = videoid_results.json
-            - name: 🔎 SEARCH - Do a Search
-              if: ${{ env.VC_SEARCH_RUN }}
-              run: |
-                  cat config.json | jq -r '.search.searches' > ./config_search.json
-                  cat ./config_search.json
-                  ./scripts/search/search.sh --json ${GITHUB_WORKSPACE}/config_search.json
-                
-
-
-
-
 
 
 
