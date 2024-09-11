@@ -91,7 +91,7 @@ jobs:
         config_b64: ${{ github.event.inputs.config_b64 }} 
         template_name: ${{ matrix.template }}
         encoded_template: ${{ matrix.encoded }}
-
+      secrets: inherit
               
         
     music:
@@ -100,7 +100,7 @@ jobs:
       uses: ./.github/workflows/music.yaml
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
-                   
+      secrets: inherit          
 
 
     generator:
@@ -109,7 +109,7 @@ jobs:
       uses: ./.github/workflows/generators.yaml
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
-
+      secrets: inherit
 
 
     searches:
@@ -118,7 +118,7 @@ jobs:
       uses: ./.github/workflows/search.yaml
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
-
+      secrets: inherit
 
 
     downloads:
@@ -127,7 +127,7 @@ jobs:
       uses: ./.github/workflows/download.yaml
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
-
+      secrets: inherit
 
 
 
