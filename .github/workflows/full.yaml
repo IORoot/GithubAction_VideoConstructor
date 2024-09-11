@@ -49,6 +49,20 @@ jobs:
 
 
 
+
+        # ╭───────────────────────────────────────────────────────╮
+        # │      DECODE THE BASE64 CONFIGS READY TO BE USED       │
+        # ╰───────────────────────────────────────────────────────╯
+        - name: 🎛️ SETUP - Base64 decode Configs
+          run: |
+            echo "${{ secrets.RCLONE_CONF_B64 }}" | base64 --decode > rclone.conf
+            cat rclone.conf
+            echo "${{ secrets.MIDJOURNEY_ENV_B64 }}" | base64 --decode > midjourney.env.conf
+            cat midjourney.env.conf
+            ls -la
+
+
+
         - name: 🎛️ SETUP - JSON to Environment Variables
           id: set-vars
           run: |
@@ -58,7 +72,7 @@ jobs:
 
 
 
-        - name: ⚙️ Generate Matrix from JSON
+        - name: ⚙️ Generate Matrix from JSON for overlays
           id: set-matrix
           run: |
             jq -c '{"include": [.overlay.overlays[] | {template: .template[], encoded: (tojson | @base64)}]}' config.json > matrix.json || true
@@ -119,7 +133,7 @@ jobs:
 
     video_constructor:
         runs-on: ubuntu-latest
-        needs: [overlays, music] 
+        needs: [overlays, music, generator, searches, downloads] 
         if: always()  
         steps:
 
