@@ -124,6 +124,8 @@ jobs:
             # ╭───────────────────────────────────────────────────────╮
             # │                  Download Artifacts                   │
             # ╰───────────────────────────────────────────────────────╯
+
+            
             - name: ⤵️ Download Overlay Artifacts
               uses: actions/download-artifact@v4
               continue-on-error: true 
@@ -159,7 +161,6 @@ jobs:
             - name: 🎛️ SETUP - Base64 decode Configs
               run: |
                 echo "${{ secrets.RCLONE_CONF_B64 }}" | base64 --decode > rclone.conf
-                echo "${{ secrets.MIDJOURNEY_ENV_B64 }}" | base64 --decode > midjourney.env.conf
                 echo "${{ github.event.inputs.config_b64 }}" | base64 --decode > config.json
                 cat config.json
 
