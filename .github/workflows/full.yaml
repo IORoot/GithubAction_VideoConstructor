@@ -107,6 +107,15 @@ jobs:
 
 
 
+    downloads:
+      needs: setup
+      if: needs.setup.outputs.vc_download_run == 'true'
+      uses: ./.github/workflows/download.yaml
+      with:
+        config_b64: ${{ github.event.inputs.config_b64 }} 
+
+
+
 
     video_constructor:
         runs-on: ubuntu-latest
@@ -154,12 +163,22 @@ jobs:
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/generators
 
 
+
             - name: ⤵️ Download Searches Artifacts
               uses: actions/download-artifact@v4
               continue-on-error: true
               with:
                 merge-multiple: true
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/searches
+                
+
+
+            - name: ⤵️ Download Download Artifacts
+              uses: actions/download-artifact@v4
+              continue-on-error: true
+              with:
+                merge-multiple: true
+                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/downloads
 
 
 
@@ -217,64 +236,8 @@ jobs:
 
 
 
-            # ╭──────────────────────────────────────────────────────────────────────────╮
-            # │                                                                          │░
-            # │                                                                          │░
-            # │                                DOWNLOADS                                 │░
-            # │                                                                          │░
-            # │                                                                          │░
-            # ╰░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 
-
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │                     INSTALL MPV                       │
-            # ╰───────────────────────────────────────────────────────╯
-            - name: 📹 DOWNLOAD - Install mpv
-              if: ${{ env.VC_DOWNLOAD_RUN }}
-              run: |
-                sudo apt-get update
-                sudo apt-get install --no-install-recommends mpv
-            
-
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │                    Install rClone                     │
-            # ╰───────────────────────────────────────────────────────╯
-            - name: 📹 DOWNLOAD - Install rClone
-              if: ${{ env.VC_DOWNLOAD_RUN }}
-              run: |
-                sudo apt install rclone
-
-                
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │                  RUN THE DOWNLOADER                   │
-            # ╰───────────────────────────────────────────────────────╯
-            ##
-            ## INPUT = videoid_results.json
-            ## OUTPUT = MP4 Video files
-            ##
-            - name: 📹 DOWNLOAD - Run Downloader
-              if: ${{ env.VC_DOWNLOAD_RUN }}
-              run: |
-                cat config.json | jq -r '.download.downloads' > ./config_download.json
-                cat ./config_download.json
-                ./scripts/download/download.sh \
-                    --json ${GITHUB_WORKSPACE}/config_download.json \
-                    --searchresults ${GITHUB_WORKSPACE}/search_results.json \
-                    --rclone ./rclone.conf
-              
-                mkdir -p videos
-                
-                find . -maxdepth 1 -iname "*.mp4" -exec cp {} videos/ \; || true
-                find . -maxdepth 1 -iname "*.avi" -exec cp {} videos/ \; || true
-                find . -maxdepth 1 -iname "*.mkv" -exec cp {} videos/ \; || true
-                find . -maxdepth 1 -iname "*.mov" -exec cp {} videos/ \; || true
-                find . -maxdepth 1 -iname "*.flv" -exec cp {} videos/ \; || true
-
-                ls -la
-                ls -la videos  
+             
 
 
 
