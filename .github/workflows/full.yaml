@@ -182,12 +182,11 @@ jobs:
 
 
 
-            - name: 🎛️ ls
-              run: |
-                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
-                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/music
-                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/generators
-                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/searches
+            # ╭───────────────────────────────────────────────────────╮
+            # │                          SSH                          │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: 🪲 DEBUG - Setup upterm session
+              uses: lhotari/action-upterm@v1
 
                   
 
