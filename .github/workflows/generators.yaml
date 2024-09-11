@@ -73,6 +73,7 @@ jobs:
                   cd midjourney
                   npm install
                   cat ${GITHUB_WORKSPACE}/config.json | jq -r '.generate.generators' > ./config_generators.json
+                  mkdir -p ${GITHUB_WORKSPACE}/generators
 
 
 

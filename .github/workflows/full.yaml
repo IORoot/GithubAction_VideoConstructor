@@ -135,58 +135,12 @@ jobs:
             # ╭───────────────────────────────────────────────────────╮
             # │                  Download Artifacts                   │
             # ╰───────────────────────────────────────────────────────╯
-
-
-            - name: ⤵️ Download Overlay Artifacts
+            - name: ⤵️ Download Artifacts
               uses: actions/download-artifact@v4
               continue-on-error: true 
               with:
                 merge-multiple: true
-                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
-
-                
-
-            - name: ⤵️ Download Music Artifacts
-              uses: actions/download-artifact@v4
-              continue-on-error: true 
-              with:
-                merge-multiple: true
-                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/music
-                
-
-
-            - name: ⤵️ Download Generator Artifacts
-              uses: actions/download-artifact@v4
-              continue-on-error: true 
-              with:
-                merge-multiple: true
-                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/generators
-
-
-
-            - name: ⤵️ Download Searches Artifacts
-              uses: actions/download-artifact@v4
-              continue-on-error: true
-              with:
-                merge-multiple: true
-                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/searches
-                
-
-
-            - name: ⤵️ Download Download Artifacts
-              uses: actions/download-artifact@v4
-              continue-on-error: true
-              with:
-                merge-multiple: true
-                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/downloads
-
-
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │                          SSH                          │
-            # ╰───────────────────────────────────────────────────────╯
-            - name: 🪲 DEBUG - Setup upterm session
-              uses: lhotari/action-upterm@v1
+                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/assets
 
                   
 
