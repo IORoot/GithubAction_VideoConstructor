@@ -29,6 +29,7 @@ jobs:
             # │             GET CONTENTS OF CURRENT REPO              │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎛️ SETUP - Checkout Repo
+            
               uses: actions/checkout@v3
 
 
@@ -57,9 +58,11 @@ jobs:
             # │                    Install FFMPEG                     │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎛️ SETUP - Install FFMPEG
+              if: ${{ env.VC_SEARCH_RUN }}
               uses: FedericoCarboni/setup-ffmpeg@v2
  
             - name: 🎛️ SETUP - Link FFMPEG to /usr/local/bin
+              if: ${{ env.VC_SEARCH_RUN }}
               run: |
                 cd /usr/local/bin
                 env
@@ -72,6 +75,7 @@ jobs:
             # │                    INSTALL YT-DLP                     │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🔎 SEARCH - Install yt-dlp
+              if: ${{ env.VC_SEARCH_RUN }}
               run: sudo pip install yt-dlp
 
 
@@ -82,6 +86,7 @@ jobs:
             #
             # OUTPUTS = videoid_results.json
             - name: 🔎 SEARCH - Do a Search
+              if: ${{ env.VC_SEARCH_RUN }}
               run: |
                   cat config.json | jq -r '.search.searches' > ./config_search.json
                   cat ./config_search.json
@@ -94,6 +99,7 @@ jobs:
             # NOTE - UPLOADS/DOWNLOADS Start in the ROOT folder, NOT ${GITHUB_WORKSPACE}
             # Give full path to file for it to work.
             - name: 🆙 Upload file as artifact
+              if: ${{ env.VC_SEARCH_RUN }}
               uses: actions/upload-artifact@v4
               with:
                 name: searches

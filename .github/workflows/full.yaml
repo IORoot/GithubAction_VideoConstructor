@@ -48,11 +48,7 @@ jobs:
             cat config.json
 
 
-
-
-        # ╭───────────────────────────────────────────────────────╮
-        # │      DECODE THE BASE64 CONFIGS READY TO BE USED       │
-        # ╰───────────────────────────────────────────────────────╯
+            
         - name: 🎛️ SETUP - Base64 decode Configs
           run: |
             echo "${{ secrets.RCLONE_CONF_B64 }}" | base64 --decode > rclone.conf
@@ -84,7 +80,6 @@ jobs:
 
     searches:
       needs: setup
-      if: needs.setup.outputs.vc_search_run == 'true'
       uses: ./.github/workflows/search.yaml
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
@@ -123,7 +118,7 @@ jobs:
 
 
     downloads:
-      needs: [setup,searches]
+      needs: [setup, searches]
       if: needs.setup.outputs.vc_download_run == 'true'
       uses: ./.github/workflows/download.yaml
       with:
