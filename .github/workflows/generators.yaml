@@ -85,7 +85,7 @@ jobs:
               continue-on-error: true
               run: |
                 ./scripts/generate/generate.sh --json ${GITHUB_WORKSPACE}/config_generate.json
-                ls -la
+                ls -la ${GITHUB_WORKSPACE}/assets
 
 
 
