@@ -4,6 +4,7 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 # ╭──────────────────────────────────────────────────────────╮
 # │                        VARIABLES                         │
 # ╰──────────────────────────────────────────────────────────╯
+OUTPUT_FOLDER="./assets"
 MIDJOURNEY_FOLDER="./midjourney"
 FOLDER="./scripts/generate"
 PWD=$(pwd)
@@ -175,7 +176,7 @@ function main()
 
     slice_images
 
-    # mv *.png ..
+    mv *.png $OUTPUT_FOLDER
 
     cd $PWD
 }

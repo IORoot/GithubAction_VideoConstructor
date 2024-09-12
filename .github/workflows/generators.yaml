@@ -98,7 +98,7 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                 name: generators
-                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/generators
+                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/assets
                 
 
 

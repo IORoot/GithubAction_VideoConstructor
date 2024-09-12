@@ -4,7 +4,7 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 # ╭──────────────────────────────────────────────────────────╮
 # │                        VARIABLES                         │
 # ╰──────────────────────────────────────────────────────────╯
-TEXTFILE_FOLDER="./generators"
+OUTPUT_FOLDER="./assets"
 FOLDER="./scripts/generate"
 PWD=$(pwd)
 
@@ -100,7 +100,7 @@ function create_textfile()
     if [[ "$RUN" == "true" ]]; then
         echo "${TEXT}" > $FILENAME
         chmod $PERMISSIONS $FILENAME
-        mv $FILENAME $TEXTFILE_FOLDER
+        mv $FILENAME $OUTPUT_FOLDER
     fi
 }
 
