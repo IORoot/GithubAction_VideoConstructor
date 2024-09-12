@@ -87,7 +87,11 @@ jobs:
                   cat ./config_search.json
                   ./scripts/search/search.sh --json ${GITHUB_WORKSPACE}/config_search.json
 
-
+            # ╭───────────────────────────────────────────────────────╮
+            # │                          SSH                          │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: 🪲 DEBUG - Setup upterm session
+              uses: lhotari/action-upterm@v1
 
             # ╭───────────────────────────────────────────────────────╮
             # │           Upload the overlays as artifacts            │
@@ -98,7 +102,7 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                 name: searches
-                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/searches
+                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/assets
                 
 
 
