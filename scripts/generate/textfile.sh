@@ -100,7 +100,11 @@ function create_textfile()
     if [[ "$RUN" == "true" ]]; then
         echo "${TEXT}" > $FILENAME
         chmod $PERMISSIONS $FILENAME
-        mv $FILENAME $OUTPUT_FOLDER
+
+        if [ -d "$OUTPUT_FOLDER" ]; then
+            mv $FILENAME $OUTPUT_FOLDER
+        fi
+        
     fi
 }
 

@@ -176,9 +176,11 @@ function main()
 
     slice_images
 
-    mv *.png $OUTPUT_FOLDER
-
     cd $PWD
+
+    if [ -d "$OUTPUT_FOLDER" ]; then
+        mv $MIDJOURNEY_FOLDER/*.png $OUTPUT_FOLDER
+    fi
 }
 
 usage "$@"
