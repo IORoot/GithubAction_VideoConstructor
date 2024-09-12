@@ -70,6 +70,7 @@ jobs:
                   sudo git clone https://github.com/IORoot/MidjourneyAPI ${GITHUB_WORKSPACE}/midjourney
                   sudo chown -Rf runner:docker midjourney
                   cp midjourney.env.conf ${GITHUB_WORKSPACE}/midjourney/.env
+                  cat config.json | jq -r '.generate.generators' > ./config_generate.json
                   cd midjourney
                   npm install
                   cat ${GITHUB_WORKSPACE}/config.json | jq -r '.generate.generators' > ./config_generators.json
@@ -83,17 +84,8 @@ jobs:
             - name: 🏞️ Generate - Run Generator
               continue-on-error: true
               run: |
-                cat config.json | jq -r '.generate.generators' > ./config_generate.json
                 ./scripts/generate/generate.sh --json ${GITHUB_WORKSPACE}/config_generate.json
                 ls -la
-
-
-                
-            # ╭───────────────────────────────────────────────────────╮
-            # │                          SSH                          │
-            # ╰───────────────────────────────────────────────────────╯
-            - name: 🪲 DEBUG - Setup upterm session
-              uses: lhotari/action-upterm@v1
 
 
 

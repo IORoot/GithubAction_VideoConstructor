@@ -164,8 +164,14 @@ jobs:
                 merge-multiple: true
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/assets
 
-                  
 
+
+            - name: 🎛️ List Artifacts Assets
+              run: |
+                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/assets     
+
+
+                
             # ╭───────────────────────────────────────────────────────╮
             # │      DECODE THE BASE64 CONFIGS READY TO BE USED       │
             # ╰───────────────────────────────────────────────────────╯
