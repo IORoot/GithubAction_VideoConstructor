@@ -103,7 +103,11 @@ jobs:
               run: |
                 sudo apt install rclone
 
-                
+            # ╭───────────────────────────────────────────────────────╮
+            # │                          SSH                          │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: 🪲 DEBUG - Setup upterm session
+              uses: lhotari/action-upterm@v1
 
             # ╭───────────────────────────────────────────────────────╮
             # │                  RUN THE DOWNLOADER                   │
@@ -121,24 +125,16 @@ jobs:
                     --searchresults ${GITHUB_WORKSPACE}/search_results.json \
                     --rclone ./rclone.conf
               
-                mkdir -p downloads
+                mkdir -p assets
                 
-                find . -maxdepth 1 -iname "*.mp4" -exec cp {} downloads/ \; || true
-                find . -maxdepth 1 -iname "*.avi" -exec cp {} downloads/ \; || true
-                find . -maxdepth 1 -iname "*.mkv" -exec cp {} downloads/ \; || true
-                find . -maxdepth 1 -iname "*.mov" -exec cp {} downloads/ \; || true
-                find . -maxdepth 1 -iname "*.flv" -exec cp {} downloads/ \; || true
+                find . -maxdepth 1 -iname "*.mp4" -exec cp {} assets/ \; || true
+                find . -maxdepth 1 -iname "*.avi" -exec cp {} assets/ \; || true
+                find . -maxdepth 1 -iname "*.mkv" -exec cp {} assets/ \; || true
+                find . -maxdepth 1 -iname "*.mov" -exec cp {} assets/ \; || true
+                find . -maxdepth 1 -iname "*.flv" -exec cp {} assets/ \; || true
 
                 ls -la
-                ls -la downloads 
-            
-
-
-            # ╭───────────────────────────────────────────────────────╮
-            # │                          SSH                          │
-            # ╰───────────────────────────────────────────────────────╯
-            # - name: 🪲 DEBUG - Setup upterm session
-            #   uses: lhotari/action-upterm@v1
+                ls -la assets
 
 
 
@@ -150,8 +146,8 @@ jobs:
             - name: 🆙 Upload file as artifact
               uses: actions/upload-artifact@v4
               with:
-                name: searches
-                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/downloads
+                name: downloads
+                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/assets
                 
 
 
