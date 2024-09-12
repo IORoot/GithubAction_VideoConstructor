@@ -4,7 +4,7 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 # ╭──────────────────────────────────────────────────────────╮
 # │                        VARIABLES                         │
 # ╰──────────────────────────────────────────────────────────╯
-OUTPUT_FOLDER="./assets"
+OUTPUT_FOLDER="./assets/"
 MIDJOURNEY_FOLDER="./midjourney"
 FOLDER="./scripts/generate"
 PWD=$(pwd)
