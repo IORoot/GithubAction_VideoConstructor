@@ -167,6 +167,7 @@ jobs:
 
 
             - name: 🎛️ List Artifacts Assets
+              continue-on-error: true 
               run: |
                 ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/assets     
 
