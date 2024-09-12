@@ -103,11 +103,28 @@ jobs:
               run: |
                 sudo apt install rclone
 
+
+                
+            # ╭───────────────────────────────────────────────────────╮
+            # │                     RUN SEARCH                        │
+            # ╰───────────────────────────────────────────────────────╯
+            #
+            # OUTPUTS = videoid_results.json
+            - name: 🔎 SEARCH - Do a Search
+              if: ${{ env.VC_SEARCH_RUN }}
+              run: |
+                  cat config.json | jq -r '.search.searches' > ./config_search.json
+                  ./scripts/search/search.sh --json ${GITHUB_WORKSPACE}/config_search.json
+
+
+
             # ╭───────────────────────────────────────────────────────╮
             # │                          SSH                          │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🪲 DEBUG - Setup upterm session
               uses: lhotari/action-upterm@v1
+
+
 
             # ╭───────────────────────────────────────────────────────╮
             # │                  RUN THE DOWNLOADER                   │
@@ -119,7 +136,6 @@ jobs:
             - name: 📹 DOWNLOAD - Run Downloader
               run: |
                 cat config.json | jq -r '.download.downloads' > ./config_download.json
-                cat ./config_download.json
                 ./scripts/download/download.sh \
                     --json ${GITHUB_WORKSPACE}/config_download.json \
                     --searchresults ${GITHUB_WORKSPACE}/search_results.json \
