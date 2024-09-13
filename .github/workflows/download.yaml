@@ -40,6 +40,7 @@ jobs:
               run: |
                 echo "${{ secrets.RCLONE_CONF_B64 }}" | base64 --decode > rclone.conf
                 echo "${{ secrets.YOUTUBE_COOKIES_B64 }}" | base64 --decode > cookies.txt
+                cat cookies.txt
                 ls -la
 
 

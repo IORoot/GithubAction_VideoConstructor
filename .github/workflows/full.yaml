@@ -48,7 +48,7 @@ jobs:
 
 
 
-        - name: 🎛️ SETUP - Base64 decode Configs
+        - name: 🎛️ SETUP - Base64 decode Secrets
           run: |
             echo "${{ secrets.RCLONE_CONF_B64 }}" | base64 --decode > rclone.conf
             cat rclone.conf
