@@ -7,7 +7,7 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 FOLDER="./scripts/download"
 PWD=$(pwd)
 SEARCHRESULTS=""
-
+COOKIE_FILE="cookies.txt"
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -31,6 +31,9 @@ usage()
 
         printf " --rclone <CONFIG_FILE>\n"
         printf "\tThe rclone config file to access Google Drive.\n\n"
+
+        printf " --cookies <FILE>\n"
+        printf "\tThe cookies file to read for authentication to youtube.\n\n"
 
         exit 1
     fi
@@ -64,6 +67,13 @@ function arguments()
 
         --rclone)
             RCLONECONFIGFILE="$2"
+            shift
+            shift
+            ;;
+
+
+        --cookies)
+            COOKIE_FILE="$2"
             shift
             shift
             ;;
@@ -121,26 +131,33 @@ function main()
         run=$(echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section].run')
 
 
+        if [[ $base_section_name == 'from_youtube' && $run == true ]]; then
+            if [ -z ${COOKIE_FILE+x} ]; then echo "No Cookies file given. Skipping."; return 0; fi
+            FLAGS="--cookies ${COOKIE_FILE}"
+        fi
+
+
         if [[ $base_section_name == 'from_search' && $run == true ]]; then
             if [ -z ${SEARCHRESULTSFILE+x} ]; then echo "No Search Results file given. Skipping."; return 0; fi
-            SEARCHRESULTSFLAG="--searchresults ${SEARCHRESULTSFILE}"
+            if [ -z ${COOKIE_FILE+x} ]; then echo "No Cookies file given. Skipping."; return 0; fi
+            FLAGS="--searchresults ${SEARCHRESULTSFILE} --cookies ${COOKIE_FILE}"
         fi
 
 
         if [[ $base_section_name == 'from_gdrive' && $run == true ]]; then
             if [ -z ${RCLONECONFIGFILE+x} ]; then echo "No Rclone Config file given. Skipping."; return 0; fi
-            SEARCHRESULTSFLAG="--config ${RCLONECONFIGFILE}"
+            FLAGS="--config ${RCLONECONFIGFILE}"
         fi
 
 
         # Proceed only if run is true
         if [ "$run" == true ]; then
             echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section]' > $PWD/download_${section}.json
-            bash $FOLDER/$script_name --json $PWD/download_${section}.json $SEARCHRESULTSFLAG
+            bash $FOLDER/$script_name --json $PWD/download_${section}.json $FLAGS
         fi
         
         # reset
-        SEARCHRESULTSFLAG=""
+        FLAGS=""
     done
 
 }

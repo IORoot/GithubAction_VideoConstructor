@@ -68,7 +68,7 @@ jobs:
               run: |
                   cat config.json | jq -r '.music.musics' > ./config_music.json
                   cat ./config_music.json
-                  ./scripts/music/music.sh --json ${GITHUB_WORKSPACE}/config_music.json
+                  ./scripts/music/music.sh --json ${GITHUB_WORKSPACE}/config_music.json --cookies ${GITHUB_WORKSPACE}/cookies.txt
 
                   mkdir -p music
                   cp music*.mp3 music || true

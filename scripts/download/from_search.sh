@@ -139,7 +139,7 @@ function main()
         
         printf "📥 %-10s : %s\n" "Snippet" "$video_id"
 
-        command="${SNIPPETFOLDER}/yt_snippets.sh --videoid $video_id --count ${COUNT} --duration ${DURATION}"
+        command="${SNIPPETFOLDER}/yt_snippets.sh --videoid $video_id --count ${COUNT} --duration ${DURATION} --cookies ${COOKIE_FILE}"
         
         if [ -n "${TIMESTAMPS}" ]; then
             command+=" --timestamps ${TIMESTAMPS}"

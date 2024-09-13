@@ -6,6 +6,7 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 # │                        VARIABLES                         │
 # ╰──────────────────────────────────────────────────────────╯
 FOLDER="./scripts/search"
+COOKIE_FILE="cookies.txt"
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -23,6 +24,9 @@ usage()
 
         printf " --json <FILE>\n"
         printf "\tThe JSON file to read.\n\n"
+
+        printf " --cookies <FILE>\n"
+        printf "\tThe cookies file to read for authentication to youtube.\n\n"
 
         exit 1
     fi
@@ -84,7 +88,7 @@ execute_script() {
 
     # Execute the script with the arguments
     echo "Executing: bash \"$script_name\" ${args[*]}"
-    bash "$script_name" "${args[@]}"
+    bash "$script_name  --cookies ${COOKIE_FILE}" "${args[@]}"
 }
 
 # ╭───────────────────────────────────────────────────────╮
