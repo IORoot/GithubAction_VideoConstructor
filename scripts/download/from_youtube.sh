@@ -9,6 +9,7 @@ FOLDER="./scripts/download"
 SUBTITLES_FOLDER="./scripts/subtitles"
 PWD=$(pwd)
 EXT="srt"
+COOKIE_FILE="cookies.txt"
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -26,6 +27,9 @@ usage()
 
         printf " --json <FILE>\n"
         printf "\tThe JSON file to read.\n\n"
+
+        printf " --cookies <FILE>\n"
+        printf "\tThe cookies file to read for authentication to youtube.\n\n"
 
         exit 1
     fi
@@ -45,6 +49,13 @@ function arguments()
 
         --json)
             JSON="$2"
+            shift
+            shift
+            ;;
+
+
+        --cookies)
+            COOKIE_FILE="$2"
             shift
             shift
             ;;
@@ -96,7 +107,7 @@ function download()
         SUBTITLE_STRING=" --write-subs --write-auto-subs --sub-lang en --convert-subs=srt "
     fi 
 
-    OUTPUT=$(yt-dlp ${SUBTITLE_STRING} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' -o "youtube_%(id)s.%(ext)s" ${URL})
+    OUTPUT=$(yt-dlp --cookies $COOKIE_FILE ${SUBTITLE_STRING} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' -o "youtube_%(id)s.%(ext)s" ${URL})
 
     echo $OUTPUT
 

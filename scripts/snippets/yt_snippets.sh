@@ -22,6 +22,7 @@ URL="https://yt.lemnoslife.com/videos?part=mostReplayed&id="
 COUNT=1
 DURATION=5
 DURATION_MILLISECONDS=5000
+COOKIE_FILE="cookies.txt"
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -48,6 +49,9 @@ usage()
 
         printf "  -t | --timestamps <CSV_TIMESTAMPS>\n"
         printf " \tComma separated list of timestamps in seconds. no spaces.\n\n"
+
+        printf " --cookies <FILE>\n"
+        printf "\tThe cookies file to read for authentication to youtube.\n\n"
 
         exit 1
     fi
@@ -90,6 +94,12 @@ function arguments()
             shift
             ;;
 
+        --cookies)
+            COOKIE_FILE="$2"
+            shift
+            shift
+            ;;
+            
         -*|--*)
             echo "Unknown option $1"
             exit 1
@@ -136,7 +146,7 @@ milliseconds_to_timestamp() {
 function get_best_url()
 {
 
-    BEST_VIDEO_URL=$(yt-dlp --get-url -f b "https://www.youtube.com/watch?v=$YOUTUBE_VIDEO_ID")
+    BEST_VIDEO_URL=$(yt-dlp --cookies $COOKIE_FILE --get-url -f b "https://www.youtube.com/watch?v=$YOUTUBE_VIDEO_ID")
 
 }
 

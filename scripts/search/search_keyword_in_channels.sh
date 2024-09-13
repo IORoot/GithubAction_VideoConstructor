@@ -10,6 +10,7 @@ URL_FILE="search_results_keyword_in_channels.json"; i=1; while [ -e "$URL_FILE" 
 RESULTS_FILE="search_results.json"
 COUNT="3"
 CHANNELSFILE="channels.txt"
+COOKIE_FILE="cookies.txt"
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -36,6 +37,9 @@ usage()
 
         printf " --channelsfile <File>\n"
         printf "\tName of file with list of channels to search.\n\n"
+
+        printf " --cookies <FILE>\n"
+        printf "\tThe cookies file to read for authentication to youtube.\n\n"
 
         exit 1
     fi
@@ -82,6 +86,13 @@ function arguments()
             ;;
 
 
+        --cookies)
+            COOKIE_FILE="$2"
+            shift
+            shift
+            ;;
+
+
         -*|--*)
             echo "Unknown option $1"
             exit 1
@@ -119,7 +130,7 @@ function do_search()
       echo $search_url
 
       # Get results
-      yt-dlp --flat-playlist -J "$search_url" | jq -r --argjson limit "$COUNT" '[ limit($limit; .entries[] | {title: .title, id: .id, channel: .uploader} ) ]' > "$TEMP_FILE"
+      yt-dlp --cookies $COOKIE_FILE --flat-playlist -J "$search_url" | jq -r --argjson limit "$COUNT" '[ limit($limit; .entries[] | {title: .title, id: .id, channel: .uploader} ) ]' > "$TEMP_FILE"
 
   done < "$CHANNELSFILE"
 

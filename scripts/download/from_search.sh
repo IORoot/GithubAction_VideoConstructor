@@ -9,6 +9,7 @@ FOLDER="./scripts/download"
 SNIPPETFOLDER="./scripts/snippets"
 PWD=$(pwd)
 SEARCHRESULTS=""
+COOKIE_FILE="cookies.txt"
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -29,6 +30,9 @@ usage()
 
         printf " --searchresults <FILE>\n"
         printf "\tThe JSON file to read with the searchresults.\n\n"
+
+        printf " --cookies <FILE>\n"
+        printf "\tThe cookies file to read for authentication to youtube.\n\n"
 
         exit 1
     fi
@@ -55,6 +59,13 @@ function arguments()
 
         --searchresults)
             SEARCHRESULTSFILE="$2"
+            shift
+            shift
+            ;;
+
+
+        --cookies)
+            COOKIE_FILE="$2"
             shift
             shift
             ;;
@@ -105,7 +116,7 @@ function read_config()
 
 function download_subtitles()
 {
-    yt-dlp https://www.youtube.com/watch?v=${video_id} --skip-download --write-subs --write-auto-subs --sub-lang en --convert-subs=srt -o "subtitle_%(id)s"
+    yt-dlp https://www.youtube.com/watch?v=${video_id} --cookies $COOKIE_FILE --skip-download --write-subs --write-auto-subs --sub-lang en --convert-subs=srt -o "subtitle_%(id)s"
 }
 
 

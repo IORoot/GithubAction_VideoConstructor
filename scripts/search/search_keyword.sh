@@ -9,6 +9,7 @@ TEMP_FILE="raw.json"
 URL_FILE="search_results_keyword.json"; i=1; while [ -e "$URL_FILE" ]; do URL_FILE="search_results_keyword${i}.json"; ((i++)); done
 RESULTS_FILE="search_results.json"
 COUNT="3"
+COOKIE_FILE="cookies.txt"
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -32,6 +33,9 @@ usage()
 
         printf " --count <Count>\n"
         printf "\tNumber of results to return.\n\n"
+
+        printf " --cookies <FILE>\n"
+        printf "\tThe cookies file to read for authentication to youtube.\n\n"
 
         exit 1
     fi
@@ -71,6 +75,13 @@ function arguments()
             ;;
 
 
+        --cookies)
+            COOKIE_FILE="$2"
+            shift
+            shift
+            ;;
+
+
         -*|--*)
             echo "Unknown option $1"
             exit 1
@@ -95,8 +106,8 @@ function do_search()
     FILTER_PARAM="--match-filter ${FILTER}"
   fi
 
-  echo yt-dlp --flat-playlist -j "ytsearchdate$COUNT:$KEYWORD" $FILTER_PARAM
-  yt-dlp --flat-playlist -j "ytsearchdate$COUNT:$KEYWORD" $FILTER_PARAM > "$TEMP_FILE"
+  echo yt-dlp --cookies $COOKIE_FILE --flat-playlist -j "ytsearchdate$COUNT:$KEYWORD" $FILTER_PARAM
+  yt-dlp --cookies $COOKIE_FILE --flat-playlist -j "ytsearchdate$COUNT:$KEYWORD" $FILTER_PARAM > "$TEMP_FILE"
 
 }
 

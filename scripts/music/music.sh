@@ -7,6 +7,7 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 # ╰──────────────────────────────────────────────────────────╯
 FOLDER="./scripts/music"
 STRATEGY_FLAG=""
+COOKIE_FILE="cookies.txt"
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -24,6 +25,9 @@ usage()
 
         printf " --json <FILE>\n"
         printf "\tThe JSON file to read.\n\n"
+
+        printf " --cookies <FILE>\n"
+        printf "\tThe cookies file to read for authentication to youtube.\n\n"
 
         exit 1
     fi
@@ -43,6 +47,13 @@ function arguments()
 
         --json)
             JSON="$2"
+            shift
+            shift
+            ;;
+
+
+        --cookies)
+            COOKIE_FILE="$2"
             shift
             shift
             ;;
@@ -123,7 +134,7 @@ function main()
             STRATEGY_FLAG="--playlist-end  $BOTTOM"
         fi 
 
-        COMMAND="yt-dlp -vU $URL $STRATEGY_FLAG --restrict-filenames --trim-filenames 20 --extract-audio --audio-format mp3 --postprocessor-args \"-ss $START_MILLI -t $END_MILLI\" --output music_${section}_%\(autonumber\)s.mp3 --force-overwrites"
+        COMMAND="yt-dlp --cookies $COOKIE_FILE -vU $URL $STRATEGY_FLAG --restrict-filenames --trim-filenames 20 --extract-audio --audio-format mp3 --postprocessor-args \"-ss $START_MILLI -t $END_MILLI\" --output music_${section}_%\(autonumber\)s.mp3 --force-overwrites"
 
         echo $COMMAND
 
