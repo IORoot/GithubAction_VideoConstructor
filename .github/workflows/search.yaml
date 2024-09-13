@@ -100,7 +100,7 @@ jobs:
               run: |
                   cat config.json | jq -r '.search.searches' > ./config_search.json
                   cat ./config_search.json
-                  ./scripts/search/search.sh --json ${GITHUB_WORKSPACE}/config_search.json
+                  ./scripts/search/search.sh --json ${GITHUB_WORKSPACE}/config_search.json --cookies ${GITHUB_WORKSPACE}/cookies.txt
 
 
             # ╭───────────────────────────────────────────────────────╮

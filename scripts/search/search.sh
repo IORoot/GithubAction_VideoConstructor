@@ -51,6 +51,13 @@ function arguments()
             ;;
 
 
+        --cookies)
+            COOKIE_FILE="$2"
+            shift
+            shift
+            ;;
+
+
         -*|--*)
             echo "Unknown option $1"
             exit 1
