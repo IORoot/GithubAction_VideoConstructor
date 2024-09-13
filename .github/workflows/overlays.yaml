@@ -186,6 +186,7 @@ jobs:
             # │             Use Timecut to capture Video              │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Capture Video
+              id: capture_video
               continue-on-error: true
               run: |
                 node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ env.VC_TIMECUT_SELECTOR }}" --viewport="${{ env.VC_TIMECUT_VIEWPORT }}" ${{ env.VC_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
@@ -197,7 +198,13 @@ jobs:
                 ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
 
 
+            # ╭───────────────────────────────────────────────────────╮
+            # │                          SSH                          │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: 🪲 DEBUG - Setup upterm session
+              uses: lhotari/action-upterm@v1
 
+              
             # Check if the previous step failed
             - name: ❌ OVERLAY - Capture Video Failed
               if: steps.capture_video.outcome == 'failure'
