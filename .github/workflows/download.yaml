@@ -34,12 +34,12 @@ jobs:
 
 
             # ╭───────────────────────────────────────────────────────╮
-            # │      DECODE THE BASE64 CONFIGS READY TO BE USED       │
+            # │      DECODE THE BASE64 SECRETS READY TO BE USED       │
             # ╰───────────────────────────────────────────────────────╯
-            - name: 🎛️ SETUP - Base64 decode Configs
+            - name: 🎛️ SETUP - Base64 decode secrets
               run: |
                 echo "${{ secrets.RCLONE_CONF_B64 }}" | base64 --decode > rclone.conf
-                cat rclone.conf
+                echo "${{ secrets.YOUTUBE_COOKIES_B64 }}" | base64 --decode > cookies.txt
                 ls -la
 
 
