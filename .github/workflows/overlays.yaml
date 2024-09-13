@@ -198,13 +198,7 @@ jobs:
                 ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/overlay
 
 
-            # ╭───────────────────────────────────────────────────────╮
-            # │                          SSH                          │
-            # ╰───────────────────────────────────────────────────────╯
-            - name: 🪲 DEBUG - Setup upterm session
-              uses: lhotari/action-upterm@v1
 
-              
             # Check if the previous step failed
             - name: ❌ OVERLAY - Capture Video Failed
               if: steps.capture_video.outcome == 'failure'
