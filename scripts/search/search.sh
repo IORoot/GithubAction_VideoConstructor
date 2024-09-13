@@ -88,7 +88,7 @@ execute_script() {
 
     # Execute the script with the arguments
     echo "Executing: bash \"$script_name\" ${args[*]}"
-    bash "$script_name  --cookies ${COOKIE_FILE}" "${args[@]}"
+    bash "$script_name" "--cookies ${COOKIE_FILE} ${args[@]}"
 }
 
 # ╭───────────────────────────────────────────────────────╮
