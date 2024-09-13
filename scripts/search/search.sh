@@ -88,7 +88,7 @@ execute_script() {
 
     # Execute the script with the arguments
     echo "Executing: bash \"$script_name\" ${args[*]}"
-    bash "$script_name" "--cookies ${COOKIE_FILE} ${args[@]}"
+    bash "$script_name" "${args[@]}"
 }
 
 # ╭───────────────────────────────────────────────────────╮
@@ -129,6 +129,9 @@ run_script() {
             fi
 
         done < <(echo "$section_content" | jq -r 'del(.run) | keys[]')
+
+        # Add cookies flag
+        args+=("--cookies" "$COOKIE_FILE")
 
         # Execute the script with the prepared arguments
         execute_script "$FOLDER/$script_name" "${args[@]}"
