@@ -8,6 +8,7 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 FOLDER="./scripts/music"
 STRATEGY_FLAG=""
 COOKIE_FILE="cookies.txt"
+USERAGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36"
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -134,7 +135,7 @@ function main()
             STRATEGY_FLAG="--playlist-end  $BOTTOM"
         fi 
 
-        COMMAND="yt-dlp --cookies $COOKIE_FILE -vU $URL $STRATEGY_FLAG --restrict-filenames --trim-filenames 20 --extract-audio --audio-format mp3 --postprocessor-args \"-ss $START_MILLI -t $END_MILLI\" --output music_${section}_%\(autonumber\)s.mp3 --force-overwrites"
+        COMMAND="yt-dlp --cookies $COOKIE_FILE -vU $URL $STRATEGY_FLAG --restrict-filenames --trim-filenames 20 --extract-audio --audio-format mp3 --postprocessor-args \"-ss $START_MILLI -t $END_MILLI\" --output music_${section}_%\(autonumber\)s.mp3 --force-overwrites --user-agent \"$USERAGENT\""
 
         echo $COMMAND
 

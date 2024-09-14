@@ -10,6 +10,7 @@ SUBTITLES_FOLDER="./scripts/subtitles"
 PWD=$(pwd)
 EXT="srt"
 COOKIE_FILE="cookies.txt"
+USERAGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36"
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -107,7 +108,7 @@ function download()
         SUBTITLE_STRING=" --write-subs --write-auto-subs --sub-lang en --convert-subs=srt "
     fi 
 
-    OUTPUT=$(yt-dlp --cookies $COOKIE_FILE ${SUBTITLE_STRING} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' -o "youtube_%(id)s.%(ext)s" ${URL})
+    OUTPUT=$(yt-dlp --cookies $COOKIE_FILE ${SUBTITLE_STRING} -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' -o "youtube_%(id)s.%(ext)s" ${URL} --user-agent \"$USERAGENT\")
 
     echo $OUTPUT
 
