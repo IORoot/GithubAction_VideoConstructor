@@ -23,6 +23,7 @@ COUNT=1
 DURATION=5
 DURATION_MILLISECONDS=5000
 COOKIE_FILE="cookies.txt"
+USERAGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36"
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -146,7 +147,7 @@ milliseconds_to_timestamp() {
 function get_best_url()
 {
 
-    BEST_VIDEO_URL=$(yt-dlp --cookies $COOKIE_FILE --get-url -f b "https://www.youtube.com/watch?v=$YOUTUBE_VIDEO_ID")
+    BEST_VIDEO_URL=$(yt-dlp --cookies $COOKIE_FILE --get-url -f b "https://www.youtube.com/watch?v=$YOUTUBE_VIDEO_ID" --user-agent "$USERAGENT")
 
 }
 

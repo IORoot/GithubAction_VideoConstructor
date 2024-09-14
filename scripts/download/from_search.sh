@@ -10,6 +10,7 @@ SNIPPETFOLDER="./scripts/snippets"
 PWD=$(pwd)
 SEARCHRESULTS=""
 COOKIE_FILE="cookies.txt"
+USERAGENT="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36"
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -116,7 +117,7 @@ function read_config()
 
 function download_subtitles()
 {
-    yt-dlp https://www.youtube.com/watch?v=${video_id} --cookies $COOKIE_FILE --skip-download --write-subs --write-auto-subs --sub-lang en --convert-subs=srt -o "subtitle_%(id)s"
+    yt-dlp https://www.youtube.com/watch?v=${video_id} --cookies $COOKIE_FILE --skip-download --write-subs --write-auto-subs --sub-lang en --convert-subs=srt -o "subtitle_%(id)s" --user-agent "$USERAGENT"
 }
 
 
