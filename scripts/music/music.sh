@@ -135,7 +135,7 @@ function main()
             STRATEGY_FLAG="--playlist-end  $BOTTOM"
         fi 
 
-        COMMAND="yt-dlp --cookies $COOKIE_FILE -vU $URL $STRATEGY_FLAG --restrict-filenames --trim-filenames 20 --extract-audio --audio-format mp3 --postprocessor-args \"-ss $START_MILLI -t $END_MILLI\" --output music_${section}_%\(autonumber\)s.mp3 --force-overwrites --user-agent \"$USERAGENT\""
+        COMMAND="yt-dlp --cookies $COOKIE_FILE -vU $URL $STRATEGY_FLAG --restrict-filenames --trim-filenames 20 --extract-audio --audio-format mp3 --postprocessor-args \"-ss $START_MILLI -t $END_MILLI\" --output music_${section}_%\(autonumber\)s.mp3 --force-overwrites --user-agent \"$USERAGENT\" --extractor-args \"youtube:player-client=web,default;po_token=web+MnTDjl30_DR2RsO2J1t_PGkbRZtuuJ7eiVsc-FMqTAHKF1XqK6np9FDiO8hB8nAk4vd9Q7UFjc3YaZ6Zbbewi6wwYPL34lz7yiUiwPaypZEiaxtDy3YwjOcjy794g8LAA15tymrBlBgC5cWIS2eWa8U1PbZWlw==\""
 
         echo $COMMAND
 

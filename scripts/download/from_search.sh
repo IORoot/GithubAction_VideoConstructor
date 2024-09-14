@@ -117,7 +117,7 @@ function read_config()
 
 function download_subtitles()
 {
-    yt-dlp https://www.youtube.com/watch?v=${video_id} --cookies $COOKIE_FILE --skip-download --write-subs --write-auto-subs --sub-lang en --convert-subs=srt -o "subtitle_%(id)s" --user-agent "$USERAGENT"
+    yt-dlp https://www.youtube.com/watch?v=${video_id} --cookies $COOKIE_FILE --skip-download --write-subs --write-auto-subs --sub-lang en --convert-subs=srt -o "subtitle_%(id)s" --user-agent "$USERAGENT" --extractor-args "youtube:player-client=web,default;po_token=web+MnTDjl30_DR2RsO2J1t_PGkbRZtuuJ7eiVsc-FMqTAHKF1XqK6np9FDiO8hB8nAk4vd9Q7UFjc3YaZ6Zbbewi6wwYPL34lz7yiUiwPaypZEiaxtDy3YwjOcjy794g8LAA15tymrBlBgC5cWIS2eWa8U1PbZWlw=="
 }
 
 

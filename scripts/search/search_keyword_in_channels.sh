@@ -130,7 +130,7 @@ function do_search()
       echo $search_url
 
       # Get results
-      yt-dlp --cookies $COOKIE_FILE --flat-playlist -J "$search_url" | jq -r --argjson limit "$COUNT" '[ limit($limit; .entries[] | {title: .title, id: .id, channel: .uploader} ) ]' > "$TEMP_FILE"
+      yt-dlp --cookies $COOKIE_FILE --extractor-args "youtube:player-client=web,default;po_token=web+MnTDjl30_DR2RsO2J1t_PGkbRZtuuJ7eiVsc-FMqTAHKF1XqK6np9FDiO8hB8nAk4vd9Q7UFjc3YaZ6Zbbewi6wwYPL34lz7yiUiwPaypZEiaxtDy3YwjOcjy794g8LAA15tymrBlBgC5cWIS2eWa8U1PbZWlw==" --flat-playlist -J "$search_url" | jq -r --argjson limit "$COUNT" '[ limit($limit; .entries[] | {title: .title, id: .id, channel: .uploader} ) ]' > "$TEMP_FILE"
 
   done < "$CHANNELSFILE"
 
