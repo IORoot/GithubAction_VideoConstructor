@@ -52,6 +52,21 @@ jobs:
                 ls -la
 
 
+
+            # ╭───────────────────────────────────────────────────────╮
+            # │                    Install FFMPEG                     │
+            # ╰───────────────────────────────────────────────────────╯
+            - name: 🎛️ SETUP - Install FFMPEG
+              uses: FedericoCarboni/setup-ffmpeg@v2
+ 
+            - name: 🎛️ SETUP - Link FFMPEG to /usr/local/bin
+              run: |
+                cd /usr/local/bin
+                env
+                ln -s /opt/hostedtoolcache/ffmpeg/*/x64/ffmpeg ./ffmpeg
+                ln -s /opt/hostedtoolcache/ffmpeg/*/x64/ffprobe ./ffprobe 
+
+
                 
             # ╭───────────────────────────────────────────────────────╮
             # │                    INSTALL YT-DLP                     │
@@ -70,10 +85,17 @@ jobs:
                   cat ./config_music.json
                   ./scripts/music/music.sh --json ${GITHUB_WORKSPACE}/config_music.json --cookies ${GITHUB_WORKSPACE}/cookies.txt
 
-                  mkdir -p music
-                  cp music*.mp3 music || true
+                  mkdir -p assets
+
+                  find . -maxdepth 1 -iname "*.mp4" -exec cp {} assets/ \; || true
+                  find . -maxdepth 1 -iname "*.avi" -exec cp {} assets/ \; || true
+                  find . -maxdepth 1 -iname "*.mkv" -exec cp {} assets/ \; || true
+                  find . -maxdepth 1 -iname "*.mov" -exec cp {} assets/ \; || true
+                  find . -maxdepth 1 -iname "*.flv" -exec cp {} assets/ \; || true
+                  find . -maxdepth 1 -iname "*.webm" -exec cp {} assets/ \; || true
+                  
                   ls -la
-                  ls -la music 
+                  ls -la assets 
 
 
 
@@ -86,7 +108,7 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                 name: music
-                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/music
+                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/assets
                 
 
 
