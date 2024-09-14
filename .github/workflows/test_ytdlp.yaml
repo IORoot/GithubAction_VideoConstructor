@@ -1,0 +1,57 @@
+name: 🎢 Test YT-DLP Working
+
+
+on:
+    workflow_dispatch:
+
+
+jobs:
+
+    test:
+      runs-on: ubuntu-latest
+      steps:
+
+        - name: 🎛️ SETUP - Checkout Repo
+          uses: actions/checkout@v3
+
+
+
+        # ╭───────────────────────────────────────────────────────╮
+        # │      DECODE THE BASE64 SECRETS READY TO BE USED       │
+        # ╰───────────────────────────────────────────────────────╯
+        - name: 🎛️ SETUP - Base64 decode secrets
+          run: |
+            echo "${{ secrets.YOUTUBE_COOKIES_B64 }}" | base64 --decode > cookies.txt
+            ls -la
+
+
+
+        # ╭───────────────────────────────────────────────────────╮
+        # │                    Install FFMPEG                     │
+        # ╰───────────────────────────────────────────────────────╯
+        - name: 🎛️ SETUP - Install FFMPEG
+          uses: FedericoCarboni/setup-ffmpeg@v2
+
+        - name: 🎛️ SETUP - Link FFMPEG to /usr/local/bin
+          run: |
+            cd /usr/local/bin
+            env
+            ln -s /opt/hostedtoolcache/ffmpeg/*/x64/ffmpeg ./ffmpeg
+            ln -s /opt/hostedtoolcache/ffmpeg/*/x64/ffprobe ./ffprobe 
+
+
+            
+        # ╭───────────────────────────────────────────────────────╮
+        # │                    INSTALL YT-DLP                     │
+        # ╰───────────────────────────────────────────────────────╯
+        - name: 🔎 SEARCH - Install yt-dlp
+          run: sudo pip install yt-dlp
+
+               
+          
+        # ╭───────────────────────────────────────────────────────╮
+        # │                      RUN YT-DLP                       │
+        # ╰───────────────────────────────────────────────────────╯
+        - name: 🔎 RUN - YT-DLP
+          run: |
+            yt-dlp --cookies cookies.txt --extractor-args "youtube:player-client=web,default;po_token=web+MnTDjl30_DR2RsO2J1t_PGkbRZtuuJ7eiVsc-FMqTAHKF1XqK6np9FDiO8hB8nAk4vd9Q7UFjc3YaZ6Zbbewi6wwYPL34lz7yiUiwPaypZEiaxtDy3YwjOcjy794g8LAA15tymrBlBgC5cWIS2eWa8U1PbZWlw==" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36" --flat-playlist -J "https://www.youtube.com/watch?v=xSE0fNj624A"
