@@ -57,10 +57,13 @@ jobs:
             
         #     # yt-dlp --cookies cookies.txt --extractor-args "youtube:player-client=web,default;po_token=web+MnTDjl30_DR2RsO2J1t_PGkbRZtuuJ7eiVsc-FMqTAHKF1XqK6np9FDiO8hB8nAk4vd9Q7UFjc3YaZ6Zbbewi6wwYPL34lz7yiUiwPaypZEiaxtDy3YwjOcjy794g8LAA15tymrBlBgC5cWIS2eWa8U1PbZWlw==" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36" --flat-playlist -J "https://www.youtube.com/watch?v=xSE0fNj624A"
                
+
+        # Get PO
+        # https://github.com/yt-dlp/yt-dlp/wiki/Extractors#po-token-guide
           
         # ╭───────────────────────────────────────────────────────╮
         # │                      RUN YT-DLP                       │
         # ╰───────────────────────────────────────────────────────╯
         - name: 🔎 RUN - YT-DLP to Download Music
           run: |
-            yt-dlp --cookies cookies.txt --extractor-args "youtube:player-client=web,default;po_token=web+MnTDjl30_DR2RsO2J1t_PGkbRZtuuJ7eiVsc-FMqTAHKF1XqK6np9FDiO8hB8nAk4vd9Q7UFjc3YaZ6Zbbewi6wwYPL34lz7yiUiwPaypZEiaxtDy3YwjOcjy794g8LAA15tymrBlBgC5cWIS2eWa8U1PbZWlw==" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36" -vU https://www.youtube.com/playlist?list=PLzCxunOM5WFKNv_NaoVO6DWNkR3K8K9WC --playlist-random --max-downloads  1 --restrict-filenames --trim-filenames 20 --extract-audio --audio-format mp3 --postprocessor-args --output music_${section}_%\(autonumber\)s.mp3 --force-overwrites --retries 3
+            yt-dlp --cookies cookies.txt --extractor-args "youtube:player-client=web,default;po_token=web+Mlu-0csU-82c2L7pVlwPkjiT-gBuYbGa9XFianfb6i7ZJZhRkIq3aJcJ-GCsiOverA7b90RuVRx0zafWo7qKWArqBJ77uGZe-vxi5hIPpUZkw0uj5bBLThiZFv2t" --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36" -vU https://www.youtube.com/playlist?list=PLzCxunOM5WFKNv_NaoVO6DWNkR3K8K9WC --playlist-random --max-downloads  1 --restrict-filenames --trim-filenames 20 --extract-audio --audio-format mp3 --postprocessor-args --output music_${section}_%\(autonumber\)s.mp3 --force-overwrites --retries 3
