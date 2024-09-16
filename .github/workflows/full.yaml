@@ -215,6 +215,7 @@ jobs:
     outputs:
       needs: scriptflow
       uses: ./.github/workflows/outputs.yaml 
+      if: always()
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 
       secrets: inherit   
