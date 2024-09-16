@@ -153,10 +153,10 @@ jobs:
 
 
 
-            - name: 🎛️ List Artifacts Assets
+            - name: 🎛️ List and Copy Artifacts Assets
               continue-on-error: true 
               run: |
-                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/assets     
+                ls -la /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/assets
 
 
                 
@@ -214,7 +214,6 @@ jobs:
 
     outputs:
       needs: scriptflow
-      if: needs.setup.outputs.vc_output_run == 'true'
       uses: ./.github/workflows/outputs.yaml 
       with:
         config_b64: ${{ github.event.inputs.config_b64 }} 

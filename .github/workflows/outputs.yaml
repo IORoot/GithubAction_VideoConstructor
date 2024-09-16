@@ -72,8 +72,6 @@ jobs:
               run: |
                 mkdir -p ${GITHUB_WORKSPACE}/uploads
                 cp ${{ env.VC_OUTPUT_INCLUDE }} ${GITHUB_WORKSPACE}/uploads || true
-                cp ${GITHUB_WORKSPACE}/overlay/overlay_video.mov ${GITHUB_WORKSPACE}/uploads || true
-                ls -la
                 ls -la uploads
 
 
