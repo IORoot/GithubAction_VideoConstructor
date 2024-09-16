@@ -137,11 +137,27 @@ jobs:
               
                 mkdir -p assets
                 
-                find . -maxdepth 1 -iname "*.mp4" -exec cp {} assets/ \; || true
-                find . -maxdepth 1 -iname "*.avi" -exec cp {} assets/ \; || true
-                find . -maxdepth 1 -iname "*.mkv" -exec cp {} assets/ \; || true
-                find . -maxdepth 1 -iname "*.mov" -exec cp {} assets/ \; || true
-                find . -maxdepth 1 -iname "*.flv" -exec cp {} assets/ \; || true
+                # find . -maxdepth 1 -iname "*.mp4" -exec cp {} assets/ \; || true
+                # find . -maxdepth 1 -iname "*.avi" -exec cp {} assets/ \; || true
+                # find . -maxdepth 1 -iname "*.mkv" -exec cp {} assets/ \; || true
+                # find . -maxdepth 1 -iname "*.mov" -exec cp {} assets/ \; || true
+                # find . -maxdepth 1 -iname "*.flv" -exec cp {} assets/ \; || true
+
+                # Find and process files with specific extensions
+                for ext in mp4 avi mkv mov flv; do
+                  find . -maxdepth 1 -iname "*.$ext" -print0 | while IFS= read -r -d '' file; do
+                    # Extract base name and extension
+                    base_name=$(basename "$file" | sed 's/\.[^.]*$//')
+                    new_ext=$(echo "$ext" | tr '[:upper:]' '[:lower:]')
+                    
+                    # Construct new file name
+                    new_file="${base_name}.${new_ext}"
+                    
+                    # Copy and rename the file
+                    cp "$file" "assets/${new_file}"
+                  done
+                done
+                
 
                 ls -la
                 ls -la assets
