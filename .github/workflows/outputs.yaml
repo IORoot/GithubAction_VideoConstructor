@@ -91,7 +91,7 @@ jobs:
             - name: 📬 OUTPUTS - Create uploads folder
               run: |
                 mkdir -p ${GITHUB_WORKSPACE}/uploads
-                cp ${GITHUB_WORKSPACE}/assets/${{ env.VC_OUTPUT_INCLUDE }} ${GITHUB_WORKSPACE}/uploads || true
+                cp ${GITHUB_WORKSPACE}/output/${{ env.VC_OUTPUT_INCLUDE }} ${GITHUB_WORKSPACE}/uploads || true
                 ls -la uploads
 
 
