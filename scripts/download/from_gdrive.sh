@@ -246,12 +246,19 @@ function output_directory()
 {
     local dir="$1"
     
+    if [[ -n "$dir" && "${dir: -1}" != "/" ]]; then
+        # set with / on end
+        dir="${dir}/"
+        OUTDIR=$dir
+    fi
+
     if [[ ! -d "$dir" ]]; then
         echo "Directory '$dir' does not exist. Creating it..."
         mkdir -p "$dir"
     else
         echo "Directory '$dir' already exists."
     fi
+
 }
 
 
