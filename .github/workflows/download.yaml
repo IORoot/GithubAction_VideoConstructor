@@ -133,18 +133,13 @@ jobs:
                     --json ${GITHUB_WORKSPACE}/config_download.json \
                     --searchresults ${GITHUB_WORKSPACE}/search_results.json \
                     --rclone ./rclone.conf \
-                    --cookies ${GITHUB_WORKSPACE}/cookies.txt
+                    --cookies ${GITHUB_WORKSPACE}/cookies.txt \
+                    --outdir ./assets
               
                 mkdir -p assets
-                
-                # find . -maxdepth 1 -iname "*.mp4" -exec cp {} assets/ \; || true
-                # find . -maxdepth 1 -iname "*.avi" -exec cp {} assets/ \; || true
-                # find . -maxdepth 1 -iname "*.mkv" -exec cp {} assets/ \; || true
-                # find . -maxdepth 1 -iname "*.mov" -exec cp {} assets/ \; || true
-                # find . -maxdepth 1 -iname "*.flv" -exec cp {} assets/ \; || true
 
                 # Find and process files with specific extensions
-                for ext in mp4 avi mkv mov flv; do
+                for ext in mp4 avi mkv mov flv jpg png gif; do
                   find . -maxdepth 1 -iname "*.$ext" -print0 | while IFS= read -r -d '' file; do
                     # Extract base name and extension
                     base_name=$(basename "$file" | sed 's/\.[^.]*$//')

@@ -8,6 +8,7 @@ FOLDER="./scripts/download"
 PWD=$(pwd)
 SEARCHRESULTS=""
 COOKIE_FILE="cookies.txt"
+OUTDIR="./assets/"  
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          Usage.                          │
@@ -34,6 +35,10 @@ usage()
 
         printf " --cookies <FILE>\n"
         printf "\tThe cookies file to read for authentication to youtube.\n\n"
+
+        printf " --outdir <FILE>\n"
+        printf "\tThe output directory.\n\n"
+        
 
         exit 1
     fi
@@ -74,6 +79,13 @@ function arguments()
 
         --cookies)
             COOKIE_FILE="$2"
+            shift
+            shift
+            ;;
+
+
+        --outdir)
+            OUTDIR="$2"
             shift
             shift
             ;;
@@ -153,7 +165,7 @@ function main()
         # Proceed only if run is true
         if [ "$run" == true ]; then
             echo "$JSON_CONTENT" | jq -r --arg section "$section" '.[$section]' > $PWD/download_${section}.json
-            bash $FOLDER/$script_name --json $PWD/download_${section}.json $FLAGS
+            bash $FOLDER/$script_name --json $PWD/download_${section}.json $FLAGS --outdir $OUTDIR
         fi
         
         # reset
