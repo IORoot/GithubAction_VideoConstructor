@@ -126,6 +126,10 @@ function download_single_file()
             OUTPUT_FILE=$(basename $FOLDER)
             OUTPUT_FILE_LOOPNAME="${i}_${OUTPUT_FILE}"
 
+            printf "FOLDER: $FOLDER\n"
+            printf "OUTPUT_FILE: $OUTPUT_FILE\n"
+            printf "OUTPUT_FILE_LOOPNAME: $OUTPUT_FILE_LOOPNAME\n"
+
             # print to screen
             printf "📥 %-10s : %s\n" "Single" "$FOLDER"
 
