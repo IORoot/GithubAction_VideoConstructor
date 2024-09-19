@@ -130,6 +130,11 @@ function main()
 
     pre_flight_checks
 
+    # MAKE SURE / on end of output directory.
+    if [[ -n "$OUTDIR" && "${OUTDIR: -1}" != "/" ]]; then
+        OUTDIR="${OUTDIR}/"
+    fi
+
     JSON_CONTENT=$(cat "$JSON")
 
     # Iterate through each top-level key in the JSON
