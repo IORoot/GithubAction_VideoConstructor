@@ -45,3 +45,10 @@ base64 -i client_secret.json -o client_secret.b64
 7. Upload to Github under the Settings > Secrets > Actions as:
     - CLIENT_SECRETS_B64
     - REQUEST_TOKEN_B64
+
+
+# rclone
+
+If you get rate limited on rclone, it's because you're using a 'rclone company' google client and API that is global for everyone.
+It's wise to create your own application and copy the config for the server to use.
+https://rclone.org/drive/#making-your-own-client-id
