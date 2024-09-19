@@ -106,7 +106,6 @@ function read_config()
     FOLDER=$(cat $JSON | jq -r -c '.folder')
     COUNT=$(cat $JSON | jq -r -c '.count')
     STRATEGY=$(cat $JSON | jq -r -c '.strategy')
-    OUTDIR=$(cat $JSON | jq -r -c '.outdir')
 
     if [ $STRATEGY == "picked" ]; then
         FILES=$(cat $JSON | jq -r -c '.files')
