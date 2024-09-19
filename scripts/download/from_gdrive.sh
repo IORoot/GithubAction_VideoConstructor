@@ -243,6 +243,18 @@ function download_specific_files()
     done
 }
 
+function output_directory()
+{
+    local dir="$1"
+    
+    if [[ ! -d "$dir" ]]; then
+        echo "Directory '$dir' does not exist. Creating it..."
+        mkdir -p "$dir"
+    else
+        echo "Directory '$dir' already exists."
+    fi
+}
+
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                                                          │
@@ -255,6 +267,8 @@ function main()
     pre_flight_checks
 
     read_config
+
+    output_directory $OUTDIR
 
     # If The source URL is a txt file with a filelist in it
     if [ $STRATEGY == "single" ]; then
