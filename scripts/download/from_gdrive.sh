@@ -144,7 +144,7 @@ function download_single_file()
         printf "OUTDIR: $OUTDIR\n"
         printf "OUTPUT_FILE: $OUTPUT_FILE\n"
         
-        rclone copy GDrive:$FOLDER ${OUTDIR}${OUTPUT_FILE} --fast-list --tpslimit ${TRANSACTIONSPERSECOND} --config ${RCLONE_CONFIG}
+        rclone copy GDrive:$FOLDER ${OUTDIR} --include "${OUTPUT_FILE}" --fast-list --tpslimit ${TRANSACTIONSPERSECOND} --config ${RCLONE_CONFIG}
     fi
     
 }
