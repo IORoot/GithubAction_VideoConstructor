@@ -139,6 +139,11 @@ function download_single_file()
     else
         OUTPUT_FILE=$(basename $FOLDER)
         printf "📥 %-10s : %s\n" "Single" "$FOLDER"
+
+        printf "FOLDER: $FOLDER\n"
+        printf "OUTDIR: $OUTDIR\n"
+        printf "OUTPUT_FILE: $OUTPUT_FILE\n"
+        
         rclone copy GDrive:$FOLDER ${OUTDIR}${OUTPUT_FILE} --fast-list --tpslimit ${TRANSACTIONSPERSECOND} --config ${RCLONE_CONFIG}
     fi
     
