@@ -209,6 +209,9 @@ jobs:
                 cat ${GITHUB_WORKSPACE}/config_scriptflow.json
                 export PATH=$PATH:$(pwd)
                 scriptflow.sh --config $(realpath ./config_scriptflow.json) -t
+                ls -la
+                ls -la ./assets
+
 
 
             # NOTE - UPLOADS/DOWNLOADS Start in the ROOT folder, NOT ${GITHUB_WORKSPACE}
