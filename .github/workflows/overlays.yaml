@@ -212,6 +212,7 @@ jobs:
                 printf "template folder (assets,public,revslider-lottie-addon, etc..) and zip them. Do not highlight the template folder and zip it. Otherwise the unzip will create a folder and the files won't be located.\n\n"
 
 
+                
 
             # ╭───────────────────────────────────────────────────────╮
             # │           Upload the overlays as artifacts            │
