@@ -88,7 +88,8 @@ function create_textfile()
     # Extract the run value
     RUN=$(echo "$JSON_CONTENT" | jq -r '.run')
     FILENAME=$(echo "$JSON_CONTENT" | jq -r '.filename')
-    TEXT=$(echo "$JSON_CONTENT" | jq -r '.text')
+    TEXT_B64=$(echo "$JSON_CONTENT" | jq -r '.text')
+    TEXT=$(echo "$TEXT_B64" | base64 --decode)
     PERMISSIONS=$(echo "$JSON_CONTENT" | jq -r '.permissions')
 
     printf "🗒️ %-10s : %s\n" "TextFile" "${FILENAME}"
