@@ -70,7 +70,12 @@ jobs:
         - name: ⚙️ Generate Matrix from JSON for overlays
           id: set-matrix
           run: |
-            jq -c '{"include": [.overlay.overlays | {template: .template[], encoded: (tojson | @base64)}]}' config.json > matrix.json || true
+            # template matrix array
+            jq -c '[.overlay.overlays | {template: .template[], encoded: (tojson | @base64)}]' config.json > template_matrix.json || true
+
+            # add index
+            jq -c '{"include": . | to_entries | map({ index: .key, template: .value.template, encoded: .value.encoded })}' template_matrix.json > matrix.json || true
+            
             cat matrix.json
             echo "matrix=$(cat matrix.json)" >> $GITHUB_OUTPUT
 
