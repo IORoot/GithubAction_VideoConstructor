@@ -23,6 +23,10 @@ on:
                 description: 'Base64 Encoded Template'
                 required: true
                 type: string
+            index:
+                description: 'Index of overlays - used for output filename'
+                required: true
+                type: string
 
 
 jobs:
@@ -192,7 +196,7 @@ jobs:
               run: |
                 node ${GITHUB_WORKSPACE}/node_modules/timecut/cli.js "http://localhost:8080" --selector="${{ env.VC_TIMECUT_SELECTOR }}" --viewport="${{ env.VC_TIMECUT_VIEWPORT }}" ${{ env.VC_TIMECUT_SETTINGS }} --transparent-background --output-options="-c:v png" --pix-fmt=rgba --output=overlay_video.mov --launch-arguments="--no-sandbox --disable-setuid-sandbox --allow-file-access-from-files"
                 mkdir -p ${GITHUB_WORKSPACE}/overlay
-                cp overlay_video.mov ${GITHUB_WORKSPACE}/overlay/overlay_${{ inputs.template_name }}.mov
+                cp overlay_video.mov ${GITHUB_WORKSPACE}/overlay/overlay_0${{ inputs.index }}.mov
                 pwd
                 ls -la
                 ls -la ${GITHUB_WORKSPACE}/overlay

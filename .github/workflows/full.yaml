@@ -91,6 +91,7 @@ jobs:
         config_b64: ${{ github.event.inputs.config_b64 }} 
         template_name: ${{ matrix.template }}
         encoded_template: ${{ matrix.encoded }}
+        index: ${{ matrix.index }}
       secrets: inherit
               
         
