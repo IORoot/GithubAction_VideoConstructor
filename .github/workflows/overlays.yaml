@@ -117,6 +117,7 @@ jobs:
             # │        The Slider Revolution Local Assets fix          │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Replace Remote Images for local Assets
+              continue-on-error: true
               run: |
                 ./scripts/overlay/replace_images.sh ./overlays/${{ inputs.template_name }}/assets
 
@@ -127,7 +128,7 @@ jobs:
             # │             Optional setup of inputs.json             │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Setup Inputs.json
-              if: ${{ env.VC_INPUTS__LETTER1ID_SELECTOR != '' && env.VC_INPUTS__LETTER1ID_SELECTOR != null }}
+              continue-on-error: true
               run: |   
                 cat decoded_template.json | jq -r '.inputs' > ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/inputs.json
                 cat ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/inputs.json
@@ -138,7 +139,7 @@ jobs:
             # │         Optional Search/Replace Lottie JSON           │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Override Lottie.json
-              if: ${{ env.VC_LOTTIE_OVERRIDES != '' && env.VC_LOTTIE_OVERRIDES != null }}
+              continue-on-error: true
               run: |   
                 cat decoded_template.json | jq -r '.lottie_overrides' > ${GITHUB_WORKSPACE}/lottie_overrides.json
                 cat ${GITHUB_WORKSPACE}/lottie_overrides.json
