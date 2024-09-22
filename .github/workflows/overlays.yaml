@@ -127,7 +127,7 @@ jobs:
             # │             Optional setup of inputs.json             │
             # ╰───────────────────────────────────────────────────────╯
             - name: 🎨 OVERLAY - Setup Inputs.json
-              if: ${{ env.VC_INPUTS != '' && env.VC_INPUTS != null }}
+              if: ${{ env.VC_INPUTS__LETTER1ID_SELECTOR != '' && env.VC_INPUTS__LETTER1ID_SELECTOR != null }}
               run: |   
                 cat decoded_template.json | jq -r '.inputs' > ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/inputs.json
                 cat ${GITHUB_WORKSPACE}/overlays/${{ inputs.template_name }}/inputs.json
