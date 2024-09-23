@@ -117,9 +117,7 @@ jobs:
                 cat ./output_config.json
                 ./scripts/outputs/outputs.sh \
                     --json ${GITHUB_WORKSPACE}/output_config.json \
-                    --rclone ./rclone.conf \
-                    --sshuser ${{ secrets.SSH_USER }} \
-                    --sshpass ${{ secrets.SSH_PASS }}
+                    --rclone ./rclone.conf --sshuser ${{ secrets.SSH_USER }} --sshpass ${{ secrets.SSH_PASS }}
 
 
 
