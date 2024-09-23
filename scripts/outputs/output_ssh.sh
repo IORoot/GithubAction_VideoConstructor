@@ -6,7 +6,7 @@ if [[ "${DEBUG-0}" == "1" ]]; then set -o xtrace; fi        # DEBUG=1 will show 
 # ╰──────────────────────────────────────────────────────────╯
 PWD=$(pwd)
 UPLOADS_FOLDER="./uploads"
-FOLDER_PREFIX="videoconstructor"
+CURRENT_DATE=$(date +"%Y%m%d_%H%M%S")
 OUTPUT_FILELIST="./output_filelist.txt"
 TYPE="SSHUNKNOWN"
 
@@ -119,11 +119,8 @@ function main()
     SERVER=$(cat $JSON | jq -r -c '.server')
     FOLDER=$(cat $JSON | jq -r -c '.folder')
 
-    # Get current date for folder creation
-    CURRENT_DATE=$(date +"%Y%m%d_%H%M%S")
-
     # Create a target folder name
-    TARGET_DIR="${FOLDER}/${FOLDER_PREFIX}_${CURRENT_DATE}/"
+    TARGET_DIR="${FOLDER}/${CURRENT_DATE}/"
 
     # Get the SSH Fingerprint / public key for server
     mkdir -p ~/.ssh
