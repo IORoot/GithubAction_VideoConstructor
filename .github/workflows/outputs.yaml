@@ -118,8 +118,8 @@ jobs:
                 ./scripts/outputs/outputs.sh \
                     --json ${GITHUB_WORKSPACE}/output_config.json \
                     --rclone ./rclone.conf \
-                    --sshuser ${{ secrets.SSH_USER }} \
-                    --sshpass ${{ secrets.SSH_PASS }}
+                    --sshuser ${{ secrets.SSHUSER }} \
+                    --sshpass ${{ secrets.SSHPASS }}
 
 
 
