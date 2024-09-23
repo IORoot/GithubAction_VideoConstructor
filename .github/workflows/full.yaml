@@ -222,11 +222,20 @@ jobs:
 
             # NOTE - UPLOADS/DOWNLOADS Start in the ROOT folder, NOT ${GITHUB_WORKSPACE}
             # Give full path to file for it to work.
-            - name: 📦 ARTIFACTS - Upload ./uploads folder as artifact if Upload to outputs Fails
+            - name: 📦 ARTIFACTS - Upload output.mp4
               uses: actions/upload-artifact@v3
               with:
                 name: output
                 path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/output.mp4
+
+
+            # NOTE - UPLOADS/DOWNLOADS Start in the ROOT folder, NOT ${GITHUB_WORKSPACE}
+            # Give full path to file for it to work.
+            - name: 📦 ARTIFACTS - Upload ./uploads folder as artifact if Upload to outputs Fails
+              uses: actions/upload-artifact@v3
+              with:
+                name: assets
+                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/assets
 
 
 
