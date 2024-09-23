@@ -36,7 +36,7 @@ jobs:
             # ╭───────────────────────────────────────────────────────╮
             # │                  Download Artifacts                   │
             # ╰───────────────────────────────────────────────────────╯
-            - name: ⤵️ Download Artifacts
+            - name: ⤵️ Download Artifacts - outputs
               uses: actions/download-artifact@v3
               continue-on-error: true 
               with:
@@ -45,10 +45,21 @@ jobs:
 
 
 
+            - name: ⤵️ Download Artifacts - assets
+              uses: actions/download-artifact@v3
+              continue-on-error: true 
+              with:
+                name: assets
+                path: /home/runner/work/GithubAction_VideoConstructor/GithubAction_VideoConstructor/assets
+
+
+                
             - name: 🎛️ List and Copy Artifacts Assets
               continue-on-error: true 
               run: |
-                ls -la ${GITHUB_WORKSPACE}/output
+                ls -la
+                ls -la ${GITHUB_WORKSPACE}/output || true
+                ls -la ${GITHUB_WORKSPACE}/assets || true
 
 
 
@@ -79,7 +90,7 @@ jobs:
             # │       Install SSH/SSHPass for saving to server        │
             # ╰───────────────────────────────────────────────────────╯
             - name: 📬 OUTPUTS - Install ssh/sshpass
-              if: ${{ env.VC_OUTPUTS_SSH_RUN }}
+              if: ${{ env.VC_OUTPUT_OUTPUTS_SSH_RUN }}
               run: |
                 sudo apt-get install --no-install-recommends ssh sshpass
 
@@ -91,8 +102,8 @@ jobs:
             - name: 📬 OUTPUTS - Create uploads folder
               run: |
                 mkdir -p ${GITHUB_WORKSPACE}/uploads
+                cp ${GITHUB_WORKSPACE}/assets/${{ env.VC_OUTPUT_INCLUDE }} ${GITHUB_WORKSPACE}/uploads || true
                 cp ${GITHUB_WORKSPACE}/output/${{ env.VC_OUTPUT_INCLUDE }} ${GITHUB_WORKSPACE}/uploads || true
-                ls -la uploads
 
 
 
