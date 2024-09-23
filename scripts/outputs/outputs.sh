@@ -147,8 +147,6 @@ function main()
 
         # SSH Flags
         if [[ $base_section_name == 'ssh' && $run == true ]]; then
-            if [ -z ${SSHUSER+x} ]; then echo "No SSHUSER given. Skipping."; return 0; fi
-            if [ -z ${SSHPASS+x} ]; then echo "No SSHPASS given. Skipping."; return 0; fi
             FLAGS="--sshuser ${SSHUSER} --sshpass ${SSHPASS}"
         fi
 
